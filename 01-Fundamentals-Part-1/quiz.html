@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript ფუნდამენტალები - ნაწილი 1 - ქვიზი</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1a1a2e;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      color: #e94560;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #888;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      max-width: 750px;
+      height: 8px;
+      background: #16213e;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #e94560, #0f3460);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .quiz-container {
+      background: #16213e;
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      max-width: 750px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .question-number {
+      font-size: 0.9rem;
+      color: #e94560;
+      font-weight: 600;
+    }
+
+    .question-topic {
+      font-size: 0.8rem;
+      color: #666;
+      background: #1a1a2e;
+      padding: 0.25rem 0.7rem;
+      border-radius: 12px;
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+      color: #f0f0f0;
+    }
+
+    pre {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    pre code {
+      font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+      color: #c9d1d9;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .option-btn {
+      background: #1a1a2e;
+      border: 2px solid #30363d;
+      border-radius: 10px;
+      padding: 0.85rem 1.2rem;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      line-height: 1.4;
+    }
+
+    .option-btn:hover:not(.disabled) {
+      border-color: #e94560;
+      background: #1e2a4a;
+    }
+
+    .option-btn.selected {
+      border-color: #e94560;
+      background: #2a1a2e;
+    }
+
+    .option-btn.correct {
+      border-color: #2ea043;
+      background: #1a2e1a;
+      color: #56d364;
+    }
+
+    .option-btn.incorrect {
+      border-color: #f85149;
+      background: #2e1a1a;
+      color: #f85149;
+    }
+
+    .option-btn.show-correct {
+      border-color: #2ea043;
+      background: #1a2e1a;
+      color: #56d364;
+    }
+
+    .option-btn.disabled {
+      cursor: default;
+      opacity: 0.7;
+    }
+
+    .option-btn.disabled.correct,
+    .option-btn.disabled.show-correct {
+      opacity: 1;
+    }
+
+    .option-btn.disabled.incorrect {
+      opacity: 1;
+    }
+
+    .explanation {
+      background: #0d1117;
+      border-left: 4px solid #e94560;
+      padding: 0.8rem 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem;
+      color: #aaa;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .explanation.visible {
+      display: block;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav-btn {
+      background: #e94560;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 1.8rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      font-weight: 600;
+    }
+
+    .nav-btn:hover {
+      background: #c73652;
+    }
+
+    .nav-btn:disabled {
+      background: #333;
+      cursor: not-allowed;
+      color: #666;
+    }
+
+    .nav-btn.secondary {
+      background: #0f3460;
+    }
+
+    .nav-btn.secondary:hover {
+      background: #0a2647;
+    }
+
+    /* Results screen */
+    .results-container {
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .results-container h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      color: #e94560;
+    }
+
+    .score-circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 8px solid #30363d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem auto;
+      position: relative;
+    }
+
+    .score-circle.excellent {
+      border-color: #2ea043;
+    }
+
+    .score-circle.good {
+      border-color: #e3b341;
+    }
+
+    .score-circle.needs-work {
+      border-color: #f85149;
+    }
+
+    .score-percent {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #f0f0f0;
+    }
+
+    .score-label {
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    .score-detail {
+      font-size: 1.1rem;
+      color: #aaa;
+      margin-bottom: 0.5rem;
+    }
+
+    .score-message {
+      font-size: 1rem;
+      color: #ccc;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .restart-btn {
+      background: #e94560;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.9rem 2.5rem;
+      font-size: 1.05rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+
+    .restart-btn:hover {
+      background: #c73652;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+      .quiz-container {
+        padding: 1.2rem 1rem;
+      }
+      .question-text {
+        font-size: 1rem;
+      }
+      pre {
+        font-size: 0.82rem;
+        padding: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>JavaScript ფუნდამენტალები - ნაწილი 1 - ქვიზი</h1>
+  <p class="subtitle">20 შეკითხვა &bull; JavaScript Fundamentals Part 1</p>
+
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="quiz-container" id="quizContainer"></div>
+
+  <script>
+    const questions = [
+      {
+        topic: "Basic Operators",
+        question: "What will <code>console.log</code> output?",
+        code: `let x = 10 + 5;\nx += 10;\nx *= 4;\nx++;\nx--;\nx--;\nconsole.log(x);`,
+        options: ["100", "99", "101", "96"],
+        correct: 1,
+        explanation: "10 + 5 = 15, then 15 + 10 = 25, then 25 * 4 = 100, then 101 (++), then 100 (--), then 99 (--)."
+      },
+      {
+        topic: "Data Types / typeof",
+        question: "What is the result of <code>typeof null</code> in JavaScript?",
+        code: `console.log(typeof null);`,
+        options: ['"null"', '"undefined"', '"object"', '"boolean"'],
+        correct: 2,
+        explanation: 'typeof null returns "object". This is a well-known historical bug in JavaScript that has never been fixed for backward compatibility reasons.'
+      },
+      {
+        topic: "Type Coercion",
+        question: "What will <code>console.log</code> output?",
+        code: `console.log('23' - '10' - 3);`,
+        options: ["'2010-3'", "'103'", "10", "NaN"],
+        correct: 2,
+        explanation: "The minus operator triggers numeric coercion. '23' becomes 23, '10' becomes 10. So 23 - 10 - 3 = 10."
+      },
+      {
+        topic: "Truthy & Falsy Values",
+        question: "Which of the following lists contains ALL the falsy values in JavaScript?",
+        options: [
+          "0, '', undefined, null, NaN, false",
+          "0, '', undefined, null, NaN",
+          "0, '', undefined, null, false, -1",
+          "0, '', undefined, null, NaN, false, []"
+        ],
+        correct: 0,
+        explanation: "There are exactly 6 falsy values in JS (ES5): 0, '' (empty string), undefined, null, NaN, and false. Note that [] and {} are truthy!"
+      },
+      {
+        topic: "Equality Operators",
+        question: "What is the difference between <code>==</code> and <code>===</code> in JavaScript?",
+        options: [
+          "There is no difference, they are interchangeable",
+          "== compares references, === compares values",
+          "=== checks both value and type (strict), == checks value with type coercion (loose)",
+          "== is used for numbers, === is used for strings"
+        ],
+        correct: 2,
+        explanation: "=== is the strict equality operator — it does NOT perform type coercion. == is the loose equality operator and WILL coerce types before comparing. For example, '18' == 18 is true, but '18' === 18 is false."
+      },
+      {
+        topic: "Type Coercion",
+        question: "What will <code>console.log</code> output?",
+        code: `let n = '1' + 1;\nn = n - 1;\nconsole.log(n);`,
+        options: ["1", "11", "10", "'11'"],
+        correct: 2,
+        explanation: "'1' + 1 → '11' (the + operator triggers string concatenation). Then '11' - 1 → 10 (the - operator triggers numeric coercion). So the result is 10."
+      },
+      {
+        topic: "Truthy & Falsy Values",
+        question: "What will <code>console.log</code> output?",
+        code: `console.log(Boolean(0));\nconsole.log(Boolean(''));\nconsole.log(Boolean('Jonas'));`,
+        options: [
+          "false, false, false",
+          "true, true, true",
+          "false, false, true",
+          "true, false, true"
+        ],
+        correct: 2,
+        explanation: "0 is falsy → false. '' (empty string) is falsy → false. 'Jonas' is a non-empty string so it is truthy → true."
+      },
+      {
+        topic: "Ternary Operator",
+        question: "What will <code>console.log</code> output?",
+        code: `const age = 15;\nconst drink = age >= 18 ? 'wine' : 'water';\nconsole.log(drink);`,
+        options: ["'wine'", "'water'", "undefined", "Error"],
+        correct: 1,
+        explanation: "15 >= 18 is false, so the ternary operator returns the value after the colon: 'water'."
+      },
+      {
+        topic: "Data Types / typeof",
+        question: "What will <code>typeof undefined</code> return?",
+        code: `let x;\nconsole.log(typeof x);`,
+        options: ['"null"', '"undefined"', '"object"', '"empty"'],
+        correct: 1,
+        explanation: "A declared variable without assignment holds the value undefined. typeof undefined returns 'undefined'."
+      },
+      {
+        topic: "let, const, var",
+        question: "What happens when you try to reassign a <code>const</code> variable?",
+        code: `const PI = 3.14;\nPI = 3.14159;`,
+        options: [
+          "It works fine, the value is updated",
+          "It silently fails, the value stays the same",
+          "It throws a TypeError",
+          "It throws a SyntaxError"
+        ],
+        correct: 2,
+        explanation: "const declares a variable that cannot be reassigned. Attempting to do so throws a TypeError: Assignment to constant variable."
+      },
+      {
+        topic: "Operator Precedence",
+        question: "What will <code>console.log</code> output?",
+        code: `console.log(2 + 3 * 4);`,
+        options: ["20", "14", "24", "12"],
+        correct: 1,
+        explanation: "Multiplication has higher precedence than addition. So 3 * 4 = 12 is evaluated first, then 2 + 12 = 14."
+      },
+      {
+        topic: "Template Literals",
+        question: "Which is the correct way to use a template literal?",
+        options: [
+          "\"My name is ${name}\"",
+          "'My name is ${name}'",
+          "`My name is ${name}`",
+          "`My name is #{name}`"
+        ],
+        correct: 2,
+        explanation: "Template literals use backticks (` `) and ${} for variable interpolation. Regular quotes (' or \") do not support interpolation."
+      },
+      {
+        topic: "Switch Statement",
+        question: "What will <code>console.log</code> output?",
+        code: `const day = 'monday';\nswitch (day) {\n  case 'monday':\n    console.log('Start of the week');\n  case 'tuesday':\n    console.log('Second day');\n    break;\n  case 'wednesday':\n    console.log('Midweek');\n    break;\n}`,
+        options: [
+          "'Start of the week'",
+          "'Start of the week' then 'Second day'",
+          "'Second day'",
+          "'Start of the week' then 'Second day' then 'Midweek'"
+        ],
+        correct: 1,
+        explanation: "The 'monday' case matches but has no break statement, so execution falls through to the 'tuesday' case. It prints both 'Start of the week' and 'Second day' before hitting the break."
+      },
+      {
+        topic: "Logical Operators",
+        question: "What will <code>console.log</code> output?",
+        code: `const hasDriversLicense = true;\nconst hasGoodVision = false;\n\nconsole.log(hasDriversLicense && hasGoodVision);\nconsole.log(hasDriversLicense || hasGoodVision);\nconsole.log(!hasDriversLicense);`,
+        options: [
+          "true, true, false",
+          "false, false, true",
+          "false, true, false",
+          "true, false, true"
+        ],
+        correct: 2,
+        explanation: "true && false = false (both must be true). true || false = true (at least one is true). !true = false (negation)."
+      },
+      {
+        topic: "Truthy & Falsy / if-else",
+        question: "What will <code>console.log</code> output?",
+        code: `const money = 0;\nif (money) {\n  console.log("Don't spend it all");\n} else {\n  console.log("You should get a job!");\n}`,
+        options: [
+          "\"Don't spend it all\"",
+          "\"You should get a job!\"",
+          "undefined",
+          "0"
+        ],
+        correct: 1,
+        explanation: "0 is a falsy value in JavaScript. When used in a boolean context (the if condition), it is converted to false, so the else block runs."
+      },
+      {
+        topic: "Type Coercion",
+        question: "What will <code>console.log</code> output?",
+        code: `console.log('10' + 3 + '1');`,
+        options: ["14", "'1031'", "'131'", "NaN"],
+        correct: 1,
+        explanation: "'10' + 3 → '103' (+ with a string triggers concatenation, 3 becomes '3'). Then '103' + '1' → '1031' (string concatenation again)."
+      },
+      {
+        topic: "Values and Variables",
+        question: "Which of the following is NOT a valid JavaScript variable name?",
+        options: [
+          "$price",
+          "_private",
+          "2ndPlace",
+          "firstName"
+        ],
+        correct: 2,
+        explanation: "Variable names in JavaScript cannot start with a number. $price (starts with $), _private (starts with _), and firstName (starts with a letter) are all valid."
+      },
+      {
+        topic: "Statements vs Expressions",
+        question: "Which of the following is a statement, NOT an expression?",
+        options: [
+          "3 + 4",
+          "true && false",
+          "if (x > 5) { }",
+          "x > 5 ? 'yes' : 'no'"
+        ],
+        correct: 2,
+        explanation: "An expression produces a value (3+4 → 7, true && false → false, ternary → 'yes'/'no'). An if/else block is a statement — it performs an action but does not produce a value itself."
+      },
+      {
+        topic: "Equality Operators",
+        question: "What will <code>console.log</code> output?",
+        code: `console.log(18 == '18');\nconsole.log(18 === '18');`,
+        options: [
+          "true, true",
+          "false, false",
+          "true, false",
+          "false, true"
+        ],
+        correct: 2,
+        explanation: "== (loose equality) performs type coercion: '18' is converted to 18, and 18 == 18 is true. === (strict equality) does NOT coerce: number 18 is not the same type as string '18', so it is false."
+      },
+      {
+        topic: "Type Conversion & Coercion",
+        question: "What will <code>console.log</code> output?",
+        code: `console.log(Number(''));\nconsole.log(Number('hello'));\nconsole.log(Number(true));`,
+        options: [
+          "0, 0, 1",
+          "NaN, NaN, 1",
+          "0, NaN, 1",
+          "0, NaN, true"
+        ],
+        correct: 2,
+        explanation: "Number('') converts to 0. Number('hello') cannot be parsed as a number, so it returns NaN. Number(true) converts to 1."
+      }
+    ];
+
+    let currentQuestion = 0;
+    let answers = new Array(questions.length).fill(null);
+    let answered = new Array(questions.length).fill(false);
+
+    function renderQuestion(index) {
+      const q = questions[index];
+      const container = document.getElementById('quizContainer');
+
+      // Progress bar
+      const progress = ((index) / questions.length) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+
+      let html = `
+        <div class="question-header">
+          <span class="question-number">შეკითხვა ${index + 1} / ${questions.length}</span>
+          <span class="question-topic">${q.topic}</span>
+        </div>
+        <div class="question-text">${q.question}</div>
+      `;
+
+      if (q.code) {
+        html += `<pre><code>${escapeHtml(q.code)}</code></pre>`;
+      }
+
+      html += `<div class="options">`;
+      q.options.forEach((opt, i) => {
+        let classes = 'option-btn';
+        if (answered[index]) {
+          classes += ' disabled';
+          if (i === q.correct) {
+            classes += ' show-correct';
+          }
+          if (answers[index] === i && i !== q.correct) {
+            classes += ' incorrect';
+          }
+          if (answers[index] === i && i === q.correct) {
+            classes = 'option-btn disabled correct';
+          }
+        }
+        html += `<button class="${classes}" onclick="selectAnswer(${index}, ${i})" ${answered[index] ? 'disabled' : ''}>${escapeHtml(opt)}</button>`;
+      });
+      html += `</div>`;
+
+      html += `<div class="explanation ${answered[index] ? 'visible' : ''}" id="explanation">${q.explanation}</div>`;
+
+      html += `<div class="nav-buttons">`;
+      html += `<button class="nav-btn secondary" onclick="navigate(-1)" ${index === 0 ? 'disabled' : ''}>&#8592; წინა</button>`;
+      if (index < questions.length - 1) {
+        html += `<button class="nav-btn" onclick="navigate(1)">შემდეგი &#8594;</button>`;
+      } else {
+        html += `<button class="nav-btn" onclick="showResults()">შედეგები</button>`;
+      }
+      html += `</div>`;
+
+      container.innerHTML = html;
+    }
+
+    function selectAnswer(qIndex, optIndex) {
+      if (answered[qIndex]) return;
+      answers[qIndex] = optIndex;
+      answered[qIndex] = true;
+      renderQuestion(qIndex);
+    }
+
+    function navigate(dir) {
+      currentQuestion += dir;
+      if (currentQuestion < 0) currentQuestion = 0;
+      if (currentQuestion >= questions.length) currentQuestion = questions.length - 1;
+      renderQuestion(currentQuestion);
+    }
+
+    function showResults() {
+      document.getElementById('progressBar').style.width = '100%';
+
+      let correctCount = 0;
+      for (let i = 0; i < questions.length; i++) {
+        if (answers[i] === questions[i].correct) correctCount++;
+      }
+
+      const percent = Math.round((correctCount / questions.length) * 100);
+      let scoreClass = 'needs-work';
+      let message = '';
+
+      if (percent >= 85) {
+        scoreClass = 'excellent';
+        message = 'Excellent! You have a strong grasp of JavaScript fundamentals.';
+      } else if (percent >= 60) {
+        scoreClass = 'good';
+        message = 'Good job! Review the topics you missed to strengthen your knowledge.';
+      } else {
+        scoreClass = 'needs-work';
+        message = 'Keep studying! Review the JavaScript Fundamentals Part 1 section again.';
+      }
+
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = `
+        <div class="results-container">
+          <h2>ქვიზი დასრულებულია!</h2>
+          <div class="score-circle ${scoreClass}">
+            <span class="score-percent">${percent}%</span>
+            <span class="score-label">ქულა</span>
+          </div>
+          <p class="score-detail">${correctCount} / ${questions.length} სწორი პასუხი</p>
+          <p class="score-message">${message}</p>
+          <button class="restart-btn" onclick="restartQuiz()">თავიდან დაწყება</button>
+        </div>
+      `;
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      answers = new Array(questions.length).fill(null);
+      answered = new Array(questions.length).fill(false);
+      renderQuestion(0);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Start
+    renderQuestion(0);
+  </script>
+</body>
+</html>
