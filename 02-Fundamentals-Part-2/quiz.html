@@ -218,6 +218,31 @@
       border: 1px solid #e53e3e;
     }
 
+    .explanation-box {
+      background: #0d1b2a;
+      border-left: 4px solid #e94560;
+      padding: 1rem 1.2rem;
+      margin-top: 0.8rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.92rem;
+      color: #b0bec5;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .explanation-box.visible {
+      display: block;
+    }
+
+    .explanation-box .explanation-title {
+      font-weight: 700;
+      color: #e94560;
+      margin-bottom: 0.3rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
     .nav-buttons {
       display: flex;
       justify-content: space-between;
@@ -389,6 +414,10 @@
         <pre class="code-block hidden" id="codeBlock"></pre>
         <div class="options" id="optionsContainer"></div>
         <div class="feedback" id="feedback"></div>
+        <div class="explanation-box" id="explanationBox">
+          <div class="explanation-title">ახსნა</div>
+          <div id="explanationText"></div>
+        </div>
       </div>
 
       <div class="nav-buttons">
@@ -423,7 +452,8 @@
           "გამორთავს console.log-ს",
           "აქცევს ყველა ცვლადს კონსტანტად"
         ],
-        correct: 1
+        correct: 1,
+        explanation: "'use strict' რთავს მკაცრ რეჟიმს, რომელიც კრძალავს ჩუმ შეცდომებს (მაგ., გამოუცხადებელ ცვლადზე მინიჭებას), კრძალავს სახიფათო სინტაქსს და ამზადებს კოდს მომავალი JavaScript ვერსიებისთვის. ის არ ცვლის შესრულების სიჩქარეს და არ აქცევს ცვლადებს კონსტანტებად."
       },
       {
         section: 'main',
@@ -440,7 +470,8 @@ console.log(fruitProcessor(5, 0));`,
           'undefined',
           'Error'
         ],
-        correct: 0
+        correct: 0,
+        explanation: "ფუნქცია იღებს apples=5 და oranges=0 პარამეტრებს. template literal-ში ${apples} ჩანაცვლდება 5-ით, ${oranges} კი 0-ით. ფუნქცია აბრუნებს სტრინგს return-ით, რომელსაც console.log ბეჭდავს."
       },
       {
         section: 'main',
@@ -453,7 +484,8 @@ console.log(fruitProcessor(5, 0));`,
           "მხოლოდ arrow ფუნქციებზე მუშაობს",
           "მხოლოდ strict mode-ში"
         ],
-        correct: 1
+        correct: 1,
+        explanation: "Function Declaration-ები ექვემდებარება hoisting-ს — JavaScript-ის ძრავა კოდის შესრულებამდე 'აწევს' მათ სკოუპის თავში. ამიტომ შესაძლებელია მათი გამოძახება კოდში მათ გამოცხადებამდეც კი. ეს არ ეხება Function Expression-ებს და Arrow ფუნქციებს."
       },
       {
         section: 'main',
@@ -466,7 +498,8 @@ console.log(fruitProcessor(5, 0));`,
           "არა, ის არ ექვემდებარება hoisting-ს",
           "დიახ, მაგრამ მხოლოდ var-ით"
         ],
-        correct: 2
+        correct: 2,
+        explanation: "Function Expression ინახება ცვლადში (const/let/var). ცვლადი ექვემდებარება hoisting-ს, მაგრამ მისი მნიშვნელობა (ფუნქცია) არ ინიციალიზდება სანამ კოდის შესრულება ამ ხაზს არ მიაღწევს. ამიტომ გამოძახება განსაზღვრამდე გამოიწვევს ReferenceError-ს (const/let) ან TypeError-ს (var)."
       },
       {
         section: 'main',
@@ -480,7 +513,8 @@ console.log(calcAge(1991));`,
           '46',
           'undefined'
         ],
-        correct: 2
+        correct: 2,
+        explanation: "ეს ერთხაზიანი arrow ფუნქციაა, რომელიც იღებს birthYear პარამეტრს და აბრუნებს 2037 - birthYear-ს. calcAge(1991) გამოთვლის 2037 - 1991 = 46. ერთხაზიან arrow ფუნქციაში return იგულისხმება ავტომატურად."
       },
       {
         section: 'main',
@@ -494,7 +528,8 @@ console.log(friends[1]);`,
           '"Peter"',
           'undefined'
         ],
-        correct: 1
+        correct: 1,
+        explanation: "მასივები 0-დან ინდექსირდება. friends[0] არის 'Michael', friends[1] არის 'Steven', friends[2] არის 'Peter'. ამიტომ friends[1] აბრუნებს 'Steven'-ს."
       },
       {
         section: 'main',
@@ -508,7 +543,8 @@ console.log(friends.length);`,
           '4',
           'undefined'
         ],
-        correct: 1
+        correct: 1,
+        explanation: "მასივის .length თვისება აბრუნებს მასივში ელემენტების რაოდენობას. friends მასივში 3 ელემენტია ('Michael', 'Steven', 'Peter'), ამიტომ friends.length არის 3. ყურადღება: length არ არის 0-ზე დაფუძნებული, ის რეალურ რაოდენობას აბრუნებს."
       },
       {
         section: 'main',
@@ -521,7 +557,8 @@ console.log(friends.length);`,
           "მთელ მასივს",
           "undefined"
         ],
-        correct: 1
+        correct: 1,
+        explanation: "push() მეთოდი ამატებს ელემენტ(ებ)ს მასივის ბოლოში და აბრუნებს მასივის ახალ სიგრძეს (რიცხვს). მაგალითად: const len = [1,2].push(3) → len იქნება 3. ეს ხშირად დამწყებთათვის მოულოდნელია, რადგან ელოდებიან, რომ თვითონ მასივს დააბრუნებს."
       },
       {
         section: 'main',
@@ -534,7 +571,8 @@ console.log(friends.length);`,
           "წაშლილ ელემენტს",
           "undefined"
         ],
-        correct: 2
+        correct: 2,
+        explanation: "pop() მეთოდი შლის მასივის ბოლო ელემენტს და აბრუნებს წაშლილ ელემენტს. ეს push()-ის საპირისპიროა: push აბრუნებს სიგრძეს, pop კი — ამოღებულ მნიშვნელობას. ანალოგიურად, shift() (პირველის წაშლა) ასევე აბრუნებს წაშლილ ელემენტს."
       },
       {
         section: 'main',
@@ -550,7 +588,8 @@ console.log(arr);`,
           "['a', 'b', 'c', 'd']",
           "['z', 'a', 'b', 'c']"
         ],
-        correct: 1
+        correct: 1,
+        explanation: "push('d') ამატებს 'd'-ს ბოლოში: ['a','b','c','d']. შემდეგ unshift('z') ამატებს 'z'-ს დასაწყისში: ['z','a','b','c','d']. push ბოლოში ამატებს, unshift — დასაწყისში. შედეგად მივიღებთ ['z', 'a', 'b', 'c', 'd']."
       },
       {
         section: 'main',
@@ -564,7 +603,8 @@ console.log(friends.includes('Bob'));`,
           '-1',
           'undefined'
         ],
-        correct: 1
+        correct: 1,
+        explanation: "includes() მეთოდი ამოწმებს, არის თუ არა მოცემული ელემენტი მასივში და აბრუნებს boolean-ს (true/false). 'Bob' არ არის friends მასივში ['Michael', 'Steven', 'Peter'], ამიტომ შედეგი არის false. ეს განსხვავდება indexOf-ისგან, რომელიც -1-ს აბრუნებს ვერ-პოვნის შემთხვევაში."
       },
       {
         section: 'main',
@@ -577,7 +617,8 @@ console.log(friends.includes('Bob'));`,
           "Arrow ფუნქციები მხოლოდ ერთ პარამეტრს იღებენ",
           "Arrow ფუნქციები ვერ აბრუნებენ მნიშვნელობას"
         ],
-        correct: 1
+        correct: 1,
+        explanation: "Arrow ფუნქციების მთავარი განსხვავება ისაა, რომ მათ არ გააჩნიათ საკუთარი 'this' keyword — ისინი 'this'-ს იღებენ გარემომცველი სკოუპიდან (lexical this). ისინი შეიძლება მრავალ პარამეტრს იღებდნენ და მნიშვნელობებსაც აბრუნებენ. შესრულების სიჩქარე ერთნაირია."
       },
       {
         section: 'main',
@@ -597,7 +638,8 @@ console.log(processor(3));`,
           '"12 pieces"',
           '"7 pieces"'
         ],
-        correct: 2
+        correct: 2,
+        explanation: "processor(3) გამოიძახებს cutPieces(3)-ს, რომელიც აბრუნებს 3 * 4 = 12. შემდეგ pieces ცვლადი იქნება 12, და template literal `${pieces} pieces` შექმნის სტრინგს '12 pieces'. ეს გვიჩვენებს, როგორ შეუძლია ერთ ფუნქციას მეორის გამოძახება."
       },
       {
         section: 'main',
@@ -610,7 +652,8 @@ console.log(processor(3));`,
           "მხოლოდ push-ის გამოყენება შეიძლება",
           "მხოლოდ ინდექსით შეცვლა შეიძლება"
         ],
-        correct: 1
+        correct: 1,
+        explanation: "const კრძალავს ცვლადის ხელახლა მინიჭებას (reassignment), მაგრამ არა მასივის შიგთავსის შეცვლას (mutation). მასივი ობიექტია და const მხოლოდ მითითებას (reference) იცავს. ამიტომ push(), pop(), ინდექსით შეცვლა — ყველაფერი ნებადართულია. მხოლოდ arr = newArray არ შეიძლება."
       },
       {
         section: 'main',
@@ -624,7 +667,8 @@ console.log(arr[arr.length - 1]);`,
           '3',
           'undefined'
         ],
-        correct: 2
+        correct: 2,
+        explanation: "arr.length არის 3. arr[3 - 1] = arr[2] = 3 (ბოლო ელემენტი). ეს არის სტანდარტული ხერხი მასივის ბოლო ელემენტზე წვდომისთვის: arr[arr.length - 1]. ინდექსი 0-დან იწყება, ამიტომ ბოლო ელემენტის ინდექსი ყოველთვის length - 1-ია."
       },
 
       // ==================== ADVANCED SECTION (16-20) ====================
@@ -644,7 +688,8 @@ console.log(person.firstName);`,
           '"Jonas"',
           'Error'
         ],
-        correct: 2
+        correct: 2,
+        explanation: "dot notation-ით (person.firstName) წვდომა ხდება ობიექტის თვისებაზე. person ობიექტის firstName თვისების მნიშვნელობა არის 'Jonas', ამიტომ console.log გამოიტანს 'Jonas'-ს."
       },
       {
         section: 'advanced',
@@ -657,7 +702,8 @@ console.log(person.firstName);`,
           "Dot notation უფრო სწრაფია",
           "Bracket notation მხოლოდ რიცხვებთან მუშაობს"
         ],
-        correct: 1
+        correct: 1,
+        explanation: "Bracket notation-ის მთავარი უპირატესობა ისაა, რომ მასში შეგიძლიათ გამოთვლილი (computed) გამოსახულების გამოყენება: obj['first' + 'Name'] ან ცვლადი: obj[myVar]. Dot notation მხოლოდ ლიტერალურ სახელებთან მუშაობს. შესრულების სიჩქარეში განსხვავება არ არის."
       },
       {
         section: 'advanced',
@@ -676,7 +722,8 @@ console.log(user.greet());`,
           'Error',
           '"Hello, this.name"'
         ],
-        correct: 1
+        correct: 1,
+        explanation: "ობიექტის მეთოდში 'this' მიუთითებს თვითონ ობიექტზე, რომელიც ამ მეთოდს იძახებს. user.greet() გამოძახებისას this არის user ობიექტი, ამიტომ this.name = 'Jonas'. template literal ${this.name} ჩანაცვლდება 'Jonas'-ით."
       },
       {
         section: 'advanced',
@@ -693,7 +740,8 @@ console.log(sum);`,
           '6',
           '10'
         ],
-        correct: 2
+        correct: 2,
+        explanation: "for ციკლი i=1-დან i<=3-მდე მიდის: პირველ იტერაციაში sum = 0 + 1 = 1, მეორეში sum = 1 + 2 = 3, მესამეში sum = 3 + 3 = 6. ციკლი მთავრდება როცა i გახდება 4 (4 <= 3 არის false). საბოლოო sum = 6."
       },
       {
         section: 'advanced',
@@ -713,7 +761,8 @@ console.log(result);`,
           '"1234"',
           '"135"'
         ],
-        correct: 1
+        correct: 1,
+        explanation: "while ციკლი 0-დან 5-მდე მიდის. თითოეულ იტერაციაში i ჯერ იზრდება (i++), შემდეგ მოწმდება continue პირობა. როცა i === 3, continue გამოტოვებს result += i-ს და გადადის შემდეგ იტერაციაზე. ამიტომ result-ში ჩაიწერება 1, 2, 4, 5 (3 გამოტოვდა) → '1245'."
       }
     ];
 
@@ -731,6 +780,8 @@ console.log(result);`,
     const codeBlock = document.getElementById('codeBlock');
     const optionsContainer = document.getElementById('optionsContainer');
     const feedback = document.getElementById('feedback');
+    const explanationBox = document.getElementById('explanationBox');
+    const explanationText = document.getElementById('explanationText');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const questionArea = document.getElementById('questionArea');
@@ -816,6 +867,13 @@ console.log(result);`,
         feedback.className = 'feedback';
         feedback.classList.remove('show');
         questionCard.classList.remove('correct', 'incorrect');
+      }
+
+      if (answers[currentIndex] !== null && q.explanation) {
+        explanationText.textContent = q.explanation;
+        explanationBox.classList.add('visible');
+      } else {
+        explanationBox.classList.remove('visible');
       }
 
       // Nav buttons

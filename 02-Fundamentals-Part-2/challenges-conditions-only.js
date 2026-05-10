@@ -219,3 +219,141 @@ HINT: To find the max, keep track of the current max value AND its index
 
 GOOD LUCK 😀
 */
+
+
+////////////////////////////////////
+// Practice Challenge #7 - Number Analyzer (ADVANCED)
+// (for Loop)
+
+/*
+You are building a tool that analyzes an array of numbers using a for loop.
+
+1. Create an array 'numbers' with these values:
+   [12, -5, 0, 8, -3, 15, 0, -1, 22, 7]
+2. Use a for loop to go through the array and:
+   a) Count how many positive numbers, negative numbers, and zeros there are
+   b) Calculate the total sum of all numbers
+   c) Find the largest and smallest number in the array
+3. After the loop, calculate the average (sum / length)
+4. Print a full report:
+   "Total numbers: 10"
+   "Positive: 5, Negative: 3, Zeros: 2"
+   "Sum: 55, Average: 5.5"
+   "Max: 22, Min: -5"
+
+TEST DATA: [12, -5, 0, 8, -3, 15, 0, -1, 22, 7]
+
+HINT: Initialize max with the first element of the array, not with 0
+HINT: Initialize min the same way — with the first element
+HINT: Use let for all counters and accumulators before the loop
+
+GOOD LUCK 😀
+*/
+
+
+////////////////////////////////////
+// Practice Challenge #8 - Dice Roller Simulator (ADVANCED)
+// (while Loop)
+
+/*
+Simulate rolling a dice repeatedly until you roll a 6.
+
+1. Create a variable 'dice' and initialize it with 0
+2. Create a variable 'rollCount' to track how many rolls it takes
+3. Use a while loop that keeps running as long as dice is NOT 6
+4. Inside the loop:
+   a) Generate a random dice roll between 1 and 6 using:
+      Math.floor(Math.random() * 6) + 1
+   b) Increment rollCount
+   c) Print each roll: "Roll #1: 🎲 3"
+5. After the loop ends (you rolled a 6), print:
+   "You rolled a 6 after X rolls!"
+6. BONUS: After the first simulation, create another while loop that
+   counts down from 5 to 1, printing "Next game starts in: X..."
+   When it reaches 0, print "Let's play again!"
+
+HINT: The while loop condition should be: dice !== 6
+HINT: Make sure to assign the random value to 'dice' inside the loop,
+      otherwise the loop will run forever!
+
+GOOD LUCK 😀
+*/
+
+
+////////////////////////////////////
+// Practice Challenge #9 - Movie Database (ADVANCED)
+// (Objects + Dot/Bracket Notation + Object Methods)
+
+/*
+Build a mini movie database using objects.
+
+1. Create an object 'movie1' with these properties:
+   - title: 'Inception'
+   - director: 'Christopher Nolan'
+   - year: 2010
+   - rating: 8.8
+   - genres: ['Sci-Fi', 'Action', 'Thriller']
+   - A method 'getSummary' that returns:
+     "Inception (2010) - directed by Christopher Nolan, rated 8.8/10"
+   - A method 'isHighlyRated' that returns true if rating >= 8.0
+
+2. Create an object 'movie2' with:
+   - title: 'The Matrix'
+   - director: 'The Wachowskis'
+   - year: 1999
+   - rating: 8.7
+   - genres: ['Sci-Fi', 'Action']
+   - The same methods as movie1
+
+3. Log the summary of each movie using getSummary()
+4. Check if each movie is highly rated using isHighlyRated()
+5. Access movie1's director using dot notation and log it
+6. Create a variable 'prop' with value 'year', then use bracket notation
+   to access that property from movie2: movie2[prop]
+7. Add a new property 'sequel' to movie1 using dot notation (value: true)
+8. Add a new property 'language' to movie2 using bracket notation
+   (value: 'English')
+9. Check if movie1's genres include 'Action' using the includes method
+10. Print the final state of both movie objects
+
+TEST DATA: Use the data described above
+
+HINT: In getSummary, use template literals with this.title, this.year, etc.
+HINT: this.rating >= 8.0 returns a boolean directly — no if/else needed
+
+GOOD LUCK 😀
+*/
+
+
+////////////////////////////////////
+// Practice Challenge #10 - Playlist Manager (ADVANCED)
+// (Arrays + Array Methods + for Loop)
+
+/*
+Build a music playlist manager using arrays, array methods, and loops.
+
+1. Create an array 'playlist' with these songs:
+   'Bohemian Rhapsody', 'Hotel California', 'Stairway to Heaven',
+   'Imagine', 'Smells Like Teen Spirit'
+2. Add 'Yesterday' and 'Let It Be' to the END of the playlist (push)
+3. Add 'Billie Jean' to the BEGINNING of the playlist (unshift)
+4. Remove the LAST song from the playlist (pop) — store in 'removedLast'
+5. Remove the FIRST song from the playlist (shift) — store in 'removedFirst'
+6. Check if 'Imagine' is in the playlist using includes
+7. Find the index of 'Hotel California' using indexOf
+8. Use a for loop to print each song with its position:
+   "1. Bohemian Rhapsody"
+   "2. Hotel California"
+   ... etc.
+9. Use a for loop to create a new array 'uppercaseSongs' that contains
+   all song names in uppercase. Inside the loop, use .toUpperCase()
+   on each element and push it into the new array.
+10. Print the final playlist, the removed songs, and the uppercase version
+
+TEST DATA: Use the songs listed above
+
+HINT: When printing position in step 8, use (i + 1) since arrays are 0-indexed
+HINT: Create an empty array first, then push transformed elements in the loop
+
+GOOD LUCK 😀
+*/

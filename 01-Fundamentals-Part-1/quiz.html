@@ -184,6 +184,15 @@
       display: block;
     }
 
+    .explanation .explanation-title {
+      font-weight: 700;
+      color: #e94560;
+      margin-bottom: 0.3rem;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
     .nav-buttons {
       display: flex;
       justify-content: space-between;
@@ -589,7 +598,7 @@
       });
       html += `</div>`;
 
-      html += `<div class="explanation ${answered[index] ? 'visible' : ''}" id="explanation">${q.explanation}</div>`;
+      html += `<div class="explanation ${answered[index] ? 'visible' : ''}" id="explanation"><div class="explanation-title">ახსნა</div>${q.explanation}</div>`;
 
       html += `<div class="nav-buttons">`;
       html += `<button class="nav-btn secondary" onclick="navigate(-1)" ${index === 0 ? 'disabled' : ''}>&#8592; წინა</button>`;
