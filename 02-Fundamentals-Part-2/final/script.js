@@ -382,7 +382,7 @@ TEST DATA: Marks weights 78 kg and is 1.69 m tall. John weights 92 kg and is 1.9
 GOOD LUCK 😀
 */
 
-/*
+
 const mark = {
   fullName: 'Mark Miller',
   mass: 78,
@@ -536,7 +536,8 @@ while (dice !== 6) {
   dice = Math.trunc(Math.random() * 6) + 1;
   if (dice === 6) console.log('Loop is about to end...');
 }
-*/
+
+
 
 ///////////////////////////////////////
 // Coding Challenge #4
