@@ -1,300 +1,395 @@
 'use strict';
 
 ///////////////////////////////////////
-// 1. document.write() და alert()
+// 1. document.write() and alert()
 ///////////////////////////////////////
 
-// document.write() — წერს ტექსტს პირდაპირ HTML გვერდზე
-// ის ჩასვავს კონტენტს იქ, სადაც სკრიპტი მდებარეობს
+// document.write() — writes text directly to the HTML page
+// It inserts content where the script is located
 
-document.write('<h2>გამარჯობა, JavaScript!</h2>');
-document.write('<p>ეს ტექსტი document.write()-ით დაიწერა</p>');
+document.write('<h2>Hello, JavaScript!</h2>');
+document.write('<p>This text was written using document.write()</p>');
 
-// შეგიძლიათ HTML ტეგებიც ჩასვათ
-document.write('<ul><li>პირველი</li><li>მეორე</li></ul>');
+// You can also insert HTML tags
+document.write('<ul><li>First</li><li>Second</li></ul>');
 
-// ⚠️ ყურადღება: თუ document.write()-ს გამოიძახებთ გვერდის ჩატვირთვის
-// შემდეგ (მაგ. ღილაკზე დაკლიკებისას), ის მთელ გვერდს გადაწერს!
-// ამიტომ პრაქტიკაში იშვიათად გამოიყენება.
+// Warning: if you call document.write() after the page has loaded
+// (e.g. on a button click), it will overwrite the entire page!
+// That's why it's rarely used in practice.
 
-// alert() — აჩვენებს popup ფანჯარას შეტყობინებით
-// alert('გამარჯობა!');
+// alert() — shows a popup window with a message
+// alert('Hello!');
 
-// alert აჩერებს კოდის შესრულებას სანამ მომხმარებელი OK-ს არ დააჭერს
-// alert('პირველი შეტყობინება');
-// alert('მეორე შეტყობინება'); // ეს მხოლოდ პირველის დახურვის შემდეგ გამოჩნდება
+// alert pauses code execution until the user clicks OK
+// alert('First message');
+// alert('Second message'); // This will only appear after closing the first one
 
-// prompt() — popup, სადაც მომხმარებელს შეყვანა შეუძლია
-// const name = prompt('შეიყვანეთ თქვენი სახელი:');
-// alert(`გამარჯობა, ${name}!`);
+// prompt() — popup where the user can type input
+// const name = prompt('Enter your name:');
+// alert(`Hello, ${name}!`);
 
-// confirm() — Yes/No popup, აბრუნებს true ან false
-// const isAdult = confirm('18 წელი შეგისრულდათ?');
-// console.log(isAdult); // true ან false
+// confirm() — Yes/No popup, returns true or false
+// const isAdult = confirm('Are you 18 or older?');
+// console.log(isAdult); // true or false
 
-// 📌 შეჯამება:
-// console.log()    — კონსოლში ბეჭდავს (დეველოპერისთვის)
-// document.write() — გვერდზე წერს HTML-ს (იშვიათად გამოიყენება)
-// alert()          — popup ფანჯარა (აჩერებს კოდს)
-// prompt()         — popup შეყვანის ველით (აბრუნებს სტრინგს)
-// confirm()        — popup Yes/No (აბრუნებს boolean-ს)
+// Summary:
+// console.log()    — prints to console (for developers)
+// document.write() — writes HTML to the page (rarely used)
+// alert()          — popup window (pauses code)
+// prompt()         — popup with input field (returns a string)
+// confirm()        — popup Yes/No (returns a boolean)
 
 
 ///////////////////////////////////////
-// 2. while ციკლი
+// 2. while loop
 ///////////////////////////////////////
 
-// while ციკლი მუშაობს სანამ პირობა true-ა
-// სინტაქსი: while (პირობა) { კოდი }
+// The while loop runs as long as the condition is true
+// Syntax: while (condition) { code }
 
-// 📌 ძირითადი მაგალითი — მრიცხველი
+// Basic example — counter
 let counter = 1;
 while (counter <= 5) {
-  console.log(`while ციკლი: ${counter}`);
-  counter++; // აუცილებელია! თორემ უსასრულო ციკლია
+  console.log(`while loop: ${counter}`);
+  counter++; // This is mandatory! Otherwise it's an infinite loop
 }
-// გამოიტანს: 1, 2, 3, 4, 5
+// Outputs: 1, 2, 3, 4, 5
 
-// 📌 while vs for — როდის რომელი?
-// for — როცა ზუსტად ვიცით რამდენჯერ უნდა გაეშვას
-// while — როცა არ ვიცით რამდენჯერ, დამოკიდებულია პირობაზე
+// while vs for — when to use which?
+// for — when you know exactly how many times it should run
+// while — when you don't know how many times, it depends on a condition
 
-// 📌 პრაქტიკული მაგალითი: კამათლის გაგორება სანამ 6 არ გააგორებ
+// Practical example: rolling a dice until you get a 6
 let dice = Math.trunc(Math.random() * 6) + 1;
 let rollCount = 0;
 
 while (dice !== 6) {
-  console.log(`გააგორე: ${dice}`);
+  console.log(`Rolled: ${dice}`);
   dice = Math.trunc(Math.random() * 6) + 1;
   rollCount++;
 }
-console.log(`6 გააგორე! სულ ${rollCount} გაგორება დასჭირდა`);
+console.log(`Rolled a 6! It took ${rollCount} rolls`);
 
-// 📌 while ციკლი მასივით
-const colors = ['წითელი', 'ლურჯი', 'მწვანე', 'ყვითელი'];
+// while loop with an array
+const colors = ['red', 'blue', 'green', 'yellow'];
 let i = 0;
 while (i < colors.length) {
-  console.log(`ფერი ${i + 1}: ${colors[i]}`);
+  console.log(`Color ${i + 1}: ${colors[i]}`);
   i++;
 }
 
-// 📌 break — ციკლის ვადაზე ადრე შეწყვეტა
+// break — exit the loop early
 let num = 0;
 while (num < 100) {
   num += Math.trunc(Math.random() * 10) + 1;
   if (num > 50) {
-    console.log(`50-ს გადააჭარბა: ${num}, ციკლი წყდება`);
+    console.log(`Exceeded 50: ${num}, breaking the loop`);
     break;
   }
-  console.log(`ჯამი: ${num}`);
+  console.log(`Sum: ${num}`);
 }
 
-// 📌 continue — მიმდინარე იტერაციის გამოტოვება
+// continue — skip the current iteration
 let j = 0;
 while (j < 10) {
   j++;
-  if (j % 2 === 0) continue; // ლუწებს გამოტოვებს
-  console.log(`კენტი: ${j}`);
+  if (j % 2 === 0) continue; // skips even numbers
+  console.log(`Odd: ${j}`);
 }
-// გამოიტანს: 1, 3, 5, 7, 9
+// Outputs: 1, 3, 5, 7, 9
 
 
 ///////////////////////////////////////
-// 3. do-while ციკლი
+// 3. do-while loop
 ///////////////////////////////////////
 
-// do-while ციკლი — ჯერ ასრულებს კოდს, მერე ამოწმებს პირობას
-// ეს ნიშნავს, რომ კოდი ყოველთვის მინიმუმ ერთხელ შესრულდება!
+// do-while loop — first executes the code, then checks the condition
+// This means the code always runs at least once!
 
-// სინტაქსი:
+// Syntax:
 // do {
-//   კოდი
-// } while (პირობა);
+//   code
+// } while (condition);
 
-// 📌 ძირითადი მაგალითი
+// Basic example
 let count = 1;
 do {
   console.log(`do-while: ${count}`);
   count++;
 } while (count <= 5);
-// გამოიტანს: 1, 2, 3, 4, 5
+// Outputs: 1, 2, 3, 4, 5
 
-// 📌 მთავარი განსხვავება while-სგან:
-// while — ჯერ ამოწმებს, მერე ასრულებს (შეიძლება 0-ჯერ შესრულდეს)
-// do-while — ჯერ ასრულებს, მერე ამოწმებს (მინიმუმ 1-ჯერ ყოველთვის)
+// Key difference from while:
+// while — checks first, then executes (may run 0 times)
+// do-while — executes first, then checks (always runs at least once)
 
-// მაგალითი სადაც განსხვავება ჩანს:
+// Example showing the difference:
 let x = 10;
 
-// while — პირობა false-ა თავიდანვე, არ შესრულდება
+// while — condition is false from the start, won't execute
 while (x < 5) {
-  console.log('while: ეს არ დაიბეჭდება');
+  console.log('while: this will NOT be printed');
   x++;
 }
 
-// do-while — პირობა false-ა, მაგრამ ერთხელ მაინც შესრულდება!
+// do-while — condition is false, but still executes once!
 let y = 10;
 do {
-  console.log('do-while: ეს ერთხელ დაიბეჭდება!');
+  console.log('do-while: this WILL be printed once!');
   y++;
 } while (y < 5);
 
-// 📌 პრაქტიკული მაგალითი: მენიუ (სიმულაცია)
-// ეს კარგი მაგალითია do-while-ისთვის, რადგან მენიუ
-// მინიმუმ ერთხელ უნდა ჩანდეს
-const menuOptions = ['პიცა', 'ბურგერი', 'სალათი', 'გასვლა'];
-let choice = 0; // სიმულაცია — რეალურში prompt() იქნებოდა
+// Practical example: menu (simulation)
+// This is a good use case for do-while because the menu
+// should appear at least once
+const menuOptions = ['Pizza', 'Burger', 'Salad', 'Exit'];
+let choice = 0; // Simulation — in real life this would be prompt()
 
 do {
   choice = Math.trunc(Math.random() * menuOptions.length);
-  console.log(`არჩეული: ${menuOptions[choice]}`);
-} while (menuOptions[choice] !== 'გასვლა');
-console.log('მენიუდან გამოსვლა!');
+  console.log(`Selected: ${menuOptions[choice]}`);
+} while (menuOptions[choice] !== 'Exit');
+console.log('Exited the menu!');
 
-// 📌 მაგალითი: შემთხვევითი რიცხვის გენერაცია, სანამ 7-ს არ მიიღებ
+// Example: generate random numbers until you get 7
 let randomNum;
 let attempts = 0;
 do {
   randomNum = Math.trunc(Math.random() * 10) + 1;
   attempts++;
-  console.log(`მცდელობა ${attempts}: ${randomNum}`);
+  console.log(`Attempt ${attempts}: ${randomNum}`);
 } while (randomNum !== 7);
-console.log(`7 მოიძებნა ${attempts} მცდელობის შემდეგ!`);
+console.log(`Found 7 after ${attempts} attempts!`);
+
+
+////////////////////////////////////
+// Coding Challenge: do-while
+////////////////////////////////////
+
+/*
+Create a password generator simulation:
+
+1. Create a function 'generatePassword' that uses do-while to generate
+   a random password of a given length using characters from a string
+   of allowed characters: 'abcdefghijklmnopqrstuvwxyz0123456789'
+2. The function should keep generating passwords (using do-while) until
+   it finds one that contains at least one digit AND at least one letter
+3. Log each attempt and the final valid password
+4. Return the valid password
+
+Test: generatePassword(8)
+
+Hint: Use Math.random() to pick random characters, and use a do-while
+because you need at least one generation attempt.
+*/
+
+const generatePassword = function (length) {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let password;
+  let attemptCount = 0;
+
+  do {
+    password = '';
+    for (let i = 0; i < length; i++) {
+      password += chars[Math.trunc(Math.random() * chars.length)];
+    }
+    attemptCount++;
+    console.log(`Attempt ${attemptCount}: ${password}`);
+  } while (
+    !/[a-z]/.test(password) ||
+    !/[0-9]/.test(password)
+  );
+
+  console.log(`Valid password found: ${password} (after ${attemptCount} attempts)`);
+  return password;
+};
+
+generatePassword(8);
 
 
 ///////////////////////////////////////
-// 4. forEach ციკლი
+// 4. forEach loop
 ///////////////////////////////////////
 
-// forEach — მასივის მეთოდი, რომელიც callback ფუნქციას
-// იძახებს მასივის ყველა ელემენტისთვის
+// forEach — an array method that calls a callback function
+// for every element in the array
 
-// სინტაქსი: array.forEach(function(element, index, array) { ... })
+// Syntax: array.forEach(function(element, index, array) { ... })
 
-// 📌 ძირითადი მაგალითი
-const fruits = ['ვაშლი', 'ბანანი', 'ფორთოხალი', 'ყურძენი'];
+// Basic example
+const fruits = ['Apple', 'Banana', 'Orange', 'Grape'];
 
 fruits.forEach(function (fruit) {
-  console.log(`მე მიყვარს ${fruit}`);
+  console.log(`I love ${fruit}`);
 });
-// გამოიტანს:
-// მე მიყვარს ვაშლი
-// მე მიყვარს ბანანი
-// მე მიყვარს ფორთოხალი
-// მე მიყვარს ყურძენი
+// Outputs:
+// I love Apple
+// I love Banana
+// I love Orange
+// I love Grape
 
-// 📌 forEach ინდექსითურთ
+// forEach with index
 fruits.forEach(function (fruit, index) {
   console.log(`${index + 1}. ${fruit}`);
 });
-// 1. ვაშლი
-// 2. ბანანი
-// 3. ფორთოხალი
-// 4. ყურძენი
+// 1. Apple
+// 2. Banana
+// 3. Orange
+// 4. Grape
 
-// 📌 arrow ფუნქციით (მოკლე ჩაწერა)
+// With arrow function (shorter syntax)
 fruits.forEach((fruit, i) => console.log(`${i}: ${fruit}`));
 
-// 📌 forEach vs for ციკლი — შედარება
+// forEach vs for loop — comparison
 
-// for ციკლით:
+// With for loop:
 for (let i = 0; i < fruits.length; i++) {
   console.log(`for: ${fruits[i]}`);
 }
 
-// forEach-ით (უფრო სუფთა და წასაკითხი):
+// With forEach (cleaner and more readable):
 fruits.forEach(fruit => console.log(`forEach: ${fruit}`));
 
-// 📌 მნიშვნელოვანი განსხვავებები:
-// 1. forEach-ში break და continue არ მუშაობს!
-// 2. forEach ყოველთვის მთელ მასივს გაივლის
-// 3. forEach არაფერს აბრუნებს (undefined)
-// 4. for ციკლი უფრო მოქნილია, forEach — უფრო სუფთა
+// Important differences:
+// 1. break and continue do NOT work in forEach!
+// 2. forEach always iterates through the entire array
+// 3. forEach returns nothing (undefined)
+// 4. for loop is more flexible, forEach is cleaner
 
-// 📌 პრაქტიკული მაგალითი — ბანკის ტრანზაქციები
+// Practical example — bank transactions
 const transactions = [200, -150, 400, -50, 100, -200];
 
 transactions.forEach(function (transaction, index) {
-  const type = transaction > 0 ? 'შემოსავალი' : 'ხარჯი';
+  const type = transaction > 0 ? 'income' : 'expense';
   console.log(
-    `ტრანზაქცია ${index + 1}: ${type} — ${Math.abs(transaction)} ლარი`
+    `Transaction ${index + 1}: ${type} — ${Math.abs(transaction)} USD`
   );
 });
 
 
+////////////////////////////////////
+// Coding Challenge: forEach
+////////////////////////////////////
+
+/*
+You have an array of student objects:
+const students = [
+  { name: 'Alice', scores: [85, 92, 78] },
+  { name: 'Bob', scores: [90, 88, 95] },
+  { name: 'Charlie', scores: [70, 65, 80] },
+  { name: 'Diana', scores: [95, 98, 100] },
+];
+
+1. Use forEach to iterate over each student
+2. For each student, calculate their average score (use a for loop to sum the scores)
+3. Determine their status: average >= 80 is "Passed", otherwise "Failed"
+4. Log: "Student: Alice | Average: 85.0 | Status: Passed"
+5. At the end, log how many students passed and how many failed
+
+Hint: You can use a counter variable outside the forEach to track pass/fail counts.
+Use a for loop inside forEach to calculate the sum of scores.
+*/
+
+const studentsForEach = [
+  { name: 'Alice', scores: [85, 92, 78] },
+  { name: 'Bob', scores: [90, 88, 95] },
+  { name: 'Charlie', scores: [70, 65, 80] },
+  { name: 'Diana', scores: [95, 98, 100] },
+];
+
+let passCount = 0;
+let failCount = 0;
+
+studentsForEach.forEach(function (student) {
+  let sum = 0;
+  for (let i = 0; i < student.scores.length; i++) {
+    sum += student.scores[i];
+  }
+  const avg = sum / student.scores.length;
+  const status = avg >= 80 ? 'Passed' : 'Failed';
+  if (status === 'Passed') passCount++;
+  else failCount++;
+  console.log(
+    `Student: ${student.name} | Average: ${avg.toFixed(1)} | Status: ${status}`
+  );
+});
+
+console.log(`Total Passed: ${passCount}, Total Failed: ${failCount}`);
+
+
 ///////////////////////////////////////
-// 5. სტრინგის მეთოდები (String Methods)
+// 5. String Methods
 ///////////////////////////////////////
 
 const airline = 'Georgian Airways';
 const plane = 'A320';
 
-// 📌 length — სტრინგის სიგრძე
+// length — string length
 console.log(airline.length); // 16
 console.log('Hello'.length); // 5
 
-// 📌 indexOf / lastIndexOf — სიმბოლოს ან ქვესტრინგის პოზიცია
-console.log(airline.indexOf('o')); // 2 (პირველი 'o')
-console.log(airline.lastIndexOf('a')); // 14 (ბოლო 'a')
+// indexOf / lastIndexOf — position of a character or substring
+console.log(airline.indexOf('o')); // 2 (first 'o')
+console.log(airline.lastIndexOf('a')); // 14 (last 'a')
 console.log(airline.indexOf('Airways')); // 9
-console.log(airline.indexOf('xyz')); // -1 (ვერ იპოვა)
+console.log(airline.indexOf('xyz')); // -1 (not found)
 
-// 📌 slice() — სტრინგის ნაწილის ამოჭრა (ახალი სტრინგი, ორიგინალი არ იცვლება)
-console.log(airline.slice(9)); // 'Airways' (მე-9 ინდექსიდან ბოლომდე)
-console.log(airline.slice(0, 8)); // 'Georgian' (0-დან 8-მდე, 8 არ შედის)
-console.log(airline.slice(-7)); // 'Airways' (ბოლოდან 7 სიმბოლო)
-console.log(airline.slice(1, -1)); // 'eorgian Airway' (პირველის და ბოლოს გარეშე)
+// slice() — extracts a portion of the string (returns new string, original unchanged)
+console.log(airline.slice(9)); // 'Airways' (from index 9 to the end)
+console.log(airline.slice(0, 8)); // 'Georgian' (from 0 to 8, 8 not included)
+console.log(airline.slice(-7)); // 'Airways' (last 7 characters)
+console.log(airline.slice(1, -1)); // 'eorgian Airway' (without first and last)
 
-// 📌 toUpperCase / toLowerCase — რეგისტრის შეცვლა
+// toUpperCase / toLowerCase — change case
 console.log(airline.toUpperCase()); // 'GEORGIAN AIRWAYS'
 console.log(airline.toLowerCase()); // 'georgian airways'
 
-// პრაქტიკული მაგალითი: სახელის ფორმატირება
+// Practical example: formatting a name
 const passenger = '  gEoRgE  ';
 const formatted =
   passenger.trim().toLowerCase().slice(0, 1).toUpperCase() +
   passenger.trim().toLowerCase().slice(1);
 console.log(formatted); // 'George'
 
-// 📌 trim() — შუალედების წაშლა დასაწყისიდან და ბოლოდან
+// trim() — removes whitespace from the beginning and end
 console.log('  Hello  '.trim()); // 'Hello'
 console.log('  Hello  '.trimStart()); // 'Hello  '
 console.log('  Hello  '.trimEnd()); // '  Hello'
 
-// 📌 replace() — სტრინგში ჩანაცვლება
-const priceGe = '350,99₾';
-const priceUS = priceGe.replace('₾', '$').replace(',', '.');
+// replace() — replaces content in a string
+const priceGe = '350,99$';
+const priceUS = priceGe.replace(',', '.');
 console.log(priceUS); // '350.99$'
 
-// replace მხოლოდ პირველ დამთხვევას ცვლის
-const announcement = 'გთხოვთ, გადით კარი 23-დან! კარი 23!';
-console.log(announcement.replace('კარი', 'ჭიშკარი'));
-// 'გთხოვთ, გადით ჭიშკარი 23-დან! კარი 23!' — მხოლოდ პირველი შეიცვალა
+// replace only changes the first match
+const announcement = 'Please exit through gate 23! Gate 23!';
+console.log(announcement.replace('gate', 'door'));
+// 'Please exit through door 23! Gate 23!' — only the first one changed
 
-// replaceAll — ყველა დამთხვევას ცვლის
-console.log(announcement.replaceAll('კარი', 'ჭიშკარი'));
-// 'გთხოვთ, გადით ჭიშკარი 23-დან! ჭიშკარი 23!'
+// replaceAll — replaces all matches
+console.log(announcement.replaceAll('23', '45'));
+// 'Please exit through gate 45! Gate 45!'
 
-// 📌 includes / startsWith / endsWith — შემოწმება (აბრუნებს boolean)
+// includes / startsWith / endsWith — checks (returns boolean)
 console.log(airline.includes('Airways')); // true
 console.log(airline.includes('xyz')); // false
 console.log(airline.startsWith('Geo')); // true
 console.log(airline.endsWith('ways')); // true
 
-// პრაქტიკული მაგალითი: ბარგის შემოწმება
+// Practical example: baggage check
 const checkBaggage = function (items) {
   const baggage = items.toLowerCase();
-  if (baggage.includes('დანა') || baggage.includes('იარაღი')) {
-    console.log('თქვენ არ გაქვთ აფრენის უფლება!');
+  if (baggage.includes('knife') || baggage.includes('weapon')) {
+    console.log('You are NOT allowed to board!');
   } else {
-    console.log('კეთილი იყოს თქვენი ფრენა!');
+    console.log('Welcome aboard! Have a nice flight!');
   }
 };
 
-checkBaggage('ლეპტოპი, საკვები, წიგნი');
-checkBaggage('წინდები, დანა, სათვალე');
+checkBaggage('Laptop, food, book');
+checkBaggage('Socks, knife, sunglasses');
 
-// 📌 split() — სტრინგის გაყოფა მასივად
+// split() — splits a string into an array
 console.log('a+very+nice+string'.split('+')); // ['a', 'very', 'nice', 'string']
 console.log('Jonas Schmedtmann'.split(' ')); // ['Jonas', 'Schmedtmann']
 
@@ -302,29 +397,28 @@ const [firstName, lastName] = 'Jonas Schmedtmann'.split(' ');
 console.log(firstName); // 'Jonas'
 console.log(lastName); // 'Schmedtmann'
 
-// 📌 join() — მასივის გაერთიანება სტრინგად (split-ის საპირისპირო)
+// join() — joins an array into a string (opposite of split)
 const elements = ['Fire', 'Air', 'Water'];
 console.log(elements.join(' - ')); // 'Fire - Air - Water'
 console.log(elements.join(', ')); // 'Fire, Air, Water'
 
-// 📌 repeat() — სტრინგის გამეორება
+// repeat() — repeats a string
 console.log('ha '.repeat(3)); // 'ha ha ha '
-console.log('⭐'.repeat(5)); // '⭐⭐⭐⭐⭐'
 
-// პრაქტიკული მაგალითი
+// Practical example
 const planesInLine = function (n) {
-  console.log(`რიგშია ${n} თვითმფრინავი ${'✈️'.repeat(n)}`);
+  console.log(`There are ${n} planes in line ${'✈️'.repeat(n)}`);
 };
 planesInLine(3);
 planesInLine(7);
 
-// 📌 padStart / padEnd — სტრინგის შევსება სასურველ სიგრძემდე
+// padStart / padEnd — pads a string to a desired length
 const message = 'Hello';
 console.log(message.padStart(10, '*')); // '*****Hello'
 console.log(message.padEnd(10, '-')); // 'Hello-----'
 console.log(message.padStart(10, '*').padEnd(15, '*')); // '*****Hello*****'
 
-// პრაქტიკული მაგალითი: საბანკო ბარათის ნომრის დამალვა
+// Practical example: masking a credit card number
 const maskCreditCard = function (number) {
   const str = String(number);
   const last = str.slice(-4);
@@ -334,44 +428,81 @@ console.log(maskCreditCard(4337846386647890)); // '************7890'
 console.log(maskCreditCard('3345622289901287')); // '************1287'
 
 
+////////////////////////////////////
+// Coding Challenge: String Methods
+////////////////////////////////////
+
+/*
+Create a function 'processText' that takes a sentence and performs
+the following string transformations:
+
+1. Trim whitespace from both ends
+2. Convert to lowercase
+3. Replace all occurrences of 'javascript' with 'JS'
+4. Capitalize the first letter of the result
+5. Add the character count at the end: " (X chars)"
+6. Return the final string
+
+Test data:
+'  I Love JAVASCRIPT and javascript is Great!  '
+→ 'I love JS and JS is great! (27 chars)'
+
+'   JAVASCRIPT   '
+→ 'JS (2 chars)'
+
+Hint: Use trim(), toLowerCase(), replaceAll(), slice(), and length
+*/
+
+const processText = function (text) {
+  const cleaned = text.trim().toLowerCase().replaceAll('javascript', 'JS');
+  const capitalized = cleaned[0].toUpperCase() + cleaned.slice(1);
+  return `${capitalized} (${capitalized.length} chars)`;
+};
+
+console.log(processText('  I Love JAVASCRIPT and javascript is Great!  '));
+// 'I love JS and JS is great! (27 chars)'
+console.log(processText('   JAVASCRIPT   '));
+// 'JS (2 chars)'
+
+
 ///////////////////////////////////////
-// 6. მასივის მეთოდი: map()
+// 6. Array Method: map()
 ///////////////////////////////////////
 
-// map() — ქმნის ახალ მასივს, ყოველ ელემენტზე ფუნქციის გამოყენებით
-// ორიგინალი მასივი არ იცვლება!
+// map() — creates a new array by applying a function to every element
+// The original array is NOT modified!
 
-// სინტაქსი: const newArray = array.map(function(element, index, array) { return ... })
+// Syntax: const newArray = array.map(function(element, index, array) { return ... })
 
-// 📌 ძირითადი მაგალითი — რიცხვების გაორმაგება
+// Basic example — doubling numbers
 const numbers = [1, 2, 3, 4, 5];
 const doubled = numbers.map(function (num) {
   return num * 2;
 });
 console.log(doubled); // [2, 4, 6, 8, 10]
-console.log(numbers); // [1, 2, 3, 4, 5] — ორიგინალი არ შეცვლილა!
+console.log(numbers); // [1, 2, 3, 4, 5] — original unchanged!
 
-// 📌 arrow ფუნქციით (მოკლე ფორმა)
+// With arrow function (short form)
 const tripled = numbers.map(num => num * 3);
 console.log(tripled); // [3, 6, 9, 12, 15]
 
-// 📌 პრაქტიკული მაგალითი — ევროდან ლარში გადაყვანა
+// Practical example — converting EUR to USD
 const eurPrices = [10, 25, 50, 100];
-const exchangeRate = 2.95;
-const gelPrices = eurPrices.map(price => price * exchangeRate);
-console.log(gelPrices); // [29.5, 73.75, 147.5, 295]
+const exchangeRate = 1.1;
+const usdPrices = eurPrices.map(price => price * exchangeRate);
+console.log(usdPrices); // [11, 27.5, 55, 110]
 
-// 📌 map ინდექსით
+// map with index
 const descriptions = eurPrices.map(
-  (price, i) => `ნივთი ${i + 1}: ${price}€ = ${(price * exchangeRate).toFixed(2)}₾`
+  (price, i) => `Item ${i + 1}: ${price}€ = ${(price * exchangeRate).toFixed(2)}$`
 );
 console.log(descriptions);
 
-// 📌 map vs forEach — მთავარი განსხვავება:
-// map() — აბრუნებს ახალ მასივს
-// forEach() — არაფერს აბრუნებს (undefined), მხოლოდ side effect-ებისთვის
+// map vs forEach — main difference:
+// map() — returns a new array
+// forEach() — returns nothing (undefined), only for side effects
 
-// 📌 სტრინგების ტრანსფორმაცია
+// String transformation
 const names = ['george', 'nino', 'david'];
 const capitalized = names.map(
   name => name[0].toUpperCase() + name.slice(1)
@@ -379,25 +510,62 @@ const capitalized = names.map(
 console.log(capitalized); // ['George', 'Nino', 'David']
 
 
+////////////////////////////////////
+// Coding Challenge: map()
+////////////////////////////////////
+
+/*
+You have an array of temperatures in Celsius:
+const celsius = [-10, 0, 15, 25, 37, 100];
+
+1. Use map() to convert each temperature to Fahrenheit
+   Formula: F = C * 9/5 + 32
+2. Use map() again to create an array of description strings:
+   "15°C = 59.0°F — Mild"
+   Use these categories:
+   < 0°C: "Freezing", 0-15°C: "Cold", 16-25°C: "Mild", 26-35°C: "Warm", > 35°C: "Hot"
+3. Log both arrays
+
+Expected Fahrenheit: [14, 32, 59, 77, 98.6, 212]
+*/
+
+const celsius = [-10, 0, 15, 25, 37, 100];
+
+const fahrenheit = celsius.map(c => c * 9 / 5 + 32);
+console.log(fahrenheit); // [14, 32, 59, 77, 98.6, 212]
+
+const tempDescriptions = celsius.map(c => {
+  const f = (c * 9 / 5 + 32).toFixed(1);
+  let category;
+  if (c < 0) category = 'Freezing';
+  else if (c <= 15) category = 'Cold';
+  else if (c <= 25) category = 'Mild';
+  else if (c <= 35) category = 'Warm';
+  else category = 'Hot';
+  return `${c}°C = ${f}°F — ${category}`;
+});
+console.log(tempDescriptions);
+
+
 ///////////////////////////////////////
-// 7. მასივის მეთოდი: filter()
+// 7. Array Method: filter()
 ///////////////////////////////////////
 
-// filter() — ქმნის ახალ მასივს მხოლოდ იმ ელემენტებით,
-// რომლებიც აკმაყოფილებენ პირობას
+// filter() — creates a new array with only the elements
+// that satisfy a condition
 
-// სინტაქსი: const filtered = array.filter(function(element) { return condition })
+// Syntax: const filtered = array.filter(function(element) { return condition })
 
-// 📌 ძირითადი მაგალითი — ლუწი რიცხვების გაფილტვრა
+// Basic example — filtering even numbers
 const allNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const evenNumbers = allNumbers.filter(num => num % 2 === 0);
 console.log(evenNumbers); // [2, 4, 6, 8, 10]
 
-// 📌 რიცხვები, რომლებიც 5-ზე მეტია
+// Numbers greater than 5
 const bigNumbers = allNumbers.filter(num => num > 5);
 console.log(bigNumbers); // [6, 7, 8, 9, 10]
 
-// 📌 პრაქტიკული მაგალითი — ბანკის ტრანზაქციები
+// Practical example — bank transactions
 const movements = [200, -150, 400, -50, 100, -200, 300];
 
 const deposits = movements.filter(mov => mov > 0);
@@ -406,40 +574,92 @@ console.log(deposits); // [200, 400, 100, 300]
 const withdrawals = movements.filter(mov => mov < 0);
 console.log(withdrawals); // [-150, -50, -200]
 
-// 📌 სტრინგების ფილტრაცია
+// Filtering strings
 const words = ['hello', 'world', 'hi', 'hey', 'JavaScript', 'code'];
 const longWords = words.filter(word => word.length > 4);
 console.log(longWords); // ['hello', 'world', 'JavaScript']
 
-// 📌 filter + map ერთად (ჩეინინგი / chaining)
-// ჯერ ვფილტრავთ შემოსავლებს, მერე ვაკონვერტირებთ ლარიდან ევროში
+// filter + map together (chaining)
+// First filter deposits, then convert from GEL to EUR
 const depositsInEur = movements
   .filter(mov => mov > 0)
   .map(mov => mov / 2.95);
 console.log(depositsInEur);
 
 
+////////////////////////////////////
+// Coding Challenge: filter()
+////////////////////////////////////
+
+/*
+You have an array of products:
+const products = [
+  { name: 'Laptop', price: 1200, inStock: true },
+  { name: 'Phone', price: 800, inStock: false },
+  { name: 'Tablet', price: 450, inStock: true },
+  { name: 'Monitor', price: 350, inStock: true },
+  { name: 'Keyboard', price: 75, inStock: false },
+  { name: 'Mouse', price: 25, inStock: true },
+  { name: 'Headphones', price: 150, inStock: true },
+];
+
+1. Filter products that are in stock AND cost less than 500
+2. Filter products that are out of stock
+3. Find the most expensive in-stock product (use filter + forEach)
+4. Log the results
+
+Expected in-stock under 500: Tablet, Monitor, Mouse, Headphones
+Expected out of stock: Phone, Keyboard
+Most expensive in stock: Laptop ($1200)
+
+Hint: Use filter() to get in-stock products, then use forEach to find the max.
+*/
+
+const products = [
+  { name: 'Laptop', price: 1200, inStock: true },
+  { name: 'Phone', price: 800, inStock: false },
+  { name: 'Tablet', price: 450, inStock: true },
+  { name: 'Monitor', price: 350, inStock: true },
+  { name: 'Keyboard', price: 75, inStock: false },
+  { name: 'Mouse', price: 25, inStock: true },
+  { name: 'Headphones', price: 150, inStock: true },
+];
+
+const affordableInStock = products.filter(p => p.inStock && p.price < 500);
+console.log('In stock & under $500:', affordableInStock.map(p => p.name));
+
+const outOfStock = products.filter(p => !p.inStock);
+console.log('Out of stock:', outOfStock.map(p => p.name));
+
+const inStockProducts = products.filter(p => p.inStock);
+let mostExpensiveInStock = inStockProducts[0];
+inStockProducts.forEach(p => {
+  if (p.price > mostExpensiveInStock.price) mostExpensiveInStock = p;
+});
+console.log('Most expensive in stock:', mostExpensiveInStock.name, `$${mostExpensiveInStock.price}`);
+
+
 ///////////////////////////////////////
-// 8. მასივის მეთოდი: find() და indexOf()
+// 8. Array Method: find() and indexOf()
 ///////////////////////////////////////
 
-// find() — აბრუნებს პირველ ელემენტს, რომელიც აკმაყოფილებს პირობას
-// indexOf() — აბრუნებს ელემენტის ინდექსს (პოზიციას)
+// find() — returns the first element that satisfies a condition
+// indexOf() — returns the index (position) of an element
 
-// 📌 indexOf — პრიმიტიული მნიშვნელობებისთვის
+// indexOf — for primitive values
 const arr = [10, 20, 30, 40, 50];
 console.log(arr.indexOf(30)); // 2
-console.log(arr.indexOf(99)); // -1 (ვერ იპოვა)
+console.log(arr.indexOf(99)); // -1 (not found)
 
-// 📌 find — პირველი ელემენტი, რომელიც აკმაყოფილებს პირობას
+// find — first element that satisfies a condition
 const firstBig = arr.find(num => num > 25);
-console.log(firstBig); // 30 (პირველი, რომელიც > 25)
+console.log(firstBig); // 30 (first one that is > 25)
 
-// 📌 find vs filter:
-// find() — აბრუნებს ერთ ელემენტს (პირველს)
-// filter() — აბრუნებს მასივს ყველა შესაბამისი ელემენტით
+// find vs filter:
+// find() — returns one element (the first match)
+// filter() — returns an array with all matching elements
 
-// 📌 find ობიექტების მასივში (ყველაზე ხშირი გამოყენება)
+// find in an array of objects (most common use case)
 const accounts = [
   { owner: 'George', balance: 5000 },
   { owner: 'Nino', balance: 1200 },
@@ -453,52 +673,100 @@ console.log(david); // { owner: 'David', balance: 8500 }
 const richAccount = accounts.find(acc => acc.balance > 5000);
 console.log(richAccount); // { owner: 'David', balance: 8500 }
 
-// 📌 findIndex — ელემენტის ინდექსი პირობით (indexOf-ის ანალოგი, მაგრამ callback-ით)
+// findIndex — element's index by condition (like indexOf but with a callback)
 const davidIndex = accounts.findIndex(acc => acc.owner === 'David');
 console.log(davidIndex); // 2
 
-// 📌 includes vs find vs indexOf:
-// includes — boolean: არის თუ არა (true/false)
-// indexOf — რიცხვი: რომელ პოზიციაზეა (-1 თუ არ არის)
-// find — ელემენტი: რომელი ელემენტი აკმაყოფილებს პირობას
+// includes vs find vs indexOf:
+// includes — boolean: exists or not (true/false)
+// indexOf — number: which position (-1 if not found)
+// find — element: which element satisfies the condition
+
+
+////////////////////////////////////
+// Coding Challenge: find() and indexOf()
+////////////////////////////////////
+
+/*
+You have an array of users:
+const users = [
+  { id: 1, name: 'Alice', role: 'admin', active: true },
+  { id: 2, name: 'Bob', role: 'user', active: false },
+  { id: 3, name: 'Charlie', role: 'user', active: true },
+  { id: 4, name: 'Diana', role: 'admin', active: true },
+  { id: 5, name: 'Eve', role: 'user', active: false },
+];
+
+1. Use find() to locate the first active admin
+2. Use find() to locate the user with id 3
+3. Use findIndex() to find the index of 'Bob'
+4. Use indexOf to check if the ids array [1,2,3,4,5] contains id 6
+5. Log all results
+
+Expected:
+First active admin: Diana
+User with id 3: Charlie
+Bob's index: 1
+Contains id 6: false
+*/
+
+const users = [
+  { id: 1, name: 'Alice', role: 'admin', active: true },
+  { id: 2, name: 'Bob', role: 'user', active: false },
+  { id: 3, name: 'Charlie', role: 'user', active: true },
+  { id: 4, name: 'Diana', role: 'admin', active: true },
+  { id: 5, name: 'Eve', role: 'user', active: false },
+];
+
+const firstActiveAdmin = users.find(u => u.role === 'admin' && u.active);
+console.log('First active admin:', firstActiveAdmin.name); // Diana
+
+const userById = users.find(u => u.id === 3);
+console.log('User with id 3:', userById.name); // Charlie
+
+const bobIndex = users.findIndex(u => u.name === 'Bob');
+console.log("Bob's index:", bobIndex); // 1
+
+const ids = users.map(u => u.id);
+console.log('Contains id 6:', ids.indexOf(6) !== -1); // false
 
 
 ///////////////////////////////////////
-// 9. მასივის მეთოდი: sort()
+// 9. Array Method: sort()
 ///////////////////////////////////////
 
-// sort() — ალაგებს მასივს ადგილზე (ცვლის ორიგინალ მასივს!)
+// sort() — sorts the array in place (mutates the original array!)
 
-// ⚠️ ყურადღება: sort() ორიგინალ მასივს ცვლის (mutates)!
+// Warning: sort() mutates the original array!
 
-// 📌 სტრინგების სორტირება (ნაგულისხმევად ანბანის მიხედვით)
+// Sorting strings (alphabetically by default)
 const owners = ['David', 'Nino', 'George', 'Ana'];
 owners.sort();
 console.log(owners); // ['Ana', 'David', 'George', 'Nino']
 
-// 📌 რიცხვების სორტირება — ⚠️ ნაგულისხმევი sort არ მუშაობს!
+// Sorting numbers — Warning: default sort doesn't work correctly!
 const nums = [3, 1, 100, 25, 10];
 nums.sort();
-console.log(nums); // [1, 10, 100, 25, 3] — არასწორი! სტრინგებად ადარებს!
+console.log(nums); // [1, 10, 100, 25, 3] — wrong! Compares as strings!
 
-// 📌 რიცხვების სწორი სორტირება — compare ფუნქცია
+// Correct number sorting — compare function
 const numbers2 = [3, 1, 100, 25, 10];
 
-// ზრდადობით (ascending)
+// Ascending order
 numbers2.sort((a, b) => a - b);
 console.log(numbers2); // [1, 3, 10, 25, 100]
 
-// კლებადობით (descending)
+// Descending order
 numbers2.sort((a, b) => b - a);
 console.log(numbers2); // [100, 25, 10, 3, 1]
 
-// 📌 როგორ მუშაობს compare ფუნქცია:
+// How the compare function works:
 // (a, b) => a - b
-// თუ შედეგი < 0: a წინ მოდის
-// თუ შედეგი > 0: b წინ მოდის
-// თუ შედეგი === 0: თანმიმდევრობა არ იცვლება
+// If result < 0: a comes first
+// If result > 0: b comes first
+// If result === 0: order doesn't change
 
-// 📌 ობიექტების სორტირება
+// Sorting objects
 const students = [
   { name: 'Ana', grade: 85 },
   { name: 'David', grade: 92 },
@@ -506,117 +774,271 @@ const students = [
   { name: 'George', grade: 95 },
 ];
 
-// ქულის მიხედვით ზრდადობით
+// By grade ascending
 students.sort((a, b) => a.grade - b.grade);
 console.log(students);
 // [{Nino, 78}, {Ana, 85}, {David, 92}, {George, 95}]
 
-// ქულის მიხედვით კლებადობით
+// By grade descending
 students.sort((a, b) => b.grade - a.grade);
 console.log(students);
 // [{George, 95}, {David, 92}, {Ana, 85}, {Nino, 78}]
 
-// 📌 ორიგინალის შენარჩუნება — slice() + sort()
+// Preserving the original — slice() + sort()
 const original = [5, 2, 8, 1];
 const sorted = original.slice().sort((a, b) => a - b);
-console.log(original); // [5, 2, 8, 1] — არ შეცვლილა
+console.log(original); // [5, 2, 8, 1] — unchanged
 console.log(sorted); // [1, 2, 5, 8]
 
 
+////////////////////////////////////
+// Coding Challenge: sort()
+////////////////////////////////////
+
+/*
+You have an array of scores:
+const gameScores = [42, 88, 15, 73, 99, 56, 31, 64, 77, 20];
+
+1. Sort the scores in descending order (highest first)
+2. Find the top 3 scores
+3. Find the bottom 3 scores
+4. Log: "Top 3: 99, 88, 77"
+5. Log: "Bottom 3: 15, 20, 31"
+
+Important: Don't modify the original array! Use slice() before sort().
+*/
+
+const gameScores = [42, 88, 15, 73, 99, 56, 31, 64, 77, 20];
+
+const sortedScores = gameScores.slice().sort((a, b) => b - a);
+const top3 = sortedScores.slice(0, 3);
+const bottom3 = sortedScores.slice(-3).sort((a, b) => a - b);
+
+console.log(`Top 3: ${top3.join(', ')}`); // Top 3: 99, 88, 77
+console.log(`Bottom 3: ${bottom3.join(', ')}`); // Bottom 3: 15, 20, 31
+console.log('Original unchanged:', gameScores);
+
+
+////////////////////////////////////
+// Coding Challenge: Object Sorting
+////////////////////////////////////
+
+/*
+You have an array of employees:
+const employees = [
+  { name: 'Alice', department: 'Engineering', salary: 95000 },
+  { name: 'Bob', department: 'Marketing', salary: 72000 },
+  { name: 'Charlie', department: 'Engineering', salary: 110000 },
+  { name: 'Diana', department: 'Marketing', salary: 68000 },
+  { name: 'Eve', department: 'Engineering', salary: 105000 },
+  { name: 'Frank', department: 'HR', salary: 60000 },
+];
+
+1. Sort by salary descending (don't mutate the original)
+2. Sort by department alphabetically, then by salary descending within each dept
+3. Log both results showing name, department, and salary
+
+Expected department+salary sort:
+Engineering: Charlie (110000), Eve (105000), Alice (95000)
+HR: Frank (60000)
+Marketing: Bob (72000), Diana (68000)
+*/
+
+const employees = [
+  { name: 'Alice', department: 'Engineering', salary: 95000 },
+  { name: 'Bob', department: 'Marketing', salary: 72000 },
+  { name: 'Charlie', department: 'Engineering', salary: 110000 },
+  { name: 'Diana', department: 'Marketing', salary: 68000 },
+  { name: 'Eve', department: 'Engineering', salary: 105000 },
+  { name: 'Frank', department: 'HR', salary: 60000 },
+];
+
+const bySalary = employees.slice().sort((a, b) => b.salary - a.salary);
+console.log('By salary:', bySalary.map(e => `${e.name}: $${e.salary}`));
+
+const byDeptAndSalary = employees.slice().sort((a, b) => {
+  if (a.department < b.department) return -1;
+  if (a.department > b.department) return 1;
+  return b.salary - a.salary;
+});
+console.log('By dept + salary:', byDeptAndSalary.map(e => `${e.department} — ${e.name}: $${e.salary}`));
+
+
 ///////////////////////////////////////
-// 10. მასივის მეთოდი: reduce()
+// 10. Array Method: reduce()
 ///////////////////////////////////////
 
-// reduce() — მასივს "ამცირებს" ერთ მნიშვნელობამდე
-// (ჯამი, საშუალო, მაქსიმუმი, სტრინგი, ობიექტი — ნებისმიერი)
+// reduce() — "reduces" an array to a single value
+// (sum, average, maximum, string, object — anything)
 
-// სინტაქსი: array.reduce(function(accumulator, current, index, array) { }, initialValue)
+// Syntax: array.reduce(function(accumulator, current, index, array) { }, initialValue)
 
-// 📌 ძირითადი მაგალითი — ჯამი
+// Basic example — sum
 const amounts = [100, 200, 300, 400];
 const total = amounts.reduce(function (acc, cur) {
   console.log(`acc: ${acc}, cur: ${cur}`);
   return acc + cur;
 }, 0);
-console.log(`ჯამი: ${total}`); // 1000
+console.log(`Total: ${total}`); // 1000
 
-// ეტაპობრივად:
+// Step by step:
 // acc=0,   cur=100 → return 100
 // acc=100, cur=200 → return 300
 // acc=300, cur=300 → return 600
 // acc=600, cur=400 → return 1000
 
-// 📌 arrow ფუნქციით (მოკლე ფორმა)
+// With arrow function (short form)
 const sum = amounts.reduce((acc, cur) => acc + cur, 0);
 console.log(sum); // 1000
 
-// 📌 მაქსიმუმის პოვნა
+// Finding the maximum
 const values = [23, 11, 64, 18, 45];
 const max = values.reduce(
   (acc, cur) => (cur > acc ? cur : acc),
   values[0]
 );
-console.log(`მაქსიმუმი: ${max}`); // 64
+console.log(`Maximum: ${max}`); // 64
 
-// 📌 მინიმუმის პოვნა
+// Finding the minimum
 const min = values.reduce(
   (acc, cur) => (cur < acc ? cur : acc),
   values[0]
 );
-console.log(`მინიმუმი: ${min}`); // 11
+console.log(`Minimum: ${min}`); // 11
 
-// 📌 საშუალოს გამოთვლა
+// Calculating the average
 const grades = [85, 90, 78, 92, 88];
 const average = grades.reduce((acc, cur) => acc + cur, 0) / grades.length;
-console.log(`საშუალო: ${average}`); // 86.6
+console.log(`Average: ${average}`); // 86.6
 
-// 📌 ელემენტების დათვლა
-const votes = ['კი', 'არა', 'კი', 'კი', 'არა', 'კი'];
+// Counting elements
+const votes = ['yes', 'no', 'yes', 'yes', 'no', 'yes'];
 const voteCounts = votes.reduce((acc, cur) => {
   acc[cur] = (acc[cur] || 0) + 1;
   return acc;
 }, {});
-console.log(voteCounts); // { კი: 4, არა: 2 }
+console.log(voteCounts); // { yes: 4, no: 2 }
 
-// 📌 filter + map + reduce — ჩეინინგი
-// ყველა შემოსავლის ჯამი ევროში
-const totalDepositsEur = movements
-  .filter(mov => mov > 0)
-  .map(mov => mov / 2.95)
+
+////////////////////////////////////
+// Coding Challenge: reduce()
+////////////////////////////////////
+
+/*
+You have a shopping cart:
+const cart = [
+  { item: 'Shirt', price: 29.99, quantity: 2 },
+  { item: 'Pants', price: 49.99, quantity: 1 },
+  { item: 'Shoes', price: 89.99, quantity: 1 },
+  { item: 'Socks', price: 9.99, quantity: 3 },
+  { item: 'Hat', price: 19.99, quantity: 1 },
+];
+
+1. Use reduce() to calculate the total price (price * quantity for each item)
+2. Use reduce() to find the most expensive single item (by price, not total)
+3. Use reduce() to create a summary object: { totalItems: X, totalPrice: Y }
+4. Log all results
+
+Expected total: 29.99*2 + 49.99 + 89.99 + 9.99*3 + 19.99 = 249.92
+*/
+
+const cart = [
+  { item: 'Shirt', price: 29.99, quantity: 2 },
+  { item: 'Pants', price: 49.99, quantity: 1 },
+  { item: 'Shoes', price: 89.99, quantity: 1 },
+  { item: 'Socks', price: 9.99, quantity: 3 },
+  { item: 'Hat', price: 19.99, quantity: 1 },
+];
+
+const totalPrice = cart.reduce((acc, cur) => acc + cur.price * cur.quantity, 0);
+console.log(`Total price: $${totalPrice.toFixed(2)}`);
+
+const mostExpensive = cart.reduce((acc, cur) => (cur.price > acc.price ? cur : acc));
+console.log(`Most expensive item: ${mostExpensive.item} ($${mostExpensive.price})`);
+
+const summary = cart.reduce(
+  (acc, cur) => {
+    acc.totalItems += cur.quantity;
+    acc.totalPrice += cur.price * cur.quantity;
+    return acc;
+  },
+  { totalItems: 0, totalPrice: 0 }
+);
+console.log(`Summary: ${summary.totalItems} items, $${summary.totalPrice.toFixed(2)}`);
+
+
+////////////////////////////////////
+// Coding Challenge: filter + map + reduce Chaining
+////////////////////////////////////
+
+/*
+You have an array of orders:
+const orders = [
+  { customer: 'Alice', items: ['Laptop', 'Mouse'], total: 1250, status: 'completed' },
+  { customer: 'Bob', items: ['Phone'], total: 800, status: 'cancelled' },
+  { customer: 'Charlie', items: ['Tablet', 'Case', 'Charger'], total: 520, status: 'completed' },
+  { customer: 'Diana', items: ['Monitor', 'Keyboard'], total: 450, status: 'completed' },
+  { customer: 'Eve', items: ['Headphones'], total: 150, status: 'cancelled' },
+  { customer: 'Frank', items: ['Camera', 'Lens', 'Tripod', 'Bag'], total: 2100, status: 'completed' },
+];
+
+Using a single chain of filter + map + reduce:
+1. Filter only completed orders
+2. Map each order to its total with a 10% discount applied
+3. Reduce to get the grand total of all discounted completed orders
+
+Log the result: "Total revenue (after 10% discount): $X"
+
+Expected: (1250 + 520 + 450 + 2100) * 0.9 = 3888
+*/
+
+const orders = [
+  { customer: 'Alice', items: ['Laptop', 'Mouse'], total: 1250, status: 'completed' },
+  { customer: 'Bob', items: ['Phone'], total: 800, status: 'cancelled' },
+  { customer: 'Charlie', items: ['Tablet', 'Case', 'Charger'], total: 520, status: 'completed' },
+  { customer: 'Diana', items: ['Monitor', 'Keyboard'], total: 450, status: 'completed' },
+  { customer: 'Eve', items: ['Headphones'], total: 150, status: 'cancelled' },
+  { customer: 'Frank', items: ['Camera', 'Lens', 'Tripod', 'Bag'], total: 2100, status: 'completed' },
+];
+
+const totalRevenue = orders
+  .filter(order => order.status === 'completed')
+  .map(order => order.total * 0.9)
   .reduce((acc, cur) => acc + cur, 0);
-console.log(`ჯამური შემოსავალი ევროში: ${totalDepositsEur.toFixed(2)}`);
+
+console.log(`Total revenue (after 10% discount): $${totalRevenue.toFixed(2)}`);
 
 
 ///////////////////////////////////////
-// 11. მასივის მეთოდები: concat() და join()
+// 11. Array Methods: concat() and join()
 ///////////////////////////////////////
 
-// concat() — აერთიანებს ორ ან მეტ მასივს ახალ მასივში
-// (ორიგინალი მასივები არ იცვლება)
+// concat() — merges two or more arrays into a new array
+// (original arrays are NOT modified)
 
-// 📌 ძირითადი მაგალითი
+// Basic example
 const arr1 = [1, 2, 3];
 const arr2 = [4, 5, 6];
 const combined = arr1.concat(arr2);
 console.log(combined); // [1, 2, 3, 4, 5, 6]
-console.log(arr1); // [1, 2, 3] — არ შეცვლილა
+console.log(arr1); // [1, 2, 3] — unchanged
 
-// 📌 რამდენიმე მასივის გაერთიანება
+// Merging multiple arrays
 const arr3 = [7, 8, 9];
 const all = arr1.concat(arr2, arr3);
 console.log(all); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-// 📌 spread ოპერატორით იგივე შედეგი (თანამედროვე ხერხი)
+// Same result with spread operator (modern approach)
 const combined2 = [...arr1, ...arr2, ...arr3];
 console.log(combined2); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-// 📌 join() — მასივს სტრინგად გარდაქმნის, ელემენტებს შორის სეპარატორით
+// join() — converts an array to a string with a separator between elements
 const letters = ['H', 'e', 'l', 'l', 'o'];
 console.log(letters.join('')); // 'Hello'
 console.log(letters.join('-')); // 'H-e-l-l-o'
 console.log(letters.join(' ')); // 'H e l l o'
 
-// 📌 split + join კომბინაცია — სტრინგის ტრანსფორმაცია
+// split + join combination — string transformation
 const sentence = 'hello world from javascript';
 const titleCase = sentence
   .split(' ')
@@ -624,223 +1046,61 @@ const titleCase = sentence
   .join(' ');
 console.log(titleCase); // 'Hello World From Javascript'
 
-// 📌 პრაქტიკული მაგალითი — CSV ფორმატის შექმნა
+// Practical example — creating CSV format
 const studentData = [
-  ['სახელი', 'ქულა', 'სტატუსი'],
-  ['ანა', '95', 'ჩაბარებული'],
-  ['დავითი', '82', 'ჩაბარებული'],
-  ['ნინო', '55', 'ჩაჭრილი'],
+  ['Name', 'Score', 'Status'],
+  ['Ana', '95', 'Passed'],
+  ['David', '82', 'Passed'],
+  ['Nino', '55', 'Failed'],
 ];
 
-const csv = studentData.map(row => row.join(',')).join('\n');
-console.log(csv);
-// სახელი,ქულა,სტატუსი
-// ანა,95,ჩაბარებული
-// დავითი,82,ჩაბარებული
-// ნინო,55,ჩაჭრილი
-
-
-///////////////////////////////////////
-// 12. მასივებზე დაფუძნებული სტრუქტურები
-///////////////////////////////////////
-
-// მასივი შეიძლება გამოვიყენოთ სხვადასხვა მონაცემთა სტრუქტურის
-// სიმულაციისთვის
-
-// 📌 Stack (სტეკი) — LIFO (Last In, First Out)
-// ბოლოს დამატებული პირველი ამოდის
-// push() — ამატებს ზემოდან
-// pop() — ამოიღებს ზემოდან
-
-console.log('--- Stack ---');
-const stack = [];
-stack.push('წიგნი 1');
-stack.push('წიგნი 2');
-stack.push('წიგნი 3');
-console.log(stack); // ['წიგნი 1', 'წიგნი 2', 'წიგნი 3']
-
-const topBook = stack.pop(); // ბოლო დამატებული = პირველი ამოსული
-console.log(topBook); // 'წიგნი 3'
-console.log(stack); // ['წიგნი 1', 'წიგნი 2']
-
-// 📌 წარმოიდგინეთ: წიგნების გროვა — ზემოდან დებ, ზემოდან იღებ
-
-// 📌 Queue (რიგი) — FIFO (First In, First Out)
-// პირველი დამატებული პირველი ამოდის
-// push() — ამატებს ბოლოში (რიგის ბოლოს დგება)
-// shift() — ამოიღებს დასაწყისიდან (რიგიდან პირველი გამოდის)
-
-console.log('--- Queue ---');
-const queue = [];
-queue.push('მომხმარებელი 1');
-queue.push('მომხმარებელი 2');
-queue.push('მომხმარებელი 3');
-console.log(queue); // ['მომხმარებელი 1', 'მომხმარებელი 2', 'მომხმარებელი 3']
-
-const firstInLine = queue.shift(); // პირველი დამატებული = პირველი ამოსული
-console.log(firstInLine); // 'მომხმარებელი 1'
-console.log(queue); // ['მომხმარებელი 2', 'მომხმარებელი 3']
-
-// 📌 წარმოიდგინეთ: მაღაზიის რიგი — პირველი ვინც დადგა, პირველი ემსახურება
-
-// 📌 პრაქტიკული მაგალითი: Undo ისტორია (Stack)
-const history = [];
-const addAction = action => {
-  history.push(action);
-  console.log(`შესრულდა: ${action}`);
-};
-const undo = () => {
-  const lastAction = history.pop();
-  console.log(`გაუქმდა: ${lastAction}`);
-};
-
-addAction('ტექსტი დაწერე');
-addAction('ფერი შეცვალე');
-addAction('სურათი ჩასვი');
-undo(); // გაუქმდა: სურათი ჩასვი
-undo(); // გაუქმდა: ფერი შეცვალე
-console.log(history); // ['ტექსტი დაწერე']
-
-// 📌 პრაქტიკული მაგალითი: ამოცანების რიგი (Queue)
-const taskQueue = [];
-const addTask = task => {
-  taskQueue.push(task);
-  console.log(`დაემატა: ${task}`);
-};
-const processNext = () => {
-  const task = taskQueue.shift();
-  console.log(`მუშავდება: ${task}`);
-};
-
-addTask('მეილის გაგზავნა');
-addTask('ფაილის შენახვა');
-addTask('მონაცემების სინქრონიზაცია');
-processNext(); // მუშავდება: მეილის გაგზავნა
-processNext(); // მუშავდება: ფაილის შენახვა
-console.log(taskQueue); // ['მონაცემების სინქრონიზაცია']
-
-
-///////////////////////////////////////
-// 13. ჩელენჯები
-///////////////////////////////////////
+const csvOutput = studentData.map(row => row.join(',')).join('\n');
+console.log(csvOutput);
+// Name,Score,Status
+// Ana,95,Passed
+// David,82,Passed
+// Nino,55,Failed
 
 
 ////////////////////////////////////
-// ჩელენჯი #1 — სტრინგების ტრანსფორმატორი
+// Coding Challenge: concat() and join()
 ////////////////////////////////////
 
 /*
-შექმენით ფუნქცია 'transformString', რომელიც იღებს სტრინგს და:
-1. შლის თავსა და ბოლოში ზედმეტ შუალედებს (trim)
-2. პირველ ასოს ზედა რეგისტრში აქცევს
-3. ყოველ სიტყვას შორის ზუსტად ერთ შუალედს ტოვებს
-4. აბრუნებს ტრანსფორმირებულ სტრინგს
+You have data from three different classes:
 
-სატესტო მონაცემები:
-'  hello   world  ' → 'Hello world'
-'  javaScript   is   GREAT  ' → 'Javascript is great'
+const classA = ['Alice', 'Bob', 'Charlie'];
+const classB = ['Diana', 'Eve'];
+const classC = ['Frank', 'George', 'Hannah', 'Ivan'];
 
-მინიშნება: გამოიყენეთ trim(), toLowerCase(), split(), filter(), join()
-split(' ') ცარიელ სტრინგებსაც მოგცემთ — filter-ით გაფილტრეთ
+1. Use concat() to merge all three classes into one array
+2. Sort the combined array alphabetically
+3. Use map() to add a student number: "1. Alice"
+4. Use join('\n') to create a formatted roster
+5. Log the roster
+6. Also create a summary line: "Total students: 9 | Classes merged: A, B, C"
+   using concat and join
 
-წარმატებები!
+Expected output:
+1. Alice
+2. Bob
+3. Charlie
+4. Diana
+5. Eve
+6. Frank
+7. George
+8. Hannah
+9. Ivan
+Total students: 9 | Classes merged: A, B, C
 */
 
-// const transformString = function (str) {
-//   const words = str.trim().toLowerCase().split(' ').filter(w => w !== '');
-//   words[0] = words[0][0].toUpperCase() + words[0].slice(1);
-//   return words.join(' ');
-// };
-// console.log(transformString('  hello   world  '));
-// console.log(transformString('  javaScript   is   GREAT  '));
+const classA = ['Alice', 'Bob', 'Charlie'];
+const classB = ['Diana', 'Eve'];
+const classC = ['Frank', 'George', 'Hannah', 'Ivan'];
 
+const allStudents = classA.concat(classB, classC).sort();
+const roster = allStudents.map((name, i) => `${i + 1}. ${name}`).join('\n');
+console.log(roster);
 
-////////////////////////////////////
-// ჩელენჯი #2 — სტუდენტების ანალიზი
-////////////////////////////////////
-
-/*
-გაქვთ სტუდენტების ქულების მასივი:
-const scores = [45, 82, 90, 55, 73, 61, 95, 38, 88, 70];
-
-1. გამოიყენეთ filter(), რომ მიიღოთ ჩაბარებული (>= 60) სტუდენტების ქულები
-2. გამოიყენეთ map(), რომ თითოეულ ჩაბარებულ ქულას ასოითი შეფასება მისცეთ:
-   >= 90: 'A', >= 80: 'B', >= 70: 'C', >= 60: 'D'
-3. გამოიყენეთ reduce(), რომ გამოთვალოთ ჩაბარებულთა საშუალო ქულა
-4. დაბეჭდეთ: "ჩაბარებულთა რაოდენობა: X, საშუალო: Y, შეფასებები: [A, B, ...]"
-
-წარმატებები!
-*/
-
-// const scores = [45, 82, 90, 55, 73, 61, 95, 38, 88, 70];
-// const passing = scores.filter(s => s >= 60);
-// const letterGrades = passing.map(s => {
-//   if (s >= 90) return 'A';
-//   if (s >= 80) return 'B';
-//   if (s >= 70) return 'C';
-//   return 'D';
-// });
-// const avg = passing.reduce((acc, cur) => acc + cur, 0) / passing.length;
-// console.log(`ჩაბარებულთა რაოდენობა: ${passing.length}, საშუალო: ${avg.toFixed(1)}, შეფასებები: [${letterGrades.join(', ')}]`);
-
-
-////////////////////////////////////
-// ჩელენჯი #3 — მასივების დამუშავება
-////////////////////////////////////
-
-/*
-გაქვთ ორი მაღაზიის პროდუქტების მასივი:
-const shop1 = ['პური', 'რძე', 'ყველი', 'კარაქი'];
-const shop2 = ['ვაშლი', 'რძე', 'წყალი', 'პური', 'ბანანი'];
-
-1. გააერთიანეთ ორი მასივი concat()-ით
-2. sort()-ით დაალაგეთ ანბანის მიხედვით
-3. filter()-ით ამოიღეთ დუბლიკატები (მინიშნება: indexOf-ის პოზიცია
-   უნდა ემთხვეოდეს მიმდინარე ინდექსს)
-4. map()-ით თითოეულს დაუმატეთ ნომერი: "1. პური"
-5. join()-ით გააერთიანეთ სტრინგად ახალ ხაზებზე ('\n')
-6. console.log-ით დაბეჭდეთ საბოლოო სია
-
-წარმატებები!
-*/
-
-// const shop1 = ['პური', 'რძე', 'ყველი', 'კარაქი'];
-// const shop2 = ['ვაშლი', 'რძე', 'წყალი', 'პური', 'ბანანი'];
-// const result = shop1
-//   .concat(shop2)
-//   .sort()
-//   .filter((item, index, arr) => arr.indexOf(item) === index)
-//   .map((item, i) => `${i + 1}. ${item}`)
-//   .join('\n');
-// console.log(result);
-
-
-////////////////////////////////////
-// ჩელენჯი #4 — do-while თამაში
-////////////////////////////////////
-
-/*
-შექმენით "გამოიცანი რიცხვი" თამაშის სიმულაცია:
-
-1. შექმენით საიდუმლო რიცხვი 1-დან 10-მდე
-2. გამოიყენეთ do-while ციკლი "გამოცნობისთვის":
-   - ყოველ იტერაციაში შექმენით შემთხვევითი guess 1-დან 10-მდე
-   - დაბეჭდეთ: "მცდელობა X: გამოიცანა Y"
-   - თუ guess === secret, ციკლი შეჩერდება
-3. ბოლოს დაბეჭდეთ: "გამოცანა! საიდუმლო რიცხვი Z იყო! X მცდელობა დასჭირდა"
-
-მინიშნება: do-while ამ შემთხვევაში სწორი არჩევანია, რადგან
-მინიმუმ ერთხელ მაინც უნდა "გამოცნო"
-
-წარმატებები!
-*/
-
-// const secret = Math.trunc(Math.random() * 10) + 1;
-// let guess;
-// let tries = 0;
-// do {
-//   guess = Math.trunc(Math.random() * 10) + 1;
-//   tries++;
-//   console.log(`მცდელობა ${tries}: გამოიცანა ${guess}`);
-// } while (guess !== secret);
-// console.log(`გამოცანა! საიდუმლო რიცხვი ${secret} იყო! ${tries} მცდელობა დასჭირდა`);
+const classNames = ['A', 'B', 'C'];
+console.log(`Total students: ${allStudents.length} | Classes merged: ${classNames.join(', ')}`);
