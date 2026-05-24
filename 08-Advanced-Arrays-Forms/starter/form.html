@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ფორმასთან მუშაობა — JavaScript</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #e0e0e0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 2rem 1rem;
+      }
+
+      .container {
+        max-width: 700px;
+        width: 100%;
+      }
+
+      h1 {
+        text-align: center;
+        color: #e94560;
+        margin-bottom: 0.5rem;
+        font-size: 1.6rem;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #7f8fa6;
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+      }
+
+      .form-section {
+        background: #16213e;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 2px solid #0f3460;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-section h2 {
+        color: #63b3ed;
+        font-size: 1.15rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #0f3460;
+        padding-bottom: 0.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.35rem;
+        color: #a0aec0;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      input[type="number"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border: 2px solid #2c3e6b;
+        border-radius: 8px;
+        background: #1a1a2e;
+        color: #e0e0e0;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: #e94560;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.3rem;
+      }
+
+      .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #e94560;
+      }
+
+      .checkbox-group label {
+        margin-bottom: 0;
+        font-weight: 400;
+      }
+
+      .btn {
+        padding: 0.75rem 1.6rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.1s;
+        margin-right: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .btn:active {
+        transform: scale(0.97);
+      }
+
+      .btn-submit {
+        background: #e94560;
+        color: #fff;
+      }
+
+      .btn-submit:hover {
+        background: #c73652;
+      }
+
+      .btn-reset {
+        background: #2c3e6b;
+        color: #e0e0e0;
+      }
+
+      .btn-reset:hover {
+        background: #3a5298;
+      }
+
+      .btn-action {
+        background: #0f3460;
+        color: #63b3ed;
+      }
+
+      .btn-action:hover {
+        background: #1a4a7a;
+      }
+
+      .output-box {
+        background: #0d1b2a;
+        border: 1px solid #1b3a5c;
+        border-radius: 8px;
+        padding: 1rem 1.2rem;
+        margin-top: 1rem;
+        font-family: "Fira Code", "Consolas", monospace;
+        font-size: 0.88rem;
+        line-height: 1.6;
+        color: #a8d8a8;
+        white-space: pre-wrap;
+        min-height: 40px;
+      }
+
+      .live-preview {
+        color: #f6ad55;
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+        min-height: 1.2rem;
+      }
+
+      .error-msg {
+        color: #fc8181;
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+        min-height: 1.2rem;
+      }
+
+      .success-msg {
+        color: #68d391;
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 1rem 0.5rem;
+        }
+        .form-section {
+          padding: 1.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>ფორმასთან მუშაობა</h1>
+      <p class="subtitle">Form Methods & Events — click, input, submit</p>
+
+      <!-- Section 1: Registration Form -->
+      <div class="form-section">
+        <h2>1. სარეგისტრაციო ფორმა</h2>
+        <form id="registrationForm">
+          <div class="form-group">
+            <label for="fullName">სახელი და გვარი</label>
+            <input type="text" id="fullName" placeholder="მაგ: გიორგი ბერიძე" />
+            <div class="error-msg" id="nameError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">ელ-ფოსტა</label>
+            <input type="text" id="email" placeholder="მაგ: example@mail.com" />
+            <div class="error-msg" id="emailError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">პაროლი</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="მინიმუმ 6 სიმბოლო"
+            />
+            <div class="error-msg" id="passwordError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="age">ასაკი</label>
+            <input
+              type="number"
+              id="age"
+              placeholder="მაგ: 25"
+              min="1"
+              max="120"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="city">ქალაქი</label>
+            <select id="city">
+              <option value="">აირჩიეთ ქალაქი</option>
+              <option value="თბილისი">თბილისი</option>
+              <option value="ბათუმი">ბათუმი</option>
+              <option value="ქუთაისი">ქუთაისი</option>
+              <option value="რუსთავი">რუსთავი</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>ინტერესები</label>
+            <div class="checkbox-group">
+              <input type="checkbox" id="interestJS" value="JavaScript" />
+              <label for="interestJS">JavaScript</label>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="interestPython" value="Python" />
+              <label for="interestPython">Python</label>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="interestDesign" value="Design" />
+              <label for="interestDesign">დიზაინი</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="bio">მოკლე ბიოგრაფია</label>
+            <textarea
+              id="bio"
+              placeholder="მოგვიყევით თქვენს შესახებ..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-submit">რეგისტრაცია</button>
+          <button type="button" class="btn btn-reset" id="resetBtn">
+            გასუფთავება
+          </button>
+        </form>
+
+        <div class="output-box" id="formOutput">ფორმა ჯერ არ გაგზავნილა...</div>
+      </div>
+
+      <!-- Section 2: Live Input Tracking -->
+      <div class="form-section">
+        <h2>2. input ივენთი — რეალურ დროში თვალყურის დევნება</h2>
+        <div class="form-group">
+          <label for="liveInput">აკრიფეთ ტექსტი:</label>
+          <input type="text" id="liveInput" placeholder="აქ აკრიფეთ..." />
+          <div class="live-preview" id="livePreview">
+            ტექსტი გამოჩნდება აქ...
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="charCount">სიმბოლოების მრიცხველი:</label>
+          <input
+            type="text"
+            id="charCount"
+            placeholder="აკრიფეთ და დათვალეთ..."
+          />
+          <div class="live-preview" id="charCountDisplay">0 სიმბოლო</div>
+        </div>
+      </div>
+
+      <!-- Section 3: Click Events Demo -->
+      <div class="form-section">
+        <h2>3. click ივენთი — ღილაკების მაგალითები</h2>
+        <button class="btn btn-action" id="colorBtn">ფერის შეცვლა</button>
+        <button class="btn btn-action" id="counterBtn">მრიცხველი: 0</button>
+        <button class="btn btn-action" id="randomBtn">
+          შემთხვევითი რიცხვი
+        </button>
+        <div class="output-box" id="clickOutput">ღილაკზე დააკლიკეთ...</div>
+      </div>
+    </div>
+
+    <script src="form.js"></script>
+  </body>
+</html>

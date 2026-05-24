@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>გაფართოებული მასივები და ფორმები - ქვიზი</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1a1a2e;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .quiz-container {
+      max-width: 750px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #e94560;
+      margin-bottom: 0.4rem;
+      font-size: 1.6rem;
+      line-height: 1.35;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #7f8fa6;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .progress-bar-track {
+      background: #16213e;
+      border-radius: 8px;
+      height: 10px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #e94560, #0f3460);
+      height: 100%;
+      border-radius: 8px;
+      transition: width 0.4s ease;
+    }
+
+    .question-counter {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #7f8fa6;
+      font-size: 0.95rem;
+    }
+
+    .section-label {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .section-label.main {
+      background: #0f3460;
+      color: #63b3ed;
+    }
+
+    .section-label.advanced {
+      background: #5c2a0e;
+      color: #f6ad55;
+    }
+
+    .advanced-banner {
+      background: linear-gradient(135deg, #5c2a0e 0%, #744210 100%);
+      border: 2px solid #f6ad55;
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      color: #fbd38d;
+    }
+
+    .advanced-banner .banner-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 0.4rem;
+      color: #f6ad55;
+    }
+
+    .question-card {
+      background: #16213e;
+      border-radius: 12px;
+      padding: 2rem;
+      border: 2px solid #0f3460;
+      transition: border-color 0.3s ease;
+    }
+
+    .question-card.advanced-card {
+      border-color: #b7791f;
+    }
+
+    .question-card.correct {
+      border-color: #38a169;
+    }
+
+    .question-card.incorrect {
+      border-color: #e53e3e;
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.55;
+    }
+
+    pre.code-block {
+      background: #0d1b2a;
+      border: 1px solid #1b3a5c;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.2rem;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #a8d8a8;
+      white-space: pre;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .option-btn {
+      background: #1a1a2e;
+      border: 2px solid #2c3e6b;
+      border-radius: 8px;
+      padding: 0.85rem 1.1rem;
+      color: #e0e0e0;
+      font-size: 0.97rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.1s;
+      line-height: 1.45;
+    }
+
+    .option-btn:hover:not(.disabled) {
+      background: #0f3460;
+      border-color: #4a6fa5;
+      transform: translateX(4px);
+    }
+
+    .option-btn.selected {
+      border-color: #63b3ed;
+      background: #1a365d;
+    }
+
+    .option-btn.correct-answer {
+      border-color: #38a169;
+      background: #1c3a2a;
+      color: #9ae6b4;
+    }
+
+    .option-btn.wrong-answer {
+      border-color: #e53e3e;
+      background: #3a1c1c;
+      color: #feb2b2;
+    }
+
+    .option-btn.disabled {
+      cursor: default;
+      opacity: 0.75;
+    }
+
+    .option-btn.disabled.correct-answer {
+      opacity: 1;
+    }
+
+    .feedback {
+      margin-top: 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      background: #1c3a2a;
+      color: #68d391;
+      border: 1px solid #38a169;
+    }
+
+    .feedback.incorrect {
+      background: #3a1c1c;
+      color: #fc8181;
+      border: 1px solid #e53e3e;
+    }
+
+    .explanation-box {
+      background: #0d1b2a;
+      border-left: 4px solid #e94560;
+      padding: 1rem 1.2rem;
+      margin-top: 0.8rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.92rem;
+      color: #b0bec5;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .explanation-box.visible {
+      display: block;
+    }
+
+    .explanation-box .explanation-title {
+      font-weight: 700;
+      color: #e94560;
+      margin-bottom: 0.3rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      gap: 1rem;
+    }
+
+    .nav-btn {
+      padding: 0.7rem 1.6rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .nav-btn:active {
+      transform: scale(0.97);
+    }
+
+    .nav-btn.prev {
+      background: #2c3e6b;
+      color: #e0e0e0;
+    }
+
+    .nav-btn.prev:hover {
+      background: #3a5298;
+    }
+
+    .nav-btn.next {
+      background: #e94560;
+      color: #fff;
+    }
+
+    .nav-btn.next:hover {
+      background: #c73652;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Results screen */
+    .results-screen {
+      background: #16213e;
+      border-radius: 12px;
+      padding: 2.5rem;
+      text-align: center;
+      border: 2px solid #0f3460;
+    }
+
+    .results-screen h2 {
+      color: #e94560;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .score-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      border: 6px solid;
+    }
+
+    .score-circle.excellent {
+      border-color: #38a169;
+      color: #68d391;
+      background: #1c3a2a;
+    }
+
+    .score-circle.good {
+      border-color: #d69e2e;
+      color: #f6e05e;
+      background: #3a351c;
+    }
+
+    .score-circle.needs-work {
+      border-color: #e53e3e;
+      color: #fc8181;
+      background: #3a1c1c;
+    }
+
+    .score-circle .score-label {
+      font-size: 0.85rem;
+      font-weight: 400;
+      margin-top: 0.2rem;
+    }
+
+    .score-breakdown {
+      margin: 1.5rem 0;
+      font-size: 1rem;
+      color: #a0aec0;
+      line-height: 2;
+    }
+
+    .score-breakdown strong {
+      color: #e0e0e0;
+    }
+
+    .restart-btn {
+      background: #e94560;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.85rem 2.2rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .restart-btn:hover {
+      background: #c73652;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+      h1 {
+        font-size: 1.25rem;
+      }
+      .question-card {
+        padding: 1.3rem;
+      }
+      pre.code-block {
+        font-size: 0.8rem;
+        padding: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>გაფართოებული მასივები და ფორმები<br />ქვიზი</h1>
+    <p class="subtitle">Advanced Arrays & Forms Quiz</p>
+
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+    </div>
+
+    <!-- Question area -->
+    <div id="questionArea">
+      <p class="question-counter" id="questionCounter"></p>
+
+      <!-- Advanced banner -->
+      <div class="advanced-banner hidden" id="advancedBanner">
+        <div class="banner-title">&#9888;&#65039; ყურადღება!</div>
+        <div>ქვემოთ მოცემული კითხვები მოიცავს რთულ კომბინაციებს და მეთოდების ჩეინინგს. ისინი მოითხოვს მასალის ღრმა გაგებას.</div>
+      </div>
+
+      <div class="question-card" id="questionCard">
+        <span class="section-label main" id="sectionLabel"></span>
+        <div class="question-text" id="questionText"></div>
+        <pre class="code-block hidden" id="codeBlock"></pre>
+        <div class="options" id="optionsContainer"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="explanation-box" id="explanationBox">
+          <div class="explanation-title">ახსნა</div>
+          <div id="explanationText"></div>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn prev" id="prevBtn" onclick="navigate(-1)">&#8592; წინა</button>
+        <button class="nav-btn next" id="nextBtn" onclick="navigate(1)">შემდეგი &#8594;</button>
+      </div>
+    </div>
+
+    <!-- Results screen -->
+    <div class="results-screen hidden" id="resultsScreen">
+      <h2>ქვიზი დასრულებულია!</h2>
+      <div class="score-circle" id="scoreCircle">
+        <span id="scorePercent"></span>
+        <span class="score-label" id="scoreLabel"></span>
+      </div>
+      <div class="score-breakdown" id="scoreBreakdown"></div>
+      <button class="restart-btn" onclick="restartQuiz()">&#x1F504; თავიდან დაწყება</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      // ==================== MAIN SECTION (1-15) ====================
+      {
+        section: 'main',
+        topic: 'while Loop',
+        question: "რა განსხვავებაა <code>while</code> და <code>do-while</code> ციკლებს შორის?",
+        code: null,
+        options: [
+          "არანაირი განსხვავება, ორივე ერთნაირად მუშაობს",
+          "do-while ყოველთვის სრულდება მინიმუმ ერთხელ, while კი შეიძლება არასოდეს შესრულდეს",
+          "while უფრო სწრაფია ვიდრე do-while",
+          "do-while მხოლოდ რიცხვებთან მუშაობს"
+        ],
+        correct: 1,
+        explanation: "while ციკლი პირობას ამოწმებს ყოველი იტერაციის წინ — თუ პირობა თავიდანვე false-ია, ციკლის სხეული არასოდეს შესრულდება. do-while კი ჯერ ასრულებს კოდს, შემდეგ ამოწმებს პირობას, ამიტომ ყოველთვის სრულდება მინიმუმ ერთხელ."
+      },
+      {
+        section: 'main',
+        topic: 'while Loop',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `let x = 10;
+while (x < 5) {
+  console.log(x);
+  x++;
+}
+console.log("done");`,
+        options: [
+          '"10" შემდეგ "done"',
+          '"done" (ციკლი არ შესრულდება)',
+          '10, 11, 12... უსასრულოდ',
+          'Error'
+        ],
+        correct: 1,
+        explanation: "x = 10 და პირობა x < 5 თავიდანვე false-ია (10 < 5 არის false). ამიტომ while ციკლის სხეული არასოდეს შესრულდება და პირდაპირ \"done\" დაიბეჭდება."
+      },
+      {
+        section: 'main',
+        topic: 'forEach',
+        question: "რას აბრუნებს <code>forEach()</code> მეთოდი?",
+        code: null,
+        options: [
+          "ახალ მასივს",
+          "undefined",
+          "ელემენტების რაოდენობას",
+          "ბოლო ელემენტს"
+        ],
+        correct: 1,
+        explanation: "forEach() ყოველთვის აბრუნებს undefined-ს. ის გამოიყენება side-effect-ებისთვის (მაგ. console.log), და არა ახალი მასივის შესაქმნელად. თუ ახალი მასივი გინდათ, გამოიყენეთ map()."
+      },
+      {
+        section: 'main',
+        topic: 'forEach',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const nums = [10, 20, 30];
+nums.forEach(function(num, i) {
+  console.log(\`\${i}: \${num}\`);
+});`,
+        options: [
+          '"1: 10", "2: 20", "3: 30"',
+          '"0: 10", "1: 20", "2: 30"',
+          '"10: 0", "20: 1", "30: 2"',
+          'Error — forEach ინდექსს არ იღებს'
+        ],
+        correct: 1,
+        explanation: "forEach-ის callback ფუნქცია იღებს ელემენტს (num) პირველ და ინდექსს (i) მეორე პარამეტრად. ინდექსი 0-დან იწყება, ამიტომ გამოიტანს '0: 10', '1: 20', '2: 30'."
+      },
+      {
+        section: 'main',
+        topic: 'String Methods',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const str = "  Hello World  ";
+console.log(str.trim().toLowerCase());`,
+        options: [
+          '"  hello world  "',
+          '"hello world"',
+          '"Hello World"',
+          '"HELLO WORLD"'
+        ],
+        correct: 1,
+        explanation: "trim() ჯერ მოაშორებს სფეისებს ორივე მხრიდან: 'Hello World'. შემდეგ toLowerCase() გადააქცევს პატარა ასოებად: 'hello world'. მეთოდები ჩეინდება — ყოველი მეთოდი მუშაობს წინა მეთოდის შედეგზე."
+      },
+      {
+        section: 'main',
+        topic: 'String Methods',
+        question: "რას გამოიტანს <code>'JavaScript'.slice(4)</code>?",
+        code: null,
+        options: [
+          '"Java"',
+          '"Script"',
+          '"aScri"',
+          '"Scri"'
+        ],
+        correct: 1,
+        explanation: "slice(4) იწყებს ინდექსი 4-დან და აბრუნებს ყველაფერს ბოლომდე. 'JavaScript'-ში ინდექსი 4 არის 'S', ამიტომ slice(4) აბრუნებს 'Script'-ს."
+      },
+      {
+        section: 'main',
+        topic: 'String Methods',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `console.log("hello world".split(" ").length);`,
+        options: [
+          '10',
+          '11',
+          '2',
+          '1'
+        ],
+        correct: 2,
+        explanation: "split(' ') ყოფს სტრინგს სფეისის მიხედვით და აბრუნებს მასივს: ['hello', 'world']. ამ მასივის length არის 2."
+      },
+      {
+        section: 'main',
+        topic: 'map()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const nums = [1, 2, 3];
+const result = nums.map(n => n * 10);
+console.log(result);
+console.log(nums);`,
+        options: [
+          '[10, 20, 30] და [10, 20, 30]',
+          '[10, 20, 30] და [1, 2, 3]',
+          '[1, 2, 3] და [10, 20, 30]',
+          'Error'
+        ],
+        correct: 1,
+        explanation: "map() ქმნის ახალ მასივს ტრანსფორმირებული ელემენტებით [10, 20, 30], მაგრამ ორიგინალ მასივს არ ცვლის — nums რჩება [1, 2, 3]. ეს map()-ის მთავარი თვისებაა: ის არასოდეს მუტირებს ორიგინალს."
+      },
+      {
+        section: 'main',
+        topic: 'map()',
+        question: "რა განსხვავებაა <code>map()</code> და <code>forEach()</code> შორის?",
+        code: null,
+        options: [
+          "map() მუტირებს ორიგინალ მასივს, forEach() — არა",
+          "forEach() აბრუნებს ახალ მასივს, map() — არა",
+          "map() აბრუნებს ახალ მასივს, forEach() აბრუნებს undefined-ს",
+          "არანაირი განსხვავება"
+        ],
+        correct: 2,
+        explanation: "map() ყოველთვის აბრუნებს ახალ მასივს ტრანსფორმირებული ელემენტებით. forEach() აბრუნებს undefined-ს და გამოიყენება side-effect-ებისთვის (მაგ. ლოგინგი). არცერთი არ ცვლის ორიგინალ მასივს."
+      },
+      {
+        section: 'main',
+        topic: 'filter()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const nums = [5, 12, 8, 130, 44];
+const big = nums.filter(n => n > 10);
+console.log(big);`,
+        options: [
+          '[5, 8]',
+          '[12, 130, 44]',
+          '[12, 8, 130, 44]',
+          '[130]'
+        ],
+        correct: 1,
+        explanation: "filter() ინახავს მხოლოდ იმ ელემენტებს, რომლებისთვისაც callback true-ს აბრუნებს. 12 > 10 ✓, 130 > 10 ✓, 44 > 10 ✓. 5 და 8 არ აკმაყოფილებენ პირობას. შედეგი: [12, 130, 44]."
+      },
+      {
+        section: 'main',
+        topic: 'find()',
+        question: "რა განსხვავებაა <code>find()</code> და <code>filter()</code> შორის?",
+        code: null,
+        options: [
+          "find() აბრუნებს მასივს, filter() — ერთ ელემენტს",
+          "find() აბრუნებს პირველ შესაბამის ელემენტს, filter() — ყველა შესაბამისს მასივში",
+          "filter() უფრო სწრაფია",
+          "find() მუტირებს ორიგინალ მასივს"
+        ],
+        correct: 1,
+        explanation: "find() აბრუნებს პირველ ელემენტს, რომელიც აკმაყოფილებს პირობას (ან undefined-ს). filter() აბრუნებს ახალ მასივს ყველა შესაბამისი ელემენტით. არცერთი არ ცვლის ორიგინალს."
+      },
+      {
+        section: 'main',
+        topic: 'find()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const users = [
+  { name: 'Ana', age: 25 },
+  { name: 'David', age: 30 },
+  { name: 'Nino', age: 28 }
+];
+const result = users.find(u => u.age > 26);
+console.log(result.name);`,
+        options: [
+          '"Ana"',
+          '"David"',
+          '"Nino"',
+          '["David", "Nino"]'
+        ],
+        correct: 1,
+        explanation: "find() აბრუნებს პირველ ელემენტს, რომელიც აკმაყოფილებს პირობას. Ana-ს ასაკი 25-ია (25 > 26 false), David-ის 30 (30 > 26 true) — ამიტომ David-ის ობიექტი ბრუნდება. result.name არის 'David'."
+      },
+      {
+        section: 'main',
+        topic: 'sort()',
+        question: "რას გამოიტანს <code>[3, 1, 100, 25].sort()</code> კომპარატორის გარეშე?",
+        code: null,
+        options: [
+          '[1, 3, 25, 100]',
+          '[100, 25, 3, 1]',
+          '[1, 100, 25, 3]',
+          '[1, 3, 100, 25]'
+        ],
+        correct: 2,
+        explanation: "კომპარატორის გარეშე sort() ელემენტებს სტრინგებად გარდაქმნის და ანბანურად ასორტირებს. '1' < '100' < '25' < '3' (სტრინგების შედარება პირველი სიმბოლოთი). ამიტომ შედეგია [1, 100, 25, 3] და არა [1, 3, 25, 100]."
+      },
+      {
+        section: 'main',
+        topic: 'sort()',
+        question: "რას აკეთებს <code>arr.slice().sort()</code>?",
+        code: null,
+        options: [
+          "ასორტირებს ორიგინალ მასივს",
+          "ქმნის ასლს და ასორტირებს ასლს — ორიგინალი არ იცვლება",
+          "შლის მასივს და ქმნის ახალს",
+          "Error — slice და sort ერთად არ მუშაობს"
+        ],
+        correct: 1,
+        explanation: "slice() არგუმენტების გარეშე ქმნის მასივის ზედაპირულ ასლს. sort() შემდეგ ასორტირებს ამ ასლს. ორიგინალი მასივი უცვლელი რჩება. ეს სტანდარტული ხერხია sort()-ის მუტაციის თავიდან ასაცილებლად."
+      },
+      {
+        section: 'main',
+        topic: 'reduce()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const nums = [10, 20, 30];
+const sum = nums.reduce((acc, cur) => acc + cur, 0);
+console.log(sum);`,
+        options: [
+          '0',
+          '30',
+          '60',
+          '[10, 20, 30]'
+        ],
+        correct: 2,
+        explanation: "reduce() იწყებს acc = 0-ით (საწყისი მნიშვნელობა). პირველი იტერაცია: 0 + 10 = 10. მეორე: 10 + 20 = 30. მესამე: 30 + 30 = 60. საბოლოო შედეგი: 60."
+      },
+
+      // ==================== ADVANCED SECTION (16-20) ====================
+      {
+        section: 'advanced',
+        topic: 'reduce()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const nums = [5, 3, 8, 1];
+const max = nums.reduce((m, c) => c > m ? c : m);
+console.log(max);`,
+        options: [
+          '1',
+          '5',
+          '8',
+          '17'
+        ],
+        correct: 2,
+        explanation: "საწყისი მნიშვნელობა არ არის მითითებული, ამიტომ პირველი ელემენტი (5) ხდება საწყისი acc. შემდეგ: 3 > 5? არა → 5. 8 > 5? დიახ → 8. 1 > 8? არა → 8. საბოლოო max = 8."
+      },
+      {
+        section: 'advanced',
+        topic: 'Method Chaining',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const nums = [1, 2, 3, 4, 5, 6];
+const result = nums
+  .filter(n => n % 2 === 0)
+  .map(n => n * 10);
+console.log(result);`,
+        options: [
+          '[10, 20, 30, 40, 50, 60]',
+          '[2, 4, 6]',
+          '[20, 40, 60]',
+          '[10, 30, 50]'
+        ],
+        correct: 2,
+        explanation: "ჯერ filter() ტოვებს ლუწ რიცხვებს: [2, 4, 6]. შემდეგ map() თითოეულს ამრავლებს 10-ზე: [20, 40, 60]. მეთოდების ჩეინინგი საშუალებას გვაძლევს რამდენიმე ოპერაცია მიმდევრობით ჩავწეროთ."
+      },
+      {
+        section: 'advanced',
+        topic: 'String Methods',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const card = "4532015112830366";
+const masked = card.slice(-4).padStart(card.length, "*");
+console.log(masked);`,
+        options: [
+          '"4532015112830366"',
+          '"************0366"',
+          '"0366************"',
+          '"****0366"'
+        ],
+        correct: 1,
+        explanation: "slice(-4) იღებს ბოლო 4 სიმბოლოს: '0366'. padStart(16, '*') ავსებს სტრინგს მარცხნიდან '*'-ებით სანამ სიგრძე 16 არ გახდება: '************0366'. ეს კლასიკური ხერხია საკრედიტო ბარათის ნომრის დასამალად."
+      },
+      {
+        section: 'advanced',
+        topic: 'sort()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const items = [
+  { name: 'B', price: 20 },
+  { name: 'A', price: 50 },
+  { name: 'C', price: 10 }
+];
+items.sort((a, b) => a.price - b.price);
+console.log(items.map(i => i.name).join(', '));`,
+        options: [
+          '"A, B, C"',
+          '"C, B, A"',
+          '"B, A, C"',
+          '"C, A, B"'
+        ],
+        correct: 0,
+        explanation: "sort((a, b) => a.price - b.price) ასორტირებს ფასის ზრდადობით: C(10), B(20), A(50). შემდეგ map(i => i.name) იღებს სახელებს: ['C', 'B', 'A']. join(', ') აერთიანებს: 'C, B, A'."
+      },
+      {
+        section: 'advanced',
+        topic: 'Combined Methods',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const words = ['hello', 'world', 'hi'];
+const result = words
+  .filter(w => w.length > 2)
+  .map(w => w.toUpperCase())
+  .join(' ');
+console.log(result);`,
+        options: [
+          '"hello world hi"',
+          '"HELLO WORLD HI"',
+          '"HELLO WORLD"',
+          '"hello world"'
+        ],
+        correct: 2,
+        explanation: "filter(w => w.length > 2) ტოვებს სიტყვებს 2-ზე მეტი სიმბოლოთი: ['hello', 'world'] ('hi' გამოფილტრდა). map(w => w.toUpperCase()) გადააქცევს: ['HELLO', 'WORLD']. join(' ') აერთიანებს: 'HELLO WORLD'."
+      }
+    ];
+
+    // State
+    let currentIndex = 0;
+    let answers = new Array(questions.length).fill(null);
+
+    // DOM elements
+    const progressBar = document.getElementById('progressBar');
+    const questionCounter = document.getElementById('questionCounter');
+    const advancedBanner = document.getElementById('advancedBanner');
+    const questionCard = document.getElementById('questionCard');
+    const sectionLabel = document.getElementById('sectionLabel');
+    const questionText = document.getElementById('questionText');
+    const codeBlock = document.getElementById('codeBlock');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const feedback = document.getElementById('feedback');
+    const explanationBox = document.getElementById('explanationBox');
+    const explanationText = document.getElementById('explanationText');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const questionArea = document.getElementById('questionArea');
+    const resultsScreen = document.getElementById('resultsScreen');
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      const total = questions.length;
+      const isAdvanced = q.section === 'advanced';
+      const firstAdvancedIndex = questions.findIndex(x => x.section === 'advanced');
+
+      // Progress
+      progressBar.style.width = ((currentIndex + 1) / total * 100) + '%';
+      questionCounter.textContent = `კითხვა ${currentIndex + 1} / ${total}`;
+
+      // Advanced banner
+      if (currentIndex === firstAdvancedIndex) {
+        advancedBanner.classList.remove('hidden');
+      } else {
+        advancedBanner.classList.add('hidden');
+      }
+
+      // Section label
+      if (isAdvanced) {
+        sectionLabel.textContent = 'დამატებითი';
+        sectionLabel.className = 'section-label advanced';
+        questionCard.classList.add('advanced-card');
+      } else {
+        sectionLabel.textContent = `ძირითადი - ${q.topic}`;
+        sectionLabel.className = 'section-label main';
+        questionCard.classList.remove('advanced-card');
+      }
+
+      // Question text
+      questionText.innerHTML = q.question;
+
+      // Code block
+      if (q.code) {
+        codeBlock.textContent = q.code;
+        codeBlock.classList.remove('hidden');
+      } else {
+        codeBlock.classList.add('hidden');
+      }
+
+      // Options
+      optionsContainer.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = opt;
+        const answered = answers[currentIndex] !== null;
+
+        if (answered) {
+          btn.classList.add('disabled');
+          if (i === q.correct) {
+            btn.classList.add('correct-answer');
+          }
+          if (answers[currentIndex] === i && i !== q.correct) {
+            btn.classList.add('wrong-answer');
+          }
+        } else {
+          btn.addEventListener('click', () => selectAnswer(i));
+        }
+
+        optionsContainer.appendChild(btn);
+      });
+
+      // Feedback
+      if (answers[currentIndex] !== null) {
+        feedback.classList.add('show');
+        if (answers[currentIndex] === q.correct) {
+          feedback.className = 'feedback show correct';
+          feedback.textContent = 'სწორია! ';
+          questionCard.classList.remove('incorrect');
+          questionCard.classList.add('correct');
+        } else {
+          feedback.className = 'feedback show incorrect';
+          feedback.textContent = 'არასწორია! სწორი პასუხი მონიშნულია მწვანედ.';
+          questionCard.classList.remove('correct');
+          questionCard.classList.add('incorrect');
+        }
+      } else {
+        feedback.className = 'feedback';
+        feedback.classList.remove('show');
+        questionCard.classList.remove('correct', 'incorrect');
+      }
+
+      if (answers[currentIndex] !== null && q.explanation) {
+        explanationText.textContent = q.explanation;
+        explanationBox.classList.add('visible');
+      } else {
+        explanationBox.classList.remove('visible');
+      }
+
+      // Nav buttons
+      prevBtn.disabled = currentIndex === 0;
+      if (currentIndex === total - 1) {
+        nextBtn.textContent = 'შედეგები →';
+      } else {
+        nextBtn.textContent = 'შემდეგი →';
+      }
+    }
+
+    function selectAnswer(index) {
+      answers[currentIndex] = index;
+      renderQuestion();
+    }
+
+    function navigate(dir) {
+      if (dir === 1 && currentIndex === questions.length - 1) {
+        showResults();
+        return;
+      }
+      currentIndex += dir;
+      if (currentIndex < 0) currentIndex = 0;
+      if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showResults() {
+      questionArea.classList.add('hidden');
+      resultsScreen.classList.remove('hidden');
+
+      let totalCorrect = 0;
+      let mainCorrect = 0;
+      let advCorrect = 0;
+      let mainTotal = 0;
+      let advTotal = 0;
+
+      questions.forEach((q, i) => {
+        const isCorrect = answers[i] === q.correct;
+        if (q.section === 'main') {
+          mainTotal++;
+          if (isCorrect) { mainCorrect++; totalCorrect++; }
+        } else {
+          advTotal++;
+          if (isCorrect) { advCorrect++; totalCorrect++; }
+        }
+      });
+
+      const percent = Math.round(totalCorrect / questions.length * 100);
+      const scoreCircle = document.getElementById('scoreCircle');
+      const scorePercent = document.getElementById('scorePercent');
+      const scoreLabel = document.getElementById('scoreLabel');
+      const scoreBreakdown = document.getElementById('scoreBreakdown');
+
+      scorePercent.textContent = percent + '%';
+
+      if (percent >= 80) {
+        scoreCircle.className = 'score-circle excellent';
+        scoreLabel.textContent = 'შესანიშნავი!';
+      } else if (percent >= 50) {
+        scoreCircle.className = 'score-circle good';
+        scoreLabel.textContent = 'კარგია!';
+      } else {
+        scoreCircle.className = 'score-circle needs-work';
+        scoreLabel.textContent = 'გაიმეორე მასალა';
+      }
+
+      scoreBreakdown.innerHTML = `
+        <strong>სულ:</strong> ${totalCorrect} / ${questions.length} სწორი პასუხი<br/>
+        <strong>ძირითადი ნაწილი:</strong> ${mainCorrect} / ${mainTotal}<br/>
+        <strong>დამატებითი:</strong> ${advCorrect} / ${advTotal}
+      `;
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      answers = new Array(questions.length).fill(null);
+      resultsScreen.classList.add('hidden');
+      questionArea.classList.remove('hidden');
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Init
+    renderQuestion();
+  </script>
+</body>
+</html>
