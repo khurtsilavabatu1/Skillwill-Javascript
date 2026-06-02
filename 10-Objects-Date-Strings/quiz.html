@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ობიექტები, Date და სტრინგები - ქვიზი</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1a1a2e;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .quiz-container {
+      max-width: 750px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #e94560;
+      margin-bottom: 0.4rem;
+      font-size: 1.6rem;
+      line-height: 1.35;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #7f8fa6;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .progress-bar-track {
+      background: #16213e;
+      border-radius: 8px;
+      height: 10px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #e94560, #0f3460);
+      height: 100%;
+      border-radius: 8px;
+      transition: width 0.4s ease;
+    }
+
+    .question-counter {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #7f8fa6;
+      font-size: 0.95rem;
+    }
+
+    .section-label {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .section-label.main {
+      background: #0f3460;
+      color: #63b3ed;
+    }
+
+    .section-label.advanced {
+      background: #5c2a0e;
+      color: #f6ad55;
+    }
+
+    .advanced-banner {
+      background: linear-gradient(135deg, #5c2a0e 0%, #744210 100%);
+      border: 2px solid #f6ad55;
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      color: #fbd38d;
+    }
+
+    .advanced-banner .banner-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 0.4rem;
+      color: #f6ad55;
+    }
+
+    .question-card {
+      background: #16213e;
+      border-radius: 12px;
+      padding: 2rem;
+      border: 2px solid #0f3460;
+      transition: border-color 0.3s ease;
+    }
+
+    .question-card.advanced-card {
+      border-color: #b7791f;
+    }
+
+    .question-card.correct {
+      border-color: #38a169;
+    }
+
+    .question-card.incorrect {
+      border-color: #e53e3e;
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.55;
+    }
+
+    pre.code-block {
+      background: #0d1b2a;
+      border: 1px solid #1b3a5c;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.2rem;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #a8d8a8;
+      white-space: pre;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .option-btn {
+      background: #1a1a2e;
+      border: 2px solid #2c3e6b;
+      border-radius: 8px;
+      padding: 0.85rem 1.1rem;
+      color: #e0e0e0;
+      font-size: 0.97rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.1s;
+      line-height: 1.45;
+    }
+
+    .option-btn:hover:not(.disabled) {
+      background: #0f3460;
+      border-color: #4a6fa5;
+      transform: translateX(4px);
+    }
+
+    .option-btn.selected {
+      border-color: #63b3ed;
+      background: #1a365d;
+    }
+
+    .option-btn.correct-answer {
+      border-color: #38a169;
+      background: #1c3a2a;
+      color: #9ae6b4;
+    }
+
+    .option-btn.wrong-answer {
+      border-color: #e53e3e;
+      background: #3a1c1c;
+      color: #feb2b2;
+    }
+
+    .option-btn.disabled {
+      cursor: default;
+      opacity: 0.75;
+    }
+
+    .option-btn.disabled.correct-answer {
+      opacity: 1;
+    }
+
+    .feedback {
+      margin-top: 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      background: #1c3a2a;
+      color: #68d391;
+      border: 1px solid #38a169;
+    }
+
+    .feedback.incorrect {
+      background: #3a1c1c;
+      color: #fc8181;
+      border: 1px solid #e53e3e;
+    }
+
+    .explanation-box {
+      background: #0d1b2a;
+      border-left: 4px solid #e94560;
+      padding: 1rem 1.2rem;
+      margin-top: 0.8rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.92rem;
+      color: #b0bec5;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .explanation-box.visible {
+      display: block;
+    }
+
+    .explanation-box .explanation-title {
+      font-weight: 700;
+      color: #e94560;
+      margin-bottom: 0.3rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      gap: 1rem;
+    }
+
+    .nav-btn {
+      padding: 0.7rem 1.6rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .nav-btn:active {
+      transform: scale(0.97);
+    }
+
+    .nav-btn.prev {
+      background: #2c3e6b;
+      color: #e0e0e0;
+    }
+
+    .nav-btn.prev:hover {
+      background: #3a5298;
+    }
+
+    .nav-btn.next {
+      background: #e94560;
+      color: #fff;
+    }
+
+    .nav-btn.next:hover {
+      background: #c73652;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Results screen */
+    .results-screen {
+      background: #16213e;
+      border-radius: 12px;
+      padding: 2.5rem;
+      text-align: center;
+      border: 2px solid #0f3460;
+    }
+
+    .results-screen h2 {
+      color: #e94560;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .score-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      border: 6px solid;
+    }
+
+    .score-circle.excellent {
+      border-color: #38a169;
+      color: #68d391;
+      background: #1c3a2a;
+    }
+
+    .score-circle.good {
+      border-color: #d69e2e;
+      color: #f6e05e;
+      background: #3a351c;
+    }
+
+    .score-circle.needs-work {
+      border-color: #e53e3e;
+      color: #fc8181;
+      background: #3a1c1c;
+    }
+
+    .score-circle .score-label {
+      font-size: 0.85rem;
+      font-weight: 400;
+      margin-top: 0.2rem;
+    }
+
+    .score-breakdown {
+      margin: 1.5rem 0;
+      font-size: 1rem;
+      color: #a0aec0;
+      line-height: 2;
+    }
+
+    .score-breakdown strong {
+      color: #e0e0e0;
+    }
+
+    .restart-btn {
+      background: #e94560;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.85rem 2.2rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .restart-btn:hover {
+      background: #c73652;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+      h1 {
+        font-size: 1.25rem;
+      }
+      .question-card {
+        padding: 1.3rem;
+      }
+      pre.code-block {
+        font-size: 0.8rem;
+        padding: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>ობიექტები, Date და სტრინგები<br />ქვიზი</h1>
+    <p class="subtitle">Objects, Date & Strings Quiz</p>
+
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+    </div>
+
+    <!-- Question area -->
+    <div id="questionArea">
+      <p class="question-counter" id="questionCounter"></p>
+
+      <!-- Advanced banner -->
+      <div class="advanced-banner hidden" id="advancedBanner">
+        <div class="banner-title">&#9888;&#65039; ყურადღება!</div>
+        <div>ქვემოთ მოცემული კითხვები მოიცავს რთულ კომბინაციებს და მეთოდების ჩეინინგს. ისინი მოითხოვს მასალის ღრმა გაგებას.</div>
+      </div>
+
+      <div class="question-card" id="questionCard">
+        <span class="section-label main" id="sectionLabel"></span>
+        <div class="question-text" id="questionText"></div>
+        <pre class="code-block hidden" id="codeBlock"></pre>
+        <div class="options" id="optionsContainer"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="explanation-box" id="explanationBox">
+          <div class="explanation-title">ახსნა</div>
+          <div id="explanationText"></div>
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn prev" id="prevBtn" onclick="navigate(-1)">&#8592; წინა</button>
+        <button class="nav-btn next" id="nextBtn" onclick="navigate(1)">შემდეგი &#8594;</button>
+      </div>
+    </div>
+
+    <!-- Results screen -->
+    <div class="results-screen hidden" id="resultsScreen">
+      <h2>ქვიზი დასრულებულია!</h2>
+      <div class="score-circle" id="scoreCircle">
+        <span id="scorePercent"></span>
+        <span class="score-label" id="scoreLabel"></span>
+      </div>
+      <div class="score-breakdown" id="scoreBreakdown"></div>
+      <button class="restart-btn" onclick="restartQuiz()">&#x1F504; თავიდან ცდა</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      // ==================== MAIN SECTION (1-15) ====================
+
+      // --- Object Literals, Properties, Methods (Q1-Q4) ---
+      {
+        section: 'main',
+        topic: 'Object Literals',
+        question: "რომელი ჩანაწერი ქმნის ობიექტს სწორად?",
+        code: null,
+        options: [
+          "const obj = { name: 'Ana', age: 21 };",
+          "const obj = [ name: 'Ana', age: 21 ];",
+          "const obj = ( name: 'Ana', age: 21 );",
+          "const obj = 'name: Ana, age: 21';"
+        ],
+        correct: 0,
+        explanation: "ობიექტი იქმნება ფიგურული ფრჩხილებით { } და შეიცავს key: value წყვილებს, მძიმით გამოყოფილს. კვადრატული ფრჩხილები [] მასივისთვისაა, მრგვალი () ჯგუფირებისთვის, ხოლო სტრინგი ობიექტი არ არის."
+      },
+      {
+        section: 'main',
+        topic: 'Object Access',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const user = {
+  name: 'Luka',
+  age: 25,
+  city: 'Tbilisi'
+};
+const prop = 'age';
+console.log(user[prop]);`,
+        options: [
+          "25",
+          "undefined",
+          "'age'",
+          "ReferenceError"
+        ],
+        correct: 0,
+        explanation: "Bracket notation-ით შეგიძლიათ ცვლადის გამოყენება თვისებაზე წვდომისთვის. prop ცვლადი შეიცავს 'age' სტრინგს, ამიტომ user[prop] იგივეა რაც user['age'], რომელიც 25-ს აბრუნებს."
+      },
+      {
+        section: 'main',
+        topic: 'Object Properties',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const car = {
+  brand: 'BMW',
+  model: 'X5',
+  year: 2023
+};
+console.log(car.color);`,
+        options: [
+          "null",
+          "undefined",
+          "ReferenceError",
+          "'' (ცარიელი სტრინგი)"
+        ],
+        correct: 1,
+        explanation: "როცა ობიექტზე ისეთ თვისებას ეძახით, რომელიც არ არსებობს, JavaScript აბრუნებს undefined-ს — არა null-ს, არა შეცდომას. ეს არის ობიექტების ნაგულისხმევი ქცევა."
+      },
+      {
+        section: 'main',
+        topic: 'Object Methods & this',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const student = {
+  name: 'Giorgi',
+  grades: [90, 85, 92],
+  getAverage: function() {
+    let sum = 0;
+    for (let i = 0; i < this.grades.length; i++) {
+      sum += this.grades[i];
+    }
+    return sum / this.grades.length;
+  }
+};
+console.log(student.getAverage());`,
+        options: [
+          "89",
+          "267",
+          "NaN",
+          "undefined"
+        ],
+        correct: 0,
+        explanation: "მეთოდში this მიუთითებს student ობიექტზე. this.grades არის [90, 85, 92] მასივი. ციკლი ჯამავს 90 + 85 + 92 = 267, შემდეგ ყოფს 3-ზე = 89."
+      },
+
+      // --- Object.keys/values/entries (Q5-Q6) ---
+      {
+        section: 'main',
+        topic: 'Object.keys/values',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const product = {
+  name: 'Laptop',
+  price: 2500,
+  inStock: true
+};
+console.log(Object.keys(product));
+console.log(Object.values(product));`,
+        options: [
+          "['name', 'price', 'inStock'] და ['Laptop', 2500, true]",
+          "['Laptop', 2500, true] და ['name', 'price', 'inStock']",
+          "[['name', 'Laptop'], ['price', 2500], ['inStock', true]]",
+          "{ name: 'Laptop', price: 2500, inStock: true }"
+        ],
+        correct: 0,
+        explanation: "Object.keys() აბრუნებს ობიექტის ყველა თვისების სახელის (key) მასივს, სტრინგების სახით. Object.values() აბრუნებს მნიშვნელობების მასივს. ორივე ინარჩუნებს თვისებების დამატების თანმიმდევრობას."
+      },
+      {
+        section: 'main',
+        topic: 'Object.entries',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const scores = { math: 95, english: 88, physics: 92 };
+const entries = Object.entries(scores);
+console.log(entries[1]);`,
+        options: [
+          "['math', 95]",
+          "['english', 88]",
+          "88",
+          "english"
+        ],
+        correct: 1,
+        explanation: "Object.entries() აბრუნებს [key, value] წყვილების მასივს. entries[0] არის ['math', 95], entries[1] არის ['english', 88], entries[2] არის ['physics', 92]. ინდექსი 1 მეორე ელემენტს — ['english', 88] — გვაძლევს."
+      },
+
+      // --- Arrays of Objects with find/filter/map/reduce/sort (Q7-Q10) ---
+      {
+        section: 'main',
+        topic: 'Array.find()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const items = [
+  { id: 1, name: 'Pen' },
+  { id: 2, name: 'Book' },
+  { id: 3, name: 'Bag' }
+];
+const result = items.find(item => item.id === 2);
+console.log(result);`,
+        options: [
+          "2",
+          "'Book'",
+          "{ id: 2, name: 'Book' }",
+          "[{ id: 2, name: 'Book' }]"
+        ],
+        correct: 2,
+        explanation: "find() აბრუნებს პირველ ელემენტს, რომელიც აკმაყოფილებს პირობას. ის აბრუნებს მთელ ობიექტს { id: 2, name: 'Book' } — არა მასივს, არა ცალკე მნიშვნელობას."
+      },
+      {
+        section: 'main',
+        topic: 'Array.filter() + map()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const products = [
+  { name: 'A', price: 100, inStock: true },
+  { name: 'B', price: 200, inStock: false },
+  { name: 'C', price: 50, inStock: true }
+];
+const result = products
+  .filter(p => p.inStock)
+  .map(p => p.name);
+console.log(result);`,
+        options: [
+          "['A', 'B', 'C']",
+          "['A', 'C']",
+          "[{ name: 'A' }, { name: 'C' }]",
+          "[100, 50]"
+        ],
+        correct: 1,
+        explanation: "filter(p => p.inStock) ტოვებს მხოლოდ მარაგში არსებულ პროდუქტებს: A და C. შემდეგ map(p => p.name) ამოიღებს მხოლოდ სახელებს. შედეგი: ['A', 'C']."
+      },
+      {
+        section: 'main',
+        topic: 'Array.reduce()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const orders = [
+  { item: 'Laptop', total: 1200 },
+  { item: 'Phone', total: 800 },
+  { item: 'Mouse', total: 25 }
+];
+const sum = orders.reduce((acc, o) => acc + o.total, 0);
+console.log(sum);`,
+        options: [
+          "0",
+          "800",
+          "2025",
+          "[1200, 800, 25]"
+        ],
+        correct: 2,
+        explanation: "reduce() იწყებს acc = 0-ით. პირველი იტერაცია: 0 + 1200 = 1200. მეორე: 1200 + 800 = 2000. მესამე: 2000 + 25 = 2025. საბოლოო ჯამი: 2025."
+      },
+      {
+        section: 'main',
+        topic: 'Array.sort()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const students = [
+  { name: 'Ana', grade: 85 },
+  { name: 'Nino', grade: 92 },
+  { name: 'Luka', grade: 78 }
+];
+students.sort((a, b) => b.grade - a.grade);
+console.log(students[0].name);`,
+        options: [
+          "'Luka'",
+          "'Ana'",
+          "'Nino'",
+          "Error"
+        ],
+        correct: 2,
+        explanation: "sort((a, b) => b.grade - a.grade) ასორტირებს კლებადობით (ყველაზე მაღლიდან). Nino-ს აქვს ყველაზე მაღალი ქულა (92), ამიტომ ის პირველი ხდება. students[0].name არის 'Nino'."
+      },
+
+      // --- Date Object Methods (Q11-Q13) ---
+      {
+        section: 'main',
+        topic: 'Date Object',
+        question: "რას გამოიტანს <code>new Date(2026, 0, 15).getMonth()</code>?",
+        code: null,
+        options: [
+          "0 (იანვარი)",
+          "1 (იანვარი)",
+          "15",
+          "2026"
+        ],
+        correct: 0,
+        explanation: "new Date(2026, 0, 15) ქმნის 2026 წლის იანვრის 15-ს. getMonth() აბრუნებს თვის ინდექსს — იანვარი = 0. ეს JavaScript-ის Date ობიექტის ცნობილი თავისებურებაა: თვეები 0-დან 11-მდეა."
+      },
+      {
+        section: 'main',
+        topic: 'Date Comparison',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const d1 = new Date('2026-06-15');
+const d2 = new Date('2026-12-25');
+console.log(d1 < d2);`,
+        options: [
+          "true",
+          "false",
+          "NaN",
+          "TypeError"
+        ],
+        correct: 0,
+        explanation: "Date ობიექტები შედარებისას ავტომატურად გარდაიქმნება მილიწამებად (timestamps). ივნისი 15 (d1) დეკემბერი 25-ის (d2) წინ არის, ამიტომ d1 < d2 არის true."
+      },
+      {
+        section: 'main',
+        topic: 'Date Calculation',
+        question: "როგორ გამოვთვალოთ ორ თარიღს შორის სხვაობა დღეებში?",
+        code: `const start = new Date('2026-01-01');
+const end = new Date('2026-01-11');`,
+        options: [
+          "end.getDate() - start.getDate()",
+          "(end - start) / (1000 * 60 * 60 * 24)",
+          "end.getDay() - start.getDay()",
+          "Math.abs(end.getMonth() - start.getMonth())"
+        ],
+        correct: 1,
+        explanation: "ორი Date-ის გამოკლებისას მილიწამებში მიიღება სხვაობა. ამას ვყოფთ 1 დღის მილიწამებზე (1000 * 60 * 60 * 24 = 86400000) და მივიღებთ დღეების რაოდენობას. getDate() მხოლოდ თვის დღეს აბრუნებს, getDay() კვირის დღეს."
+      },
+
+      // --- toLocaleString, toUTCString (Q14-Q15) ---
+      {
+        section: 'main',
+        topic: 'toLocaleDateString',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const d = new Date(2024, 11, 25);
+console.log(d.toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric'
+}));`,
+        options: [
+          "'25/12/2024'",
+          "'December 25, 2024'",
+          "'2024-12-25'",
+          "'Nov 25, 2024'"
+        ],
+        correct: 1,
+        explanation: "new Date(2024, 11, 25) — თვე 11 = დეკემბერი. toLocaleDateString('en-US') ამერიკულ ფორმატში აჩვენებს. { month: 'long', day: 'numeric', year: 'numeric' } ოფციებით შედეგია 'December 25, 2024'."
+      },
+      {
+        section: 'main',
+        topic: 'toUTCString',
+        question: "რა განსხვავებაა <code>toLocaleString()</code> და <code>toUTCString()</code> შორის?",
+        code: null,
+        options: [
+          "არანაირი განსხვავება",
+          "toLocaleString() აჩვენებს ლოკალურ დროს, toUTCString() — UTC/GMT დროს",
+          "toUTCString() მხოლოდ თარიღს აჩვენებს, toLocaleString() — მხოლოდ დროს",
+          "toLocaleString() ობიექტს აბრუნებს, toUTCString() — სტრინგს"
+        ],
+        correct: 1,
+        explanation: "toLocaleString() აჩვენებს თარიღსა და დროს მომხმარებლის ლოკალური დროის ზონის მიხედვით. toUTCString() კი ყოველთვის UTC (Coordinated Universal Time) ფორმატში აჩვენებს. ორივე სტრინგს აბრუნებს."
+      },
+
+      // ==================== ADVANCED SECTION (16-20) ====================
+
+      // --- String Methods (Q16-Q20) ---
+      {
+        section: 'advanced',
+        topic: 'String.slice()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const str = 'Hello, World!';
+console.log(str.slice(7, 12));
+console.log(str.slice(-6));`,
+        options: [
+          "'World' და 'orld!'",
+          "'World' და 'World!'",
+          "'World' და 'orld!!'",
+          "', Wor' და 'World!'"
+        ],
+        correct: 1,
+        explanation: "slice(7, 12) ამოიღებს ინდექსი 7-დან 12-მდე (12 არ შედის): W(7)o(8)r(9)l(10)d(11) = 'World'. slice(-6) ამოიღებს ბოლო 6 სიმბოლოს: სტრინგის სიგრძე 13-ია, -6 ნიშნავს ინდექს 7-დან, ანუ 'World!'."
+      },
+      {
+        section: 'advanced',
+        topic: 'String.split() + join()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const csv = 'Ana,Luka,Nino,Giorgi';
+const arr = csv.split(',');
+console.log(arr.length);
+console.log(arr.join(' - '));`,
+        options: [
+          "4 და 'Ana - Luka - Nino - Giorgi'",
+          "3 და 'Ana-Luka-Nino-Giorgi'",
+          "4 და 'Ana,Luka,Nino,Giorgi'",
+          "1 და 'Ana - Luka - Nino - Giorgi'"
+        ],
+        correct: 0,
+        explanation: "split(',') ყოფს სტრინგს მძიმით და ქმნის მასივს ['Ana', 'Luka', 'Nino', 'Giorgi'] — length არის 4. join(' - ') აერთიანებს მასივს ' - ' სეპარატორით: 'Ana - Luka - Nino - Giorgi'."
+      },
+      {
+        section: 'advanced',
+        topic: 'String.replace() + trim()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const messy = '  Hello JavaScript World  ';
+const clean = messy
+  .trim()
+  .replaceAll(' ', '-')
+  .toLowerCase();
+console.log(clean);`,
+        options: [
+          "'  hello-javascript-world  '",
+          "'hello-javascript-world'",
+          "'Hello JavaScript World'",
+          "'hello javascript world'"
+        ],
+        correct: 1,
+        explanation: "trim() მოაშორებს სფეისებს ორივე მხრიდან: 'Hello JavaScript World'. replaceAll(' ', '-') ცვლის ყველა სფეისს ტირეთი: 'Hello-JavaScript-World'. toLowerCase() გადაიყვანს პატარა ასოებად: 'hello-javascript-world'."
+      },
+      {
+        section: 'advanced',
+        topic: 'String.indexOf() + includes()',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const text = 'JavaScript is awesome';
+console.log(text.indexOf('is'));
+console.log(text.indexOf('Python'));
+console.log(text.includes('awesome'));`,
+        options: [
+          "11, -1, true",
+          "11, 0, true",
+          "2, -1, false",
+          "11, undefined, true"
+        ],
+        correct: 0,
+        explanation: "indexOf('is') პოულობს 'is'-ს ინდექს 11-ზე ('J'(0)'a'(1)'v'(2)'a'(3)'S'(4)'c'(5)'r'(6)'i'(7)'p'(8)'t'(9)' '(10)'i'(11)). indexOf('Python') ვერ პოულობს და აბრუნებს -1-ს. includes('awesome') აბრუნებს true-ს."
+      },
+      {
+        section: 'advanced',
+        topic: 'Combined Methods',
+        question: "რას გამოიტანს ეს კოდი?",
+        code: `const users = [
+  { name: 'Ana', joined: '2024-01-15' },
+  { name: 'Luka', joined: '2024-03-20' },
+  { name: 'Nino', joined: '2024-02-10' }
+];
+const result = users
+  .filter(u => {
+    const d = new Date(u.joined);
+    return d.getMonth() < 2;
+  })
+  .map(u => u.name.toUpperCase())
+  .join(', ');
+console.log(result);`,
+        options: [
+          "'ANA, LUKA, NINO'",
+          "'ANA, NINO'",
+          "'ANA'",
+          "'LUKA'"
+        ],
+        correct: 1,
+        explanation: "filter ტოვებს მომხმარებლებს, რომელთა თვის ინდექსი < 2 (ანუ იანვარი=0 ან თებერვალი=1). Ana-ს თვე = 0 (იანვარი) და Nino-ს = 1 (თებერვალი). Luka-ს = 2 (მარტი) — გამოფილტრდება. map ზედა რეგისტრში გადაიყვანს. join აერთიანებს: 'ANA, NINO'."
+      }
+    ];
+
+    // State
+    let currentIndex = 0;
+    let answers = new Array(questions.length).fill(null);
+
+    // DOM elements
+    const progressBar = document.getElementById('progressBar');
+    const questionCounter = document.getElementById('questionCounter');
+    const advancedBanner = document.getElementById('advancedBanner');
+    const questionCard = document.getElementById('questionCard');
+    const sectionLabel = document.getElementById('sectionLabel');
+    const questionText = document.getElementById('questionText');
+    const codeBlock = document.getElementById('codeBlock');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const feedback = document.getElementById('feedback');
+    const explanationBox = document.getElementById('explanationBox');
+    const explanationText = document.getElementById('explanationText');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const questionArea = document.getElementById('questionArea');
+    const resultsScreen = document.getElementById('resultsScreen');
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      const total = questions.length;
+      const isAdvanced = q.section === 'advanced';
+      const firstAdvancedIndex = questions.findIndex(x => x.section === 'advanced');
+
+      // Progress
+      progressBar.style.width = ((currentIndex + 1) / total * 100) + '%';
+      questionCounter.textContent = `კითხვა ${currentIndex + 1} / ${total}`;
+
+      // Advanced banner
+      if (currentIndex === firstAdvancedIndex) {
+        advancedBanner.classList.remove('hidden');
+      } else {
+        advancedBanner.classList.add('hidden');
+      }
+
+      // Section label
+      if (isAdvanced) {
+        sectionLabel.textContent = `დამატებითი - ${q.topic}`;
+        sectionLabel.className = 'section-label advanced';
+        questionCard.classList.add('advanced-card');
+      } else {
+        sectionLabel.textContent = `ძირითადი - ${q.topic}`;
+        sectionLabel.className = 'section-label main';
+        questionCard.classList.remove('advanced-card');
+      }
+
+      // Question text
+      questionText.innerHTML = q.question;
+
+      // Code block
+      if (q.code) {
+        codeBlock.textContent = q.code;
+        codeBlock.classList.remove('hidden');
+      } else {
+        codeBlock.classList.add('hidden');
+      }
+
+      // Options
+      optionsContainer.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = opt;
+        const answered = answers[currentIndex] !== null;
+
+        if (answered) {
+          btn.classList.add('disabled');
+          if (i === q.correct) {
+            btn.classList.add('correct-answer');
+          }
+          if (answers[currentIndex] === i && i !== q.correct) {
+            btn.classList.add('wrong-answer');
+          }
+        } else {
+          btn.addEventListener('click', () => selectAnswer(i));
+        }
+
+        optionsContainer.appendChild(btn);
+      });
+
+      // Feedback
+      if (answers[currentIndex] !== null) {
+        feedback.classList.add('show');
+        if (answers[currentIndex] === q.correct) {
+          feedback.className = 'feedback show correct';
+          feedback.textContent = 'სწორია! ';
+          questionCard.classList.remove('incorrect');
+          questionCard.classList.add('correct');
+        } else {
+          feedback.className = 'feedback show incorrect';
+          feedback.textContent = 'არასწორია! სწორი პასუხი მონიშნულია მწვანედ.';
+          questionCard.classList.remove('correct');
+          questionCard.classList.add('incorrect');
+        }
+      } else {
+        feedback.className = 'feedback';
+        feedback.classList.remove('show');
+        questionCard.classList.remove('correct', 'incorrect');
+      }
+
+      if (answers[currentIndex] !== null && q.explanation) {
+        explanationText.textContent = q.explanation;
+        explanationBox.classList.add('visible');
+      } else {
+        explanationBox.classList.remove('visible');
+      }
+
+      // Nav buttons
+      prevBtn.disabled = currentIndex === 0;
+      if (currentIndex === total - 1) {
+        nextBtn.textContent = 'შედეგები →';
+      } else {
+        nextBtn.textContent = 'შემდეგი →';
+      }
+    }
+
+    function selectAnswer(index) {
+      answers[currentIndex] = index;
+      renderQuestion();
+    }
+
+    function navigate(dir) {
+      if (dir === 1 && currentIndex === questions.length - 1) {
+        showResults();
+        return;
+      }
+      currentIndex += dir;
+      if (currentIndex < 0) currentIndex = 0;
+      if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showResults() {
+      questionArea.classList.add('hidden');
+      resultsScreen.classList.remove('hidden');
+
+      let totalCorrect = 0;
+      let mainCorrect = 0;
+      let advCorrect = 0;
+      let mainTotal = 0;
+      let advTotal = 0;
+
+      questions.forEach((q, i) => {
+        const isCorrect = answers[i] === q.correct;
+        if (q.section === 'main') {
+          mainTotal++;
+          if (isCorrect) { mainCorrect++; totalCorrect++; }
+        } else {
+          advTotal++;
+          if (isCorrect) { advCorrect++; totalCorrect++; }
+        }
+      });
+
+      const percent = Math.round(totalCorrect / questions.length * 100);
+      const scoreCircle = document.getElementById('scoreCircle');
+      const scorePercent = document.getElementById('scorePercent');
+      const scoreLabel = document.getElementById('scoreLabel');
+      const scoreBreakdown = document.getElementById('scoreBreakdown');
+
+      scorePercent.textContent = percent + '%';
+
+      if (percent >= 80) {
+        scoreCircle.className = 'score-circle excellent';
+        scoreLabel.textContent = 'შესანიშნავი!';
+      } else if (percent >= 50) {
+        scoreCircle.className = 'score-circle good';
+        scoreLabel.textContent = 'კარგია!';
+      } else {
+        scoreCircle.className = 'score-circle needs-work';
+        scoreLabel.textContent = 'გაიმეორე მასალა';
+      }
+
+      scoreBreakdown.innerHTML = `
+        <strong>სულ:</strong> ${totalCorrect} / ${questions.length} სწორი პასუხი<br/>
+        <strong>ძირითადი ნაწილი:</strong> ${mainCorrect} / ${mainTotal}<br/>
+        <strong>დამატებითი:</strong> ${advCorrect} / ${advTotal}
+      `;
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      answers = new Array(questions.length).fill(null);
+      resultsScreen.classList.add('hidden');
+      questionArea.classList.remove('hidden');
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Init
+    renderQuestion();
+  </script>
+</body>
+</html>
