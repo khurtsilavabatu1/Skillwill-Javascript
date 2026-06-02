@@ -466,7 +466,14 @@ console.log(sorted);
 const gameScores = [42, 88, 15, 73, 99, 56, 31, 64, 77, 20];
 
 const sortedScores = gameScores.slice().sort((a, b) => b - a);
+// [99, 88, 77, 73, 64, 56, 42, 31, 20, 15];
 const top3 = sortedScores.slice(0, 3);
+// [99, 88, 77]
+const top4 = sortedScores.slice(3);
+// [73, 64, 56, 42, 31, 20, 15];
+console.log(top4);
+console.log(top3);
+
 const bottom3 = sortedScores.slice(-3).sort((a, b) => a - b);
 console.log(sortedScores);
 console.log(top3);
@@ -482,5 +489,67 @@ const amounts = [100, 200, 300, 400];
 const total = amounts.reduce(function (acc, cur) {
   console.log(`acc: ${acc}, cur: ${cur}`);
   return acc + cur;
-});
+}, 0);
 console.log(`Total: ${total}`);
+
+////////////////////////////////////
+// Coding Challenge: reduce()
+////////////////////////////////////
+
+/*
+You have an array of orders:
+const orders = [
+  { product: 'Laptop', quantity: 2, price: 999 },
+  { product: 'Phone', quantity: 5, price: 699 },
+  { product: 'Tablet', quantity: 3, price: 450 },
+  { product: 'Mouse', quantity: 10, price: 25 },
+  { product: 'Keyboard', quantity: 4, price: 75 },
+];
+
+1. Use reduce to calculate the total revenue (quantity * price for each order, then sum)
+2. Use reduce to find the order with the highest total value (quantity * price)
+3. Use reduce to count the total number of items ordered (sum of all quantities)
+4. Log all results
+
+Expected output:
+Total revenue: $6942
+Most valuable order: Phone ($3495)
+Total items ordered: 24
+
+Hint: The accumulator doesn't have to be a number — for task 2,
+it can be the "best order so far" (an object).
+*/
+
+const orders = [
+  { product: "Laptop", quantity: 2, price: 999 },
+  { product: "Phone", quantity: 5, price: 699 },
+  { product: "Tablet", quantity: 3, price: 450 },
+  { product: "Mouse", quantity: 10, price: 25 },
+  { product: "Keyboard", quantity: 4, price: 75 },
+];
+
+const totalRevenue = orders.reduce((accumulator, order) => {
+  return accumulator + order.quantity * order.price;
+}, 0);
+
+// const mostValuableOrder = orders.reduce(function (bestOrder, currentOrder) {
+//   const currentTotal = currentOrder.quantity * currentOrder.price;
+//   const bestTotal = bestOrder.quantity * bestOrder.price;
+//   return currentTotal > bestTotal ? currentOrder : bestOrder;
+// }, orders[0]);
+
+// const mostValuableOrder = orders.reduce((bestOrder, currentOrder) => {
+//   const currentTotal = currentOrder.quantity * currentOrder.price;
+//   const bestTotal = bestOrder.quantity * bestOrder.price;
+//   return currentTotal > bestTotal ? currentOrder : bestOrder;
+// }, orders[0]);
+
+const mostValuableOrder = orders.reduce((acc, curr) => {
+  const currentTotal = curr.quantity * curr.price;
+  const bestTotal = acc.quantity * acc.price;
+  return currentTotal > bestTotal ? curr : acc;
+}, orders[0]);
+
+const totalItemsOrdered = orders.reduce((acc, order) => {
+  return acc + order.quantity;
+}, 0);

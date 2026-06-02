@@ -23,6 +23,33 @@ console.log(all); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
 const combined2 = [...arr1, ...arr2, ...arr3];
 console.log(combined2); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+// Spread — expands an array into individual elements
+const original = [1, 2, 3];
+const copy = [...original, 4, 5];
+console.log(copy); // [1, 2, 3, 4, 5]
+
+// Spread in function calls
+const maxNum = Math.max(...original);
+console.log(maxNum); // 3
+
+// Rest operator — collects remaining elements into an array
+// (looks the same as spread: ... but used on the LEFT side)
+const [first, second, ...rest] = [10, 20, 30, 40, 50];
+console.log(first); // 10
+console.log(second); // 20
+console.log(rest); // [30, 40, 50]
+
+// Rest in functions — collects all arguments into an array
+const sumAll = function (...nums) {
+  return nums.reduce((acc, cur) => acc + cur, 0);
+};
+console.log(sumAll(1, 2, 3)); // 6
+console.log(sumAll(10, 20, 30, 40)); // 100
+
+// Spread vs Rest — key difference:
+// Spread (RIGHT side) — unpacks: [...arr]   → expands elements
+// Rest   (LEFT side)  — packs:   [...rest]  → collects elements
+
 // concat with different types
 const mixed = [1, 2].concat(["a", "b"], [true, false]);
 console.log(mixed); // [1, 2, 'a', 'b', true, false]
