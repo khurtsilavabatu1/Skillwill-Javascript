@@ -9,6 +9,7 @@
 // ბრაუზერში, "this" ზედა დონეზე window-ს მიუთითებს.
 
 console.log(typeof window); // 'object'
+console.log(window);
 
 // var-ით გამოცხადებული გლობალური ცვლადები window-ის property-ებია
 var globalVar = "I am global";
@@ -65,7 +66,7 @@ setTimeout(
   },
   1000,
   "Hello",
-  "World"
+  "World",
 );
 
 // setInterval ფუნქციას განმეორებით ასრულებს ფიქსირებული ინტერვალით
@@ -236,12 +237,12 @@ const getLocation = function () {
       enableHighAccuracy: true,
       timeout: 5000,
       maximumAge: 0,
-    }
+    },
   );
 };
 
 // სატესტოდ კომენტარი მოხსენით (საჭიროებს ბრაუზერს geolocation-ის მხარდაჭერით):
-// getLocation();
+getLocation();
 
 // --- navigator.clipboard (ბუფერის წაკითხვა/ჩაწერა, საჭიროებს ნებართვას) ---
 // თანამედროვე Clipboard API ცვლის document.execCommand('copy')-ს.
@@ -257,7 +258,7 @@ const copyToClipboard = async function (text) {
 };
 
 // სატესტოდ კომენტარი მოხსენით (HTTPS უნდა იყოს, მომხმარებლის ჟესტით გამოწვეული):
-// copyToClipboard('Hello from JavaScript!');
+copyToClipboard("Hello from JavaScript!");
 
 // პრაქტიკული მაგალითი: ბრაუზერის ყველა ინფორმაციის შეგროვება ერთ ობიექტში
 const getBrowserInfo = function () {
@@ -394,6 +395,7 @@ console.log("Modified URL:", myUrl.href);
 
 // URLSearchParams — query სტრინგებთან მუშაობის თანამედროვე გზა
 const params = new URLSearchParams("?category=shoes&sort=price&page=2");
+console.log(params);
 
 // get -- ერთი პარამეტრის მნიშვნელობის მიღება
 console.log("category:", params.get("category")); // 'shoes'
@@ -461,7 +463,7 @@ const extractUrlParams = function (urlString) {
 };
 
 const parsed = extractUrlParams(
-  "https://shop.example.com/products?category=shoes&color=red&color=blue&sort=price#reviews"
+  "https://shop.example.com/products?category=shoes&color=red&color=blue&sort=price#reviews",
 );
 console.log("Parsed URL:", parsed);
 // { origin: ..., pathname: '/products', hash: '#reviews',
@@ -611,7 +613,6 @@ console.log("Missing key:", missingKey); // null
 // removeItem(key) — შლის კონკრეტულ ელემენტს
 localStorage.removeItem("fontSize");
 console.log("After removal:", localStorage.getItem("fontSize")); // null
-
 // clear() — შლის ყველაფერს localStorage-დან (სიფრთხილით გამოიყენეთ!)
 // localStorage.clear();
 
@@ -640,6 +641,7 @@ const userPreferences = {
 };
 
 localStorage.setItem("preferences", JSON.stringify(userPreferences));
+console.log(localStorage.getItem("preferences"));
 
 // ობიექტის წაკითხვა და პარსინგი
 const savedPreferences = JSON.parse(localStorage.getItem("preferences"));
@@ -778,7 +780,6 @@ sessionStorage.setItem("session", JSON.stringify(sessionData));
 
 const loadedSession = JSON.parse(sessionStorage.getItem("session"));
 console.log("Session data:", loadedSession);
-
 // --- პრაქტიკული მაგალითი: ფორმის მონაცემების შენარჩუნება შემთხვევითი განახლებისას ---
 
 const saveFormData = function (formId, data) {
@@ -972,3 +973,584 @@ trackVisits();
 // Server-readable     | Yes              | No               | No
 // Best for            | Auth tokens,     | User prefs,      | Temp state,
 //                     | server config    | cached data      | form drafts
+
+////////////////////////////////////
+// 9. ინტერაქტიული დემო — HTML-თან ინტეგრაცია
+////////////////////////////////////
+
+// ეს სექცია აკავშირებს ზემოთ ნასწავლ ყველა კონცეფციას HTML ელემენტებთან
+// და ქმნის სრულფასოვან ინტერაქტიულ აპლიკაციას:
+//   - Hash-based routing (location.hash, hashchange event)
+//   - URL პარამეტრები (URLSearchParams) ფილტრაცია/პაგინაციისთვის
+//   - localStorage: თემის შენახვა, ჩანიშვნების CRUD
+//   - Cookies: cookie consent banner, ვიზიტების მთვლელი
+//   - window/navigator/screen ობიექტების ვიზუალიზაცია
+//   - ცოცხალი URL Inspector ქვედა პანელში
+
+// ========== მონაცემები ==========
+
+const PRODUCTS = [
+  { id: 1, name: "MacBook Pro 14", category: "electronics", price: 4999 },
+  { id: 2, name: "iPhone 15 Pro", category: "electronics", price: 2999 },
+  { id: 3, name: "Samsung Galaxy S24", category: "electronics", price: 1999 },
+  { id: 4, name: "AirPods Pro", category: "electronics", price: 699 },
+  { id: 5, name: "iPad Air", category: "electronics", price: 1899 },
+  { id: 6, name: "Nike Air Max", category: "clothing", price: 399 },
+  { id: 7, name: "Adidas Ultraboost", category: "clothing", price: 449 },
+  { id: 8, name: "Levi's 501", category: "clothing", price: 199 },
+  { id: 9, name: "North Face Jacket", category: "clothing", price: 599 },
+  { id: 10, name: "Converse All Star", category: "clothing", price: 249 },
+  { id: 11, name: "Clean Code", category: "books", price: 89 },
+  { id: 12, name: "JavaScript: The Good Parts", category: "books", price: 69 },
+  { id: 13, name: "Design Patterns", category: "books", price: 99 },
+  { id: 14, name: "The Pragmatic Programmer", category: "books", price: 109 },
+  { id: 15, name: "Eloquent JavaScript", category: "books", price: 79 },
+  { id: 16, name: "საფეხბურთო ბურთი", category: "sports", price: 79 },
+  { id: 17, name: "იოგა მატი", category: "sports", price: 59 },
+  { id: 18, name: "ჩოგბურთის რაკეტი", category: "sports", price: 349 },
+  { id: 19, name: "კალათბურთის ბურთი", category: "sports", price: 99 },
+  { id: 20, name: "სარბენი ფეხსაცმელი", category: "sports", price: 299 },
+];
+
+const CATEGORY_LABELS = {
+  all: "ყველა",
+  electronics: "ელექტრონიკა",
+  clothing: "ტანსაცმელი",
+  books: "წიგნები",
+  sports: "სპორტი",
+};
+
+const ITEMS_PER_PAGE = 4;
+const NOTES_KEY = "demo_notes";
+
+// ========== XSS-ის თავიდან ასაცილებელი დამხმარე ფუნქცია ==========
+
+const escapeHtml = function (text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+};
+
+// ========== Hash-based Router ==========
+// location.hash-ს ვიყენებთ ნავიგაციისთვის, რადგან ის file:// პროტოკოლზეც
+// მუშაობს და გვერდის გადატვირთვას არ იწვევს.
+// ფორმატი: #page?param1=value1&param2=value2
+// რეალურ SPA-ში history.pushState-ს გამოიყენებდნენ სუფთა URL-ებისთვის.
+
+const parseHash = function () {
+  const hash = location.hash.slice(1) || "home";
+  const qIndex = hash.indexOf("?");
+
+  if (qIndex === -1) {
+    return { page: hash, params: new URLSearchParams() };
+  }
+
+  return {
+    page: hash.substring(0, qIndex),
+    params: new URLSearchParams(hash.substring(qIndex + 1)),
+  };
+};
+
+const navigateTo = function (page, params) {
+  let hash = "#" + page;
+  if (params) {
+    const str = params.toString();
+    if (str) hash += "?" + str;
+  }
+  location.hash = hash;
+};
+
+// ========== URL Inspector — ცოცხალი URL მონიტორი ==========
+// location ობიექტის ყველა property-ს ვაჩვენებთ ქვედა პანელში
+
+const updateUrlInspector = function () {
+  document.getElementById("ui-href").textContent = location.href;
+  document.getElementById("ui-protocol").textContent = location.protocol;
+  document.getElementById("ui-host").textContent = location.host;
+  document.getElementById("ui-pathname").textContent = location.pathname;
+  document.getElementById("ui-hash").textContent = location.hash || "(ცარიელი)";
+
+  const hashParsed = parseHash();
+  document.getElementById("ui-page").textContent = hashParsed.page;
+  document.getElementById("ui-params").textContent =
+    hashParsed.params.toString() || "(არ არის)";
+};
+
+// ========== Theme Manager — localStorage ==========
+// მომხმარებლის არჩეული თემა localStorage-ში ინახება და
+// გვერდის განახლების შემდეგაც ნარჩუნდება.
+
+const initTheme = function () {
+  const saved = localStorage.getItem("demo_theme");
+  if (saved === "dark") {
+    document.body.classList.add("dark-theme");
+  }
+  updateThemeButton();
+};
+
+const toggleTheme = function () {
+  document.body.classList.toggle("dark-theme");
+  const isDark = document.body.classList.contains("dark-theme");
+  localStorage.setItem("demo_theme", isDark ? "dark" : "light");
+  updateThemeButton();
+};
+
+const updateThemeButton = function () {
+  const isDark = document.body.classList.contains("dark-theme");
+  document.getElementById("theme-toggle").textContent = isDark
+    ? "Light Mode"
+    : "Dark Mode";
+};
+
+// ========== Cookie Banner ==========
+// პირველ ვიზიტზე cookie consent banner ჩანს.
+// მომხმარებლის არჩევანი cookie-ში ინახება.
+
+const initCookieBanner = function () {
+  const consent = getCookie("demo_consent");
+  if (!consent) {
+    document.getElementById("cookie-banner").classList.remove("hidden");
+  }
+};
+
+// ========== Visit Counter — Cookies ==========
+// ყოველ ვიზიტზე cookie-ის მნიშვნელობას ვზრდით.
+
+const updateVisitCount = function () {
+  let visits = parseInt(getCookie("demo_visits")) || 0;
+  visits++;
+  setCookie("demo_visits", String(visits), 365);
+  document.getElementById("visit-count").textContent = "ვიზიტი: " + visits;
+};
+
+// ========== Notes Manager — localStorage ==========
+// ჩანიშვნები localStorage-ში ინახება JSON ფორმატში.
+
+const getNotes = function () {
+  const data = localStorage.getItem(NOTES_KEY);
+  return data ? JSON.parse(data) : [];
+};
+
+const saveNotes = function (notes) {
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+};
+
+const addNote = function (text) {
+  const notes = getNotes();
+  notes.unshift({
+    id: Date.now(),
+    text: text,
+    date: new Date().toLocaleDateString("ka-GE"),
+  });
+  saveNotes(notes);
+};
+
+const deleteNote = function (id) {
+  const notes = getNotes().filter(function (n) {
+    return n.id !== id;
+  });
+  saveNotes(notes);
+};
+
+const clearAllNotes = function () {
+  localStorage.removeItem(NOTES_KEY);
+};
+
+// ========== Page Renderers ==========
+
+// --- მთავარი გვერდი: ბრაუზერის ინფო + Storage მონიტორი ---
+
+const renderHome = function () {
+  const app = document.getElementById("app");
+
+  const info = {
+    browser: detectBrowser(),
+    language: navigator.language,
+    online: navigator.onLine ? "დიახ" : "არა",
+    platform: navigator.platform,
+    viewport: window.innerWidth + " x " + window.innerHeight,
+    screenRes: screen.width + " x " + screen.height,
+    pixelRatio: window.devicePixelRatio,
+    cookiesOn: navigator.cookieEnabled ? "დიახ" : "არა",
+  };
+
+  // localStorage-ის შიგთავსი
+  const lsKeys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    lsKeys.push({ key: key, value: localStorage.getItem(key) });
+  }
+
+  // Cookies-ის შიგთავსი
+  const cookies = getAllCookies();
+  const cookieEntries = Object.entries(cookies);
+
+  // localStorage ცხრილის HTML
+  let lsTableHtml = "";
+  if (lsKeys.length === 0) {
+    lsTableHtml = '<p class="empty-state">localStorage ცარიელია</p>';
+  } else {
+    lsTableHtml =
+      '<table class="storage-table"><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>';
+    lsKeys.forEach(function (item) {
+      const displayVal =
+        item.value.length > 80
+          ? item.value.substring(0, 80) + "..."
+          : item.value;
+      lsTableHtml +=
+        "<tr><td>" +
+        escapeHtml(item.key) +
+        "</td><td>" +
+        escapeHtml(displayVal) +
+        "</td></tr>";
+    });
+    lsTableHtml += "</tbody></table>";
+  }
+
+  // Cookies ცხრილის HTML
+  let cookieTableHtml = "";
+  if (cookieEntries.length === 0) {
+    cookieTableHtml = '<p class="empty-state">Cookies ცარიელია</p>';
+  } else {
+    cookieTableHtml =
+      '<table class="storage-table"><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody>';
+    cookieEntries.forEach(function (entry) {
+      cookieTableHtml +=
+        "<tr><td>" +
+        escapeHtml(entry[0]) +
+        "</td><td>" +
+        escapeHtml(entry[1]) +
+        "</td></tr>";
+    });
+    cookieTableHtml += "</tbody></table>";
+  }
+
+  app.innerHTML =
+    '<div class="welcome-text">' +
+    "<h2>Browser Objects & Storage</h2>" +
+    "<p>ინტერაქტიული დემო — ნავიგაცია, პაგინაცია, localStorage, Cookies</p>" +
+    "</div>" +
+    '<h3 class="section-heading">Browser & System Info</h3>' +
+    '<p style="margin-bottom:12px;color:var(--text-secondary);font-size:0.9em">' +
+    "window, navigator, screen ობიექტებიდან მიღებული ინფორმაცია:</p>" +
+    '<div class="info-grid">' +
+    '<div class="info-tile"><div class="label">Browser</div><div class="value">' +
+    escapeHtml(info.browser) +
+    "</div></div>" +
+    '<div class="info-tile"><div class="label">Language</div><div class="value">' +
+    escapeHtml(info.language) +
+    "</div></div>" +
+    '<div class="info-tile"><div class="label">Online</div><div class="value">' +
+    info.online +
+    "</div></div>" +
+    '<div class="info-tile"><div class="label">Platform</div><div class="value">' +
+    escapeHtml(info.platform) +
+    "</div></div>" +
+    '<div class="info-tile"><div class="label">Viewport</div><div class="value">' +
+    info.viewport +
+    "</div></div>" +
+    '<div class="info-tile"><div class="label">Screen</div><div class="value">' +
+    info.screenRes +
+    "</div></div>" +
+    '<div class="info-tile"><div class="label">Pixel Ratio</div><div class="value">' +
+    info.pixelRatio +
+    "</div></div>" +
+    '<div class="info-tile"><div class="label">Cookies</div><div class="value">' +
+    info.cookiesOn +
+    "</div></div>" +
+    "</div>" +
+    '<h3 class="section-heading">localStorage Monitor</h3>' +
+    '<div class="card">' +
+    lsTableHtml +
+    "</div>" +
+    '<h3 class="section-heading">Cookies Monitor</h3>' +
+    '<div class="card">' +
+    cookieTableHtml +
+    "</div>";
+};
+
+// --- პროდუქტების გვერდი: ფილტრაცია + პაგინაცია ---
+// URLSearchParams-ს ვიყენებთ კატეგორიისა და გვერდის ნომრისთვის.
+// URL ცვლილებისთანავე ქვედა URL Inspector ახლდება.
+
+const renderProducts = function (params) {
+  const app = document.getElementById("app");
+  const currentCategory = params.get("category") || "all";
+  let currentPage = parseInt(params.get("page")) || 1;
+
+  // პროდუქტების ფილტრაცია კატეგორიით
+  let filtered = PRODUCTS;
+  if (currentCategory !== "all") {
+    filtered = PRODUCTS.filter(function (p) {
+      return p.category === currentCategory;
+    });
+  }
+
+  // პაგინაციის გამოთვლა
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const pageItems = filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  // ფილტრის ღილაკების HTML
+  let filtersHtml = '<div class="filters">';
+  Object.keys(CATEGORY_LABELS).forEach(function (cat) {
+    const activeClass = cat === currentCategory ? " active" : "";
+    filtersHtml +=
+      '<button class="filter-btn' +
+      activeClass +
+      '" data-category="' +
+      cat +
+      '">' +
+      CATEGORY_LABELS[cat] +
+      "</button>";
+  });
+  filtersHtml += "</div>";
+
+  // პროდუქტების ბარათების HTML
+  let productsHtml = "";
+  if (pageItems.length === 0) {
+    productsHtml = '<p class="empty-state">პროდუქტები ვერ მოიძებნა</p>';
+  } else {
+    productsHtml = '<div class="products-grid">';
+    pageItems.forEach(function (p) {
+      productsHtml +=
+        '<div class="product-card">' +
+        "<h3>" +
+        escapeHtml(p.name) +
+        "</h3>" +
+        '<span class="cat-tag">' +
+        CATEGORY_LABELS[p.category] +
+        "</span>" +
+        '<div class="price">' +
+        p.price +
+        " &#8382;</div>" +
+        "</div>";
+    });
+    productsHtml += "</div>";
+  }
+
+  // პაგინაციის ღილაკების HTML
+  let paginationHtml = '<div class="pagination">';
+  paginationHtml +=
+    '<button class="page-btn" data-page="1"' +
+    (currentPage === 1 ? " disabled" : "") +
+    ">&laquo;</button>";
+  paginationHtml +=
+    '<button class="page-btn" data-page="' +
+    (currentPage - 1) +
+    '"' +
+    (currentPage === 1 ? " disabled" : "") +
+    ">&lsaquo;</button>";
+
+  for (let i = 1; i <= totalPages; i++) {
+    paginationHtml +=
+      '<button class="page-btn' +
+      (i === currentPage ? " active" : "") +
+      '" data-page="' +
+      i +
+      '">' +
+      i +
+      "</button>";
+  }
+
+  paginationHtml +=
+    '<button class="page-btn" data-page="' +
+    (currentPage + 1) +
+    '"' +
+    (currentPage === totalPages ? " disabled" : "") +
+    ">&rsaquo;</button>";
+  paginationHtml +=
+    '<button class="page-btn" data-page="' +
+    totalPages +
+    '"' +
+    (currentPage === totalPages ? " disabled" : "") +
+    ">&raquo;</button>";
+  paginationHtml += "</div>";
+
+  const pageInfoHtml =
+    '<div class="page-info">გვერდი ' +
+    currentPage +
+    " / " +
+    totalPages +
+    " (სულ " +
+    filtered.length +
+    " პროდუქტი)</div>";
+
+  app.innerHTML =
+    '<h2 class="page-title">პროდუქტები</h2>' +
+    filtersHtml +
+    productsHtml +
+    paginationHtml +
+    pageInfoHtml;
+
+  // ფილტრის ღილაკებზე click — კატეგორიის შეცვლა URL-ში
+  app.querySelectorAll(".filter-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const cat = this.dataset.category;
+      const newParams = new URLSearchParams();
+      if (cat !== "all") newParams.set("category", cat);
+      newParams.set("page", "1");
+      navigateTo("products", newParams);
+    });
+  });
+
+  // პაგინაციის ღილაკებზე click — გვერდის შეცვლა URL-ში
+  app.querySelectorAll(".page-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (this.disabled) return;
+      const newParams = new URLSearchParams();
+      if (currentCategory !== "all") newParams.set("category", currentCategory);
+      newParams.set("page", this.dataset.page);
+      navigateTo("products", newParams);
+    });
+  });
+};
+
+// --- ჩანიშვნების გვერდი: localStorage CRUD ---
+
+const renderNotes = function () {
+  const app = document.getElementById("app");
+  const notes = getNotes();
+
+  // ჩანიშვნების სიის HTML
+  let notesListHtml = "";
+  if (notes.length === 0) {
+    notesListHtml =
+      '<p class="empty-state">ჯერ არცერთი ჩანიშვნა არ არის. დაამატეთ პირველი!</p>';
+  } else {
+    notes.forEach(function (note) {
+      notesListHtml +=
+        '<div class="note-item" data-id="' +
+        note.id +
+        '">' +
+        '<span class="note-text">' +
+        escapeHtml(note.text) +
+        "</span>" +
+        '<span class="note-date">' +
+        escapeHtml(note.date) +
+        "</span>" +
+        '<button class="btn-danger delete-note">წაშლა</button>' +
+        "</div>";
+    });
+  }
+
+  app.innerHTML =
+    '<h2 class="page-title">ჩანიშვნები</h2>' +
+    '<div class="note-form">' +
+    '<input type="text" class="note-input" id="note-input" placeholder="ახალი ჩანიშვნა..." />' +
+    '<button class="btn-primary" id="add-note">დამატება</button>' +
+    "</div>" +
+    '<div class="notes-header">' +
+    '<span class="notes-count">' +
+    notes.length +
+    " ჩანიშვნა (localStorage-ში)</span>" +
+    (notes.length > 0
+      ? '<button class="btn-danger" id="clear-notes">ყველას წაშლა</button>'
+      : "") +
+    "</div>" +
+    '<div id="notes-list">' +
+    notesListHtml +
+    "</div>";
+
+  // ჩანიშვნის დამატება
+  const noteInput = document.getElementById("note-input");
+  const addBtn = document.getElementById("add-note");
+
+  const handleAddNote = function () {
+    const text = noteInput.value.trim();
+    if (!text) return;
+    addNote(text);
+    renderNotes();
+  };
+
+  addBtn.addEventListener("click", handleAddNote);
+  noteInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") handleAddNote();
+  });
+
+  // ჩანიშვნის წაშლა
+  document.querySelectorAll(".delete-note").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const noteItem = this.closest(".note-item");
+      const id = parseInt(noteItem.dataset.id);
+      deleteNote(id);
+      renderNotes();
+    });
+  });
+
+  // ყველას წაშლა
+  const clearBtn = document.getElementById("clear-notes");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", function () {
+      clearAllNotes();
+      renderNotes();
+    });
+  }
+
+  noteInput.focus();
+};
+
+// ========== Router ==========
+// hashchange event-ს ვუსმენთ — ბრაუზერის back/forward ღილაკებიც მუშაობს.
+
+const route = function () {
+  const hashParsed = parseHash();
+
+  // ნავიგაციის ბმულების active მდგომარეობის განახლება
+  document.querySelectorAll(".nav-link").forEach(function (link) {
+    link.classList.toggle("active", link.dataset.page === hashParsed.page);
+  });
+
+  // შესაბამისი გვერდის რენდერი
+  switch (hashParsed.page) {
+    case "products":
+      renderProducts(hashParsed.params);
+      break;
+    case "notes":
+      renderNotes();
+      break;
+    default:
+      renderHome();
+  }
+
+  updateUrlInspector();
+  window.scrollTo(0, 0);
+};
+
+// ========== ინიციალიზაცია ==========
+
+// თემა: localStorage-დან ვტვირთავთ
+initTheme();
+
+// Cookie Banner: cookie-ს ვამოწმებთ
+initCookieBanner();
+
+// ვიზიტების მთვლელი: cookie-ს ვზრდით
+updateVisitCount();
+
+// Theme toggle ღილაკი
+document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+
+// Cookie banner ღილაკები
+document
+  .getElementById("accept-cookies")
+  .addEventListener("click", function () {
+    setCookie("demo_consent", "accepted", 365);
+    document.getElementById("cookie-banner").classList.add("hidden");
+  });
+
+document
+  .getElementById("decline-cookies")
+  .addEventListener("click", function () {
+    setCookie("demo_consent", "declined", 7);
+    document.getElementById("cookie-banner").classList.add("hidden");
+  });
+
+// Hash change listener — ბრაუზერის back/forward ღილაკებისთვის
+window.addEventListener("hashchange", route);
+
+// პირველი რენდერი
+route();

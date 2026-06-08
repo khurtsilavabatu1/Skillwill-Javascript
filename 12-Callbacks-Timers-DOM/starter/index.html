@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Callbacks, Timers & DOM</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+        color: #263238;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        padding: 30px 20px;
+        margin-bottom: 30px;
+        background: linear-gradient(to right, #00897b, #26a69a);
+        border-radius: 12px;
+        color: white;
+      }
+
+      .header h1 {
+        font-size: 2.4rem;
+        margin-bottom: 8px;
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .section-card {
+        background: white;
+        border-radius: 10px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-card h2 {
+        font-size: 1.4rem;
+        color: #00897b;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e0f2f1;
+      }
+
+      .demo-btn {
+        background: #00897b;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 4px;
+        transition: background 0.2s;
+      }
+
+      .demo-btn:hover {
+        background: #00695c;
+      }
+
+      .demo-btn:active {
+        transform: scale(0.97);
+      }
+
+      .display-box {
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin: 10px 0;
+        font-family: "Courier New", monospace;
+        font-size: 1rem;
+        min-height: 40px;
+      }
+
+      .demo-box {
+        width: 120px;
+        height: 120px;
+        background: #26a69a;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        margin: 10px 0;
+        transition: all 0.3s;
+      }
+
+      .demo-box.highlight {
+        background: #ff7043;
+        transform: scale(1.1);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .list-demo {
+        list-style: none;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 10px 0;
+      }
+
+      .list-item {
+        background: #e0f2f1;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        background: #e0e0e0;
+        font-size: 0.85rem;
+        margin-top: 8px;
+      }
+
+      #text-input {
+        padding: 10px 14px;
+        border: 2px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 350px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      #text-input:focus {
+        border-color: #00897b;
+      }
+
+      .hover-zone {
+        background: #e0f2f1;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        margin-top: 10px;
+        transition: all 0.3s;
+        cursor: default;
+      }
+
+      .clock-display {
+        font-size: 3rem;
+        font-family: "Courier New", monospace;
+        text-align: center;
+        color: #00897b;
+        padding: 20px;
+        background: #e0f2f1;
+        border-radius: 10px;
+        letter-spacing: 4px;
+      }
+
+      .countdown {
+        font-size: 4rem;
+        font-family: "Courier New", monospace;
+        text-align: center;
+        color: #00897b;
+        padding: 20px;
+        transition: color 0.3s;
+      }
+
+      .countdown.warning {
+        color: #e53935;
+      }
+
+      .traffic-light-container {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .traffic-light {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #e53935;
+        transition: background 0.5s;
+        border: 4px solid #37474f;
+      }
+
+      .typewriter-display {
+        font-family: "Courier New", monospace;
+        font-size: 1.2rem;
+        min-height: 50px;
+        border-left: 3px solid #00897b;
+        padding-left: 12px;
+        margin: 10px 0;
+      }
+
+      .game-area {
+        height: 200px;
+        background: #bdbdbd;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 10px 0;
+        transition: background 0.2s;
+        user-select: none;
+      }
+
+      .game-area.waiting {
+        background: #ff9800;
+      }
+
+      .game-area.ready {
+        background: #43a047;
+      }
+
+      .game-area.too-early {
+        background: #e53935;
+      }
+
+      .flex-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Callbacks, Timers & DOM</h1>
+        <p>Interactive Practice Page</p>
+      </header>
+
+      <!-- Section: DOM Selection -->
+      <div class="section-card">
+        <h2>DOM Selection</h2>
+        <p id="demo-text">
+          This paragraph has id="demo-text". You can select and modify it with
+          JavaScript.
+        </p>
+        <div id="demo-box" class="demo-box">Box</div>
+        <div id="output-display" class="display-box">Output will appear here</div>
+        <ul class="list-demo">
+          <li class="list-item">HTML</li>
+          <li class="list-item">CSS</li>
+          <li class="list-item">JavaScript</li>
+          <li class="list-item">DOM</li>
+          <li class="list-item">Events</li>
+        </ul>
+        <span
+          id="status-badge"
+          class="status-badge"
+          data-role="status"
+        >
+          Status: Idle
+        </span>
+      </div>
+
+      <!-- Section: Event Listeners -->
+      <div class="section-card">
+        <h2>Event Listeners</h2>
+        <div class="flex-row">
+          <button id="btn-alert" class="demo-btn">Alert Button</button>
+          <button id="btn-toggle" class="demo-btn">Toggle Box</button>
+        </div>
+        <div style="margin-top: 12px">
+          <input
+            type="text"
+            id="text-input"
+            placeholder="Start typing here..."
+          />
+          <p id="input-mirror" class="display-box">Your text will appear here</p>
+        </div>
+        <div id="hover-zone" class="hover-zone">Hover over me!</div>
+      </div>
+
+      <!-- Section: Live Clock -->
+      <div class="section-card">
+        <h2>Live Clock</h2>
+        <div id="live-clock" class="clock-display">00:00:00</div>
+      </div>
+
+      <!-- Section: Countdown Timer -->
+      <div class="section-card">
+        <h2>Countdown Timer</h2>
+        <div id="countdown-display" class="countdown">10</div>
+        <div class="flex-row" style="justify-content: center">
+          <button id="btn-start-countdown" class="demo-btn">Start</button>
+          <button id="btn-stop-countdown" class="demo-btn">Stop</button>
+          <button id="btn-reset-countdown" class="demo-btn">Reset</button>
+        </div>
+      </div>
+
+      <!-- Section: Click Counter -->
+      <div class="section-card">
+        <h2>Click Counter (Auto-Reset after 3s)</h2>
+        <div class="flex-row">
+          <button id="btn-click-counter" class="demo-btn">Click Me!</button>
+          <span id="click-count" class="display-box" style="min-width: 60px; text-align: center">0</span>
+        </div>
+        <p id="click-status" style="margin-top: 8px; color: #757575; font-size: 0.9rem"></p>
+      </div>
+
+      <!-- Section: Traffic Light -->
+      <div class="section-card">
+        <h2>Traffic Light</h2>
+        <div class="traffic-light-container">
+          <div id="traffic-light" class="traffic-light"></div>
+          <p id="traffic-label" style="font-size: 1.2rem; font-weight: bold">Red</p>
+        </div>
+      </div>
+
+      <!-- Section: Typewriter -->
+      <div class="section-card">
+        <h2>Typewriter Effect</h2>
+        <p id="typewriter-output" class="typewriter-display"></p>
+        <button id="btn-typewriter" class="demo-btn">Start Typewriter</button>
+      </div>
+
+      <!-- Section: Reaction Game -->
+      <div class="section-card">
+        <h2>Reaction Time Game</h2>
+        <div id="game-area" class="game-area">
+          Click "Start Game" to begin
+        </div>
+        <div class="flex-row">
+          <button id="btn-start-game" class="demo-btn">Start Game</button>
+          <span id="reaction-result" class="display-box" style="min-width: 150px">-- ms</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
