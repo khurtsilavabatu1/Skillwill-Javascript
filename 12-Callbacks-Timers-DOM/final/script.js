@@ -310,23 +310,6 @@ const startCountdown = function (seconds) {
 // კომენტარი მოხსენით სატესტოდ:
 // startCountdown(5);
 
-// მაგალითი 3: Recursive setTimeout — setInterval-ის ალტერნატივა
-// უპირატესობა: თითოეული შემდეგი გამოძახება წინის დასრულების შემდეგ იწყება,
-// ამიტომ არასოდეს "გადაფარვა" არ ხდება.
-const recursiveCounter = function (count, max) {
-  if (count > max) {
-    console.log("Recursive counter done!");
-    return;
-  }
-  console.log(`Recursive tick #${count}`);
-  setTimeout(function () {
-    recursiveCounter(count + 1, max);
-  }, 1000);
-};
-
-// კომენტარი მოხსენით სატესტოდ:
-// recursiveCounter(1, 5);
-
 // მაგალითი 4: კონსოლში ციფრული საათი
 const consoleClockId = setInterval(function () {
   console.log("Console clock:", new Date().toLocaleTimeString());
@@ -353,15 +336,14 @@ setTimeout(function () {
 2. Test it: repeatNTimes(function(i) { console.log('Tick ' + i); }, 5, 1000)
    Should log "Tick 1" through "Tick 5" at 1-second intervals.
 
-3. BONUS: Create a simplified 'debounce' function that takes a function
-   and a delay. It returns a NEW function that, when called, waits 'delay'
-   milliseconds before executing. If called again before the delay is up,
-   it resets the timer.
+3. BONUS: Create a function 'delayedGreet' that takes a name and a delay
+   in milliseconds. It should use setTimeout to log
+   "Hello, <name>!" after the given delay.
 
-TEST DATA: Use the examples above
+TEST DATA: delayedGreet("Giorgi", 2000) — should log "Hello, Giorgi!" after 2 seconds
 
 HINT: repeatNTimes needs a counter variable and clearInterval when counter reaches n
-HINT: debounce uses setTimeout internally and clearTimeout to reset
+HINT: delayedGreet simply wraps console.log inside setTimeout
 
 GOOD LUCK :)
 */
@@ -383,25 +365,14 @@ const repeatNTimes = function (callback, n, intervalMs) {
 //   console.log("Tick " + i);
 // }, 5, 1000);
 
-const debounce = function (fn, delayMs) {
-  let timerId;
-  return function () {
-    clearTimeout(timerId);
-    const args = arguments;
-    const self = this;
-    timerId = setTimeout(function () {
-      fn.apply(self, args);
-    }, delayMs);
-  };
+const delayedGreet = function (name, delayMs) {
+  setTimeout(function () {
+    console.log("Hello, " + name + "!");
+  }, delayMs);
 };
 
 // კომენტარი მოხსენით სატესტოდ:
-// const debouncedLog = debounce(function (msg) {
-//   console.log("Debounced:", msg);
-// }, 1000);
-// debouncedLog("first");
-// debouncedLog("second");
-// debouncedLog("third"); // მხოლოდ "third" დაიბეჭდება 1 წამის შემდეგ
+// delayedGreet("Giorgi", 2000); // "Hello, Giorgi!" — 2 წამის შემდეგ
 
 ////////////////////////////////////
 // 5. DOM — კონცეფცია და ხის სტრუქტურა

@@ -211,15 +211,14 @@ GOOD LUCK :)
 2. Test it: repeatNTimes(function(i) { console.log('Tick ' + i); }, 5, 1000)
    Should log "Tick 1" through "Tick 5" at 1-second intervals.
 
-3. BONUS: Create a simplified 'debounce' function that takes a function
-   and a delay. It returns a NEW function that, when called, waits 'delay'
-   milliseconds before executing. If called again before the delay is up,
-   it resets the timer.
+3. BONUS: Create a function 'delayedGreet' that takes a name and a delay
+   in milliseconds. It should use setTimeout to log
+   "Hello, <name>!" after the given delay.
 
-TEST DATA: Use the examples above
+TEST DATA: delayedGreet("Giorgi", 2000) — should log "Hello, Giorgi!" after 2 seconds
 
 HINT: repeatNTimes needs a counter variable and clearInterval when counter reaches n
-HINT: debounce uses setTimeout internally and clearTimeout to reset
+HINT: delayedGreet simply wraps console.log inside setTimeout
 
 GOOD LUCK :)
 */
