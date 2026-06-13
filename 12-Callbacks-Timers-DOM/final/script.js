@@ -115,7 +115,7 @@ const isNotEmpty = function (str) {
 };
 
 processInput(
-  "Skillwill",
+  "",
   isNotEmpty,
   function (val) {
     console.log(`Valid input: "${val}"`);
@@ -308,7 +308,7 @@ const startCountdown = function (seconds) {
 };
 
 // კომენტარი მოხსენით სატესტოდ:
-// startCountdown(5);
+startCountdown(5);
 
 // მაგალითი 4: კონსოლში ციფრული საათი
 const consoleClockId = setInterval(function () {
@@ -361,9 +361,13 @@ const repeatNTimes = function (callback, n, intervalMs) {
 };
 
 // კომენტარი მოხსენით სატესტოდ:
-// repeatNTimes(function (i) {
-//   console.log("Tick " + i);
-// }, 5, 1000);
+repeatNTimes(
+  function (i) {
+    console.log("Tick " + i);
+  },
+  5,
+  1000,
+);
 
 const delayedGreet = function (name, delayMs) {
   setTimeout(function () {
@@ -372,7 +376,7 @@ const delayedGreet = function (name, delayMs) {
 };
 
 // კომენტარი მოხსენით სატესტოდ:
-// delayedGreet("Giorgi", 2000); // "Hello, Giorgi!" — 2 წამის შემდეგ
+delayedGreet("Giorgi", 2000); // "Hello, Giorgi!" — 2 წამის შემდეგ
 
 ////////////////////////////////////
 // 5. DOM — კონცეფცია და ხის სტრუქტურა
@@ -464,7 +468,7 @@ console.log("Has 'demo-box' class:", demoBox.classList.contains("demo-box"));
 // true
 
 // კომენტარი მოხსენით სატესტოდ:
-// demoBox.classList.toggle('highlight');
+demoBox.classList.toggle("highlight");
 
 // მაგალითი 6: ელემენტის ჩვენება/დამალვა
 const statusBadge = document.getElementById("status-badge");
@@ -677,7 +681,7 @@ const oneTimeClick = function () {
 };
 
 // კომენტარი მოხსენით სატესტოდ:
-// btnAlert.addEventListener('click', oneTimeClick);
+btnAlert.addEventListener("click", oneTimeClick);
 
 ////////////////////////////////////
 // 9. ტაიმერები + DOM — ინტერაქტიული მაგალითები

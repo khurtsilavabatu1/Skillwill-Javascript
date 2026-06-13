@@ -1057,7 +1057,7 @@ const navigateTo = function (page, params) {
     const str = params.toString();
     if (str) hash += "?" + str;
   }
-  location.hash = hash;
+  location.hash = ``;
 };
 
 // ========== URL Inspector — ცოცხალი URL მონიტორი ==========
@@ -1178,12 +1178,16 @@ const renderHome = function () {
   const lsKeys = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    lsKeys.push({ key: key, value: localStorage.getItem(key) });
+    lsKeys.push({ key, value: localStorage.getItem(key) });
   }
+  console.log("lsKeys", lsKeys);
 
   // Cookies-ის შიგთავსი
   const cookies = getAllCookies();
+  console.log("cookies", cookies);
+
   const cookieEntries = Object.entries(cookies);
+  console.log("cookieEntries", cookieEntries);
 
   // localStorage ცხრილის HTML
   let lsTableHtml = "";
