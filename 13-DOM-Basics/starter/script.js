@@ -1,126 +1,124 @@
 "use strict";
 
 ////////////////////////////////////
-// ინტერაქტიული დემო — Starter
+// 1. DOM-ის ცნება და DOM ხე
 ////////////////////////////////////
 
-// ეს ფაილი შეიცავს TODO-ებს, რომლებიც თქვენ უნდა შეავსოთ.
-// ყოველი TODO-ს აღწერაში მოცემულია რა კონცეფციას იყენებს
-// და რა უნდა გააკეთოს ფუნქციამ.
+// DOM (Document Object Model) — ბრაუზერის მიერ შექმნილი
+// HTML დოკუმენტის ობიექტური წარმოდგენა (ხისებური სტრუქტურა).
+// document — DOM-ის entry point, მთავარი ობიექტი.
 
+console.log(document);
+console.log(document.documentElement); // <html>
+console.log(document.body); // <body>
+console.log(document.title); // გვერდის სათაური
 
-// ========== Section 1: getElementById ==========
+////////////////////////////////////
+// 2. getElementById
+////////////////////////////////////
 
-// TODO 1: getElementById-ით ამოიღეთ #greeting-text ელემენტი
-// და შეცვალეთ მისი textContent: "Hello, DOM World!"
-// კონცეფცია: document.getElementById(), textContent
+// document.getElementById('id') — ეძებს ელემენტს უნიკალური id-ით.
+// აბრუნებს ერთ ელემენტს ან null-ს.
 
+const greetingEl = document.getElementById("greeting-text");
+console.log(greetingEl.textContent);
+greetingEl.textContent = "Hello, DOM World!";
 
-// TODO 2: getElementById-ით ამოიღეთ #counter-display ელემენტი.
-// შექმენით ცვლადი count = 0.
-// დაამატეთ click event listener-ები #btn-increment, #btn-decrement, #btn-reset ღილაკებზე:
-//   - increment: count + 1, განაახლეთ counter-display-ის textContent
-//   - decrement: count - 1 (მინიმუმ 0), განაახლეთ counter-display-ის textContent
-//   - reset: count = 0, განაახლეთ counter-display-ის textContent
-// კონცეფცია: getElementById, textContent, addEventListener
+// null თუ ვერ იპოვა
+const nonExistent = document.getElementById("does-not-exist");
+console.log(nonExistent); // null
 
+// --- Counter Demo ---
+const counterDisplay = document.getElementById("counter-display");
+const btnIncrement = document.getElementById("btn-increment");
+const btnReset = document.getElementById("btn-reset");
+const output1 = document.getElementById("output-1");
 
-// TODO 3: getElementById-ით ამოიღეთ #output-1 ელემენტი.
-// შეცვალეთ მისი innerHTML ისე, რომ შიგნით იყოს:
-// "<strong>getElementById</strong> — ელემენტს ეძებს <em>id</em> ატრიბუტით"
-// კონცეფცია: getElementById, innerHTML
+let count = 0;
 
+btnIncrement.addEventListener("click", function () {
+  count++;
+  counterDisplay.textContent = count;
+});
 
-// ========== Section 2: querySelector & querySelectorAll ==========
+btnReset.addEventListener("click", function () {
+  count = 0;
+  counterDisplay.textContent = count;
+});
 
-// TODO 4: querySelector-ით ამოიღეთ .profile-name ელემენტი
-// და შეცვალეთ მისი textContent "Giorgi Lomidze"-ზე.
-// ასევე querySelector-ით ამოიღეთ .profile-role და შეცვალეთ "Full Stack Developer"-ზე.
-// კონცეფცია: querySelector (კლასით)
+output1.innerHTML =
+  "<strong>getElementById</strong> — ელემენტს ეძებს <em>id</em> ატრიბუტით";
 
+////////////////////////////////////
+// 3. querySelector / querySelectorAll
+////////////////////////////////////
 
-// TODO 5: querySelector-ით ამოიღეთ #avatar ელემენტი
-// და შეცვალეთ მისი textContent "G"-ზე (Giorgi-ს პირველი ასო).
-// ასევე შეცვალეთ მისი style.background "G"-სთვის შესაფერის ფერზე, მაგ. '#1e88e5'
-// კონცეფცია: querySelector (id-ით), textContent, style
+// querySelector(selector) — CSS სელექტორით ეძებს პირველ ემთხვევას.
+// querySelectorAll(selector) — ყველა ემთხვევას (NodeList).
 
+// კლასით
+const profileName = document.querySelector(".profile-name");
+profileName.textContent = "Giorgi Lomidze";
 
-// TODO 6: #btn-update-profile ღილაკზე click listener-ის დამატება.
-// კლიკისას querySelector-ით ამოიღეთ .profile-email და შეცვალეთ
-// textContent: "giorgi@skillwill.ge"
-// კონცეფცია: querySelector, addEventListener
+// კომბინირებული სელექტორი
+const profileEmail = document.querySelector(".profile-info .profile-email");
+console.log(profileEmail.textContent);
 
+// querySelectorAll + forEach
+const allTasks = document.querySelectorAll(".task-item");
+console.log("Total tasks:", allTasks.length);
 
-// TODO 7: querySelectorAll-ით ამოიღეთ ყველა .task-item ელემენტი.
-// #btn-count-tasks კლიკზე #output-2-ში აჩვენეთ რამდენი task-ია სულ.
-// კონცეფცია: querySelectorAll, length
+allTasks.forEach(function (task, index) {
+  console.log(`Task ${index + 1}:`, task.textContent.trim());
+});
 
+// --- ღილაკები ---
+document
+  .getElementById("btn-update-profile")
+  .addEventListener("click", function () {
+    document.querySelector(".profile-email").textContent =
+      "giorgi@skillwill.ge";
+    document.querySelector(".profile-role").textContent =
+      "Full Stack Developer";
+    document.querySelector("#avatar").textContent = "G";
+    document.querySelector("#avatar").style.background = "#1e88e5";
+  });
 
-// TODO 8: #btn-complete-first კლიკზე querySelector-ით
-// ამოიღეთ პირველი .task-item და დაამატეთ კლასი 'completed'.
-// კონცეფცია: querySelector (პირველი ემთხვევა), classList.add
+document
+  .getElementById("btn-complete-first")
+  .addEventListener("click", function () {
+    const firstTask = document.querySelector(".task-item");
+    if (firstTask) {
+      firstTask.classList.add("completed");
+    }
+  });
 
+////////////////////////////////////
+// 4. getElementsByClassName
+////////////////////////////////////
 
-// TODO 9: #btn-highlight-high კლიკზე querySelectorAll-ით
-// ამოიღეთ ყველა .priority-high ელემენტი და თითოეულის
-// მშობელ ელემენტს (.task-item) შეუცვალეთ background ფერი '#fff3e0'-ზე.
-// გამოიყენეთ for ციკლი ან forEach.
-// კონცეფცია: querySelectorAll, parentElement, style
+// getElementsByClassName('class') — აბრუნებს HTMLCollection-ს (live).
+// HTMLCollection vs NodeList:
+//   - HTMLCollection — "live", ავტომატურად განახლდება, forEach არ აქვს
+//   - NodeList — "static", forEach აქვს
 
+const colorBoxes = document.getElementsByClassName("color-box");
+console.log("Color boxes:", colorBoxes.length);
 
-// ========== Section 3: getElementsByClassName & getElementsByTagName ==========
+document
+  .getElementById("btn-fade-boxes")
+  .addEventListener("click", function () {
+    const boxes = document.getElementsByClassName("color-box");
+    for (let i = 0; i < boxes.length; i++) {
+      boxes[i].style.opacity = "0.3";
+    }
+  });
 
-// TODO 10: getElementsByClassName-ით ამოიღეთ ყველა 'color-box' ელემენტი.
-// #btn-count-boxes კლიკზე #output-3-ში აჩვენეთ რამდენი color-box-ია.
-// კონცეფცია: getElementsByClassName, length
-
-
-// TODO 11: #btn-fade-boxes კლიკზე getElementsByClassName('color-box')-ით
-// ამოღებულ ყველა ელემენტს შეუცვალეთ opacity 0.3-ზე.
-// #btn-restore-boxes კლიკზე დააბრუნეთ opacity 1-ზე.
-// კონცეფცია: getElementsByClassName, style.opacity, for ციკლი
-
-
-// TODO 12: getElementsByTagName('a')-ით ამოიღეთ #main-nav-ში არსებული ლინკები.
-// #btn-count-links კლიკზე #output-3-ში აჩვენეთ ლინკების რაოდენობა.
-// #btn-uppercase-links კლიკზე თითოეული ლინკის textContent გადაიყვანეთ uppercase-ში.
-// მინიშნება: ჯერ getElementById-ით ამოიღეთ #main-nav, შემდეგ მასზე გამოიძახეთ getElementsByTagName
-// კონცეფცია: getElementsByTagName, textContent, toUpperCase
-
-
-// TODO 13: getElementsByTagName('tr')-ით ამოიღეთ #student-table-ში არსებული რიგები.
-// #btn-count-rows კლიკზე #output-3-ში აჩვენეთ tbody-ში რამდენი მონაცემთა რიგია (thead-ის გარეშე).
-// #btn-highlight-top კლიკზე ყველა რიგი, სადაც შეფასება >= 90, background გახადეთ '#e8f5e9'.
-// მინიშნება: tbody-ს რიგები index 1-დან იწყება (ან tbody-ზე getElementsByTagName)
-// კონცეფცია: getElementsByTagName, children, style
-
-
-// ========== Section 4: innerHTML, textContent & style ==========
-
-// TODO 14: #btn-show-inner კლიკზე #output-4-ში აჩვენეთ #content-area-ს innerHTML.
-// #btn-show-text კლიკზე #output-4-ში აჩვენეთ #content-area-ს textContent.
-// კონცეფცია: innerHTML vs textContent (კითხვა)
-
-
-// TODO 15: #btn-set-inner კლიკზე #content-area-ს innerHTML შეუცვალეთ:
-// "<h3 style='color: #3949ab'>Updated!</h3><p>This was set with <code>innerHTML</code></p>"
-// #btn-set-text კლიკზე #content-area-ს textContent შეუცვალეთ:
-// "This was set with textContent — HTML tags won't render here"
-// კონცეფცია: innerHTML vs textContent (ჩაწერა)
-
-
-// TODO 16: style თვისებების შეცვლა:
-// #btn-style-color კლიკზე #style-target-ის color შეუცვალეთ '#e53935'-ზე
-// #btn-style-bg კლიკზე #style-target-ის backgroundColor შეუცვალეთ '#1a237e'-ზე და color '#fff'-ზე
-// #btn-style-size კლიკზე #style-target-ის fontSize შეუცვალეთ '2rem'-ზე
-// #btn-style-reset კლიკზე ყველა style წაშალეთ: element.style.cssText = ''
-// კონცეფცია: style.property, style.cssText
-
-
-// TODO 17: innerHTML-ით დინამიური კონტენტის შექმნა.
-// #btn-add-success კლიკზე #notification-area-ს innerHTML-ს დაუმატეთ (+=):
-//   '<div class="notification success">Operation completed successfully!</div>'
-// #btn-add-error კლიკზე: '<div class="notification error">Something went wrong!</div>'
-// #btn-add-info კლიკზე: '<div class="notification info">Here is some useful information.</div>'
-// #btn-clear-notifications კლიკზე: notification-area-ს innerHTML = ''
-// კონცეფცია: innerHTML (დამატება += და გასუფთავება)
+document
+  .getElementById("btn-restore-boxes")
+  .addEventListener("click", function () {
+    const boxes = document.getElementsByClassName("color-box");
+    for (let i = 0; i < boxes.length; i++) {
+      boxes[i].style.opacity = "1";
+    }
+  });
