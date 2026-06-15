@@ -535,6 +535,23 @@ console.log(
   }),
 );
 
+// 'tag' — ტეგით
+document.querySelectorAll("p"); // ყველა <p> ელემენტი
+document.querySelector("h2"); // პირველი <h2>
+
+// 'parent > child' — პირდაპირი შვილი
+document.querySelectorAll("ul > li"); // <ul>-ის პირდაპირი <li> შვილები
+document.querySelector("div > p"); // <div>-ის პირდაპირი <p>
+
+// '[attribute]' — ატრიბუტით
+document.querySelector("[disabled]"); // პირველი disabled ელემენტი
+document.querySelector('[type="text"]'); // პირველი input type="text"
+document.querySelectorAll('[data-role="status"]'); // ყველა data-role="status"
+
+// 'tag.class' — ტეგი + კლასი
+document.querySelectorAll("button.demo-btn"); // ყველა <button> კლასით "demo-btn"
+document.querySelector("div.section-card"); // პირველი <div> კლასით "section-card"
+
 // მაგალითი 5: ატრიბუტის სელექტორი
 const statusElement = document.querySelector('[data-role="status"]');
 console.log("Status element:", statusElement.textContent);
@@ -653,6 +670,8 @@ const textInput = document.getElementById("text-input");
 const inputMirror = document.getElementById("input-mirror");
 
 textInput.addEventListener("input", function (e) {
+  console.log("eventInfo", e);
+
   inputMirror.textContent = e.target.value || "Your text will appear here";
 });
 

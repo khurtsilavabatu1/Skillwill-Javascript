@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Practice Challenges - Browser Objects & Storage</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f0f2f5;
+        color: #1a1a2e;
+        min-height: 100vh;
+        padding: 24px 16px;
+      }
+
+      body.dark-theme {
+        background: #0f0f23;
+        color: #e0e0e0;
+      }
+
+      body.dark-theme .card {
+        background: #1a1a2e;
+        border-color: #2a2a3e;
+      }
+
+      body.dark-theme .output {
+        background: #12121f;
+        border-color: #2a2a3e;
+      }
+
+      body.dark-theme input,
+      body.dark-theme select {
+        background: #12121f;
+        color: #e0e0e0;
+        border-color: #2a2a3e;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 1.6em;
+        color: #6a1b9a;
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .card {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .card h2 {
+        font-size: 1.15em;
+        color: #6a1b9a;
+        margin-bottom: 4px;
+      }
+
+      .card .desc {
+        font-size: 0.85em;
+        color: #888;
+        margin-bottom: 14px;
+      }
+
+      .output {
+        background: #f8f8fc;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 14px;
+        font-family: "Courier New", Consolas, monospace;
+        font-size: 0.85em;
+        min-height: 60px;
+        white-space: pre-wrap;
+        word-break: break-all;
+        margin-top: 10px;
+      }
+
+      .btn {
+        padding: 8px 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9em;
+        font-weight: 600;
+        transition: opacity 0.2s;
+        margin-right: 8px;
+        margin-bottom: 6px;
+      }
+
+      .btn:hover {
+        opacity: 0.85;
+      }
+
+      .btn-primary {
+        background: #6a1b9a;
+        color: #fff;
+      }
+
+      .btn-danger {
+        background: #e74c3c;
+        color: #fff;
+      }
+
+      .btn-success {
+        background: #27ae60;
+        color: #fff;
+      }
+
+      .btn-secondary {
+        background: #546e7a;
+        color: #fff;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .info-tile {
+        background: #f8f8fc;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+      }
+
+      body.dark-theme .info-tile {
+        background: #12121f;
+        border-color: #2a2a3e;
+      }
+
+      .info-tile .label {
+        font-size: 0.75em;
+        color: #888;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+
+      .info-tile .value {
+        font-size: 1.1em;
+        font-weight: 700;
+        color: #6a1b9a;
+        word-break: break-all;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      input,
+      select {
+        padding: 8px 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.9em;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      input:focus,
+      select:focus {
+        border-color: #6a1b9a;
+      }
+
+      .storage-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85em;
+        margin-top: 10px;
+      }
+
+      .storage-table th,
+      .storage-table td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      body.dark-theme .storage-table th,
+      body.dark-theme .storage-table td {
+        border-color: #2a2a3e;
+      }
+
+      .storage-table th {
+        color: #888;
+        font-weight: 600;
+        font-size: 0.85em;
+        text-transform: uppercase;
+      }
+
+      .storage-table td:first-child {
+        font-weight: 600;
+        color: #6a1b9a;
+      }
+
+      @media (max-width: 640px) {
+        .info-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Practice Challenges</h1>
+      <p class="subtitle">Browser Objects & Storage</p>
+
+      <!-- Challenge #1: Window Inspector -->
+      <div class="card">
+        <h2>#1 - Window Inspector</h2>
+        <p class="desc">Viewport info, timers, window features</p>
+        <div class="controls">
+          <button class="btn btn-primary" id="btn-viewport">Viewport Info</button>
+          <button class="btn btn-primary" id="btn-features">Check Features</button>
+          <button class="btn btn-success" id="btn-start-ticks">Start Ticks (5x)</button>
+          <button class="btn btn-danger" id="btn-stop-ticks">Stop</button>
+        </div>
+        <div class="info-grid" id="viewport-grid"></div>
+        <div class="output" id="output-1"></div>
+      </div>
+
+      <!-- Challenge #2: Device Detective -->
+      <div class="card">
+        <h2>#2 - Device Detective</h2>
+        <p class="desc">Navigator, Screen, browser detection</p>
+        <div class="controls">
+          <button class="btn btn-primary" id="btn-report">Generate Report</button>
+        </div>
+        <div class="info-grid" id="device-grid"></div>
+        <div class="output" id="output-2"></div>
+      </div>
+
+      <!-- Challenge #3: URL Parser -->
+      <div class="card">
+        <h2>#3 - URL Parser</h2>
+        <p class="desc">Location, URLSearchParams</p>
+        <div class="controls">
+          <button class="btn btn-primary" id="btn-parse-url">Parse Current URL</button>
+          <button class="btn btn-secondary" id="btn-build-query">Build Query</button>
+        </div>
+        <div class="controls">
+          <input type="text" id="param-key" placeholder="key" style="width: 120px" />
+          <input type="text" id="param-value" placeholder="value" style="width: 120px" />
+          <button class="btn btn-success" id="btn-add-param">Add Param</button>
+          <button class="btn btn-danger" id="btn-remove-param">Remove Param</button>
+        </div>
+        <div class="output" id="output-3"></div>
+      </div>
+
+      <!-- Challenge #4: Theme Saver -->
+      <div class="card">
+        <h2>#4 - Theme Saver</h2>
+        <p class="desc">localStorage, JSON, settings persistence</p>
+        <div class="controls">
+          <button class="btn btn-primary" id="btn-toggle-theme">Toggle Theme</button>
+          <button class="btn btn-secondary" id="btn-load-settings">Load Settings</button>
+          <button class="btn btn-danger" id="btn-reset-settings">Reset</button>
+        </div>
+        <div class="controls">
+          <label>Font Size:</label>
+          <input type="number" id="font-size-input" value="16" style="width: 80px" />
+          <button class="btn btn-success" id="btn-save-font">Save</button>
+          <label style="margin-left: 12px">Language:</label>
+          <select id="lang-select">
+            <option value="en">English</option>
+            <option value="ka">Georgian</option>
+            <option value="de">German</option>
+          </select>
+          <button class="btn btn-success" id="btn-save-lang">Save</button>
+        </div>
+        <div class="output" id="output-4"></div>
+      </div>
+
+      <!-- Challenge #5: Session Manager -->
+      <div class="card">
+        <h2>#5 - Session Manager</h2>
+        <p class="desc">sessionStorage, cookies, comparison</p>
+        <div class="controls">
+          <button class="btn btn-primary" id="btn-set-cookie">Set Cookie</button>
+          <button class="btn btn-primary" id="btn-save-session">Save Session</button>
+          <button class="btn btn-secondary" id="btn-read-all">Read All</button>
+          <button class="btn btn-secondary" id="btn-compare">Compare Methods</button>
+          <button class="btn btn-danger" id="btn-cleanup">Clean Up</button>
+        </div>
+        <div class="output" id="output-5"></div>
+      </div>
+    </div>
+
+    <script src="practice-challenges.js"></script>
+  </body>
+</html>

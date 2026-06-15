@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>DOM Basics</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+        color: #263238;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        padding: 30px 20px;
+        margin-bottom: 30px;
+        background: linear-gradient(to right, #3949ab, #5c6bc0);
+        border-radius: 12px;
+        color: white;
+      }
+
+      .header h1 {
+        font-size: 2.4rem;
+        margin-bottom: 8px;
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .section-card {
+        background: white;
+        border-radius: 10px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-card h2 {
+        font-size: 1.4rem;
+        color: #3949ab;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e8eaf6;
+      }
+
+      .demo-btn {
+        background: #3949ab;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 4px;
+        transition: background 0.2s;
+      }
+
+      .demo-btn:hover {
+        background: #283593;
+      }
+
+      .demo-btn:active {
+        transform: scale(0.97);
+      }
+
+      .display-box {
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin: 10px 0;
+        font-family: "Courier New", monospace;
+        font-size: 1rem;
+        min-height: 40px;
+      }
+
+      .highlight {
+        background: #fff9c4;
+        border: 2px solid #fdd835;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .flex-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 8px 0;
+      }
+
+      /* Profile Card */
+      .profile-card {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        padding: 20px;
+        background: #f3e5f5;
+        border-radius: 10px;
+        margin: 10px 0;
+      }
+
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #7e57c2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      .profile-info h3 {
+        font-size: 1.2rem;
+        color: #4a148c;
+      }
+
+      .profile-info p {
+        color: #666;
+        margin-top: 4px;
+      }
+
+      /* Task List */
+      .task-list {
+        list-style: none;
+        margin: 10px 0;
+      }
+
+      .task-item {
+        padding: 12px 16px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.2s;
+      }
+
+      .task-item:hover {
+        background: #f5f5f5;
+      }
+
+      .task-item.completed {
+        background: #e8f5e9;
+        text-decoration: line-through;
+        color: #999;
+      }
+
+      .task-priority {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .priority-high {
+        background: #ffcdd2;
+        color: #c62828;
+      }
+
+      .priority-medium {
+        background: #fff9c4;
+        color: #f57f17;
+      }
+
+      .priority-low {
+        background: #c8e6c9;
+        color: #2e7d32;
+      }
+
+      /* Color Boxes */
+      .color-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin: 10px 0;
+      }
+
+      .color-box {
+        height: 80px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: transform 0.2s, opacity 0.2s;
+      }
+
+      .color-box:hover {
+        transform: scale(1.05);
+      }
+
+      /* Navigation */
+      .demo-nav {
+        display: flex;
+        gap: 4px;
+        background: #263238;
+        padding: 8px;
+        border-radius: 8px;
+        margin: 10px 0;
+      }
+
+      .demo-nav a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
+
+      .demo-nav a:hover,
+      .demo-nav a.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+      }
+
+      /* Table */
+      .demo-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0;
+      }
+
+      .demo-table th,
+      .demo-table td {
+        padding: 10px 14px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .demo-table th {
+        background: #e8eaf6;
+        font-weight: 600;
+        color: #3949ab;
+      }
+
+      .demo-table tr:hover {
+        background: #f5f5f5;
+      }
+
+      /* Notification */
+      .notification {
+        padding: 14px 20px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-weight: 500;
+      }
+
+      .notification.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border-left: 4px solid #43a047;
+      }
+
+      .notification.error {
+        background: #ffebee;
+        color: #c62828;
+        border-left: 4px solid #e53935;
+      }
+
+      .notification.info {
+        background: #e3f2fd;
+        color: #1565c0;
+        border-left: 4px solid #1e88e5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>DOM Basics</h1>
+        <p>Interactive Practice Page</p>
+      </header>
+
+      <!-- Section 1: getElementById -->
+      <div class="section-card">
+        <h2>getElementById</h2>
+        <p id="greeting-text">Hello, welcome to DOM Basics!</p>
+        <div id="counter-display" class="display-box" style="text-align: center; font-size: 2rem">0</div>
+        <div class="flex-row" style="justify-content: center; margin-top: 10px">
+          <button id="btn-increment" class="demo-btn">+1</button>
+          <button id="btn-decrement" class="demo-btn">-1</button>
+          <button id="btn-reset" class="demo-btn">Reset</button>
+        </div>
+        <div id="output-1" class="display-box">Output will appear here</div>
+      </div>
+
+      <!-- Section 2: querySelector & querySelectorAll -->
+      <div class="section-card">
+        <h2>querySelector & querySelectorAll</h2>
+        <div class="profile-card" id="user-profile">
+          <div class="profile-avatar" id="avatar">N</div>
+          <div class="profile-info">
+            <h3 class="profile-name">Nino Beridze</h3>
+            <p class="profile-role">Frontend Developer</p>
+            <p class="profile-email">nino@example.com</p>
+          </div>
+        </div>
+        <div class="flex-row">
+          <button id="btn-update-profile" class="demo-btn">Update Profile</button>
+          <button id="btn-highlight-info" class="demo-btn">Highlight Info</button>
+        </div>
+
+        <ul class="task-list" id="task-list">
+          <li class="task-item" data-id="1">
+            <span class="task-priority priority-high">High</span>
+            <span>Fix login bug</span>
+          </li>
+          <li class="task-item" data-id="2">
+            <span class="task-priority priority-medium">Medium</span>
+            <span>Update documentation</span>
+          </li>
+          <li class="task-item" data-id="3">
+            <span class="task-priority priority-low">Low</span>
+            <span>Refactor CSS</span>
+          </li>
+          <li class="task-item" data-id="4">
+            <span class="task-priority priority-high">High</span>
+            <span>Deploy to production</span>
+          </li>
+          <li class="task-item" data-id="5">
+            <span class="task-priority priority-medium">Medium</span>
+            <span>Write unit tests</span>
+          </li>
+        </ul>
+        <div class="flex-row">
+          <button id="btn-count-tasks" class="demo-btn">Count Tasks</button>
+          <button id="btn-complete-first" class="demo-btn">Complete First</button>
+          <button id="btn-highlight-high" class="demo-btn">Highlight High Priority</button>
+        </div>
+        <div id="output-2" class="display-box">Output will appear here</div>
+      </div>
+
+      <!-- Section 3: getElementsByClassName & getElementsByTagName -->
+      <div class="section-card">
+        <h2>getElementsByClassName & getElementsByTagName</h2>
+        <div class="color-grid" id="color-grid">
+          <div class="color-box" style="background: #e53935">Red</div>
+          <div class="color-box" style="background: #1e88e5">Blue</div>
+          <div class="color-box" style="background: #43a047">Green</div>
+          <div class="color-box" style="background: #fb8c00">Orange</div>
+          <div class="color-box" style="background: #8e24aa">Purple</div>
+          <div class="color-box" style="background: #00897b">Teal</div>
+          <div class="color-box" style="background: #d81b60">Pink</div>
+          <div class="color-box" style="background: #546e7a">Gray</div>
+        </div>
+        <div class="flex-row">
+          <button id="btn-count-boxes" class="demo-btn">Count Boxes</button>
+          <button id="btn-fade-boxes" class="demo-btn">Fade All</button>
+          <button id="btn-restore-boxes" class="demo-btn">Restore</button>
+        </div>
+
+        <nav class="demo-nav" id="main-nav">
+          <a href="#" class="active">Home</a>
+          <a href="#">Products</a>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+        </nav>
+        <div class="flex-row">
+          <button id="btn-count-links" class="demo-btn">Count Links</button>
+          <button id="btn-uppercase-links" class="demo-btn">Uppercase Links</button>
+        </div>
+
+        <table class="demo-table" id="student-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Grade</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Giorgi</td>
+              <td>95</td>
+              <td>Excellent</td>
+            </tr>
+            <tr>
+              <td>Nino</td>
+              <td>87</td>
+              <td>Good</td>
+            </tr>
+            <tr>
+              <td>Dato</td>
+              <td>72</td>
+              <td>Average</td>
+            </tr>
+            <tr>
+              <td>Ana</td>
+              <td>91</td>
+              <td>Excellent</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="flex-row">
+          <button id="btn-count-rows" class="demo-btn">Count Rows</button>
+          <button id="btn-highlight-top" class="demo-btn">Highlight Top Students</button>
+        </div>
+        <div id="output-3" class="display-box">Output will appear here</div>
+      </div>
+
+      <!-- Section 4: innerHTML, textContent, style -->
+      <div class="section-card">
+        <h2>innerHTML, textContent & style</h2>
+        <div id="content-area" class="display-box">
+          <strong>Bold text</strong> and <em>italic text</em> with <a href="#">a link</a>.
+        </div>
+        <div class="flex-row">
+          <button id="btn-show-inner" class="demo-btn">Show innerHTML</button>
+          <button id="btn-show-text" class="demo-btn">Show textContent</button>
+          <button id="btn-set-inner" class="demo-btn">Set innerHTML</button>
+          <button id="btn-set-text" class="demo-btn">Set textContent</button>
+        </div>
+
+        <div id="style-target" style="padding: 20px; margin: 10px 0; border-radius: 8px; background: #e8eaf6; text-align: center; font-size: 1.2rem">
+          Style me with JavaScript!
+        </div>
+        <div class="flex-row">
+          <button id="btn-style-color" class="demo-btn">Change Color</button>
+          <button id="btn-style-bg" class="demo-btn">Change Background</button>
+          <button id="btn-style-size" class="demo-btn">Change Font Size</button>
+          <button id="btn-style-reset" class="demo-btn">Reset Styles</button>
+        </div>
+
+        <div id="notification-area"></div>
+        <div class="flex-row">
+          <button id="btn-add-success" class="demo-btn">Add Success</button>
+          <button id="btn-add-error" class="demo-btn">Add Error</button>
+          <button id="btn-add-info" class="demo-btn">Add Info</button>
+          <button id="btn-clear-notifications" class="demo-btn">Clear All</button>
+        </div>
+        <div id="output-4" class="display-box">Output will appear here</div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
