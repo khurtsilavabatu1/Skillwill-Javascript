@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOM Challenges - Student Dashboard</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f0f2f5;
+        color: #263238;
+        min-height: 100vh;
+        padding: 24px 16px;
+      }
+
+      .container {
+        max-width: 880px;
+        margin: 0 auto;
+      }
+
+      /* ========== Welcome Banner ========== */
+      .welcome-banner {
+        background: linear-gradient(135deg, #3949ab, #5c6bc0);
+        color: white;
+        padding: 32px 28px;
+        border-radius: 14px;
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .welcome-banner h1 {
+        font-size: 2rem;
+        margin-bottom: 6px;
+      }
+
+      .welcome-banner p {
+        font-size: 1.05rem;
+        opacity: 0.85;
+      }
+
+      /* ========== Cards ========== */
+      .card {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 22px;
+        margin-bottom: 22px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      }
+
+      .card h2 {
+        font-size: 1.25rem;
+        color: #3949ab;
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e8eaf6;
+      }
+
+      /* ========== Profile Card ========== */
+      .profile-section {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        padding: 16px;
+        background: #e8eaf6;
+        border-radius: 10px;
+      }
+
+      .student-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: #7e57c2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+
+      .student-info h3 {
+        font-size: 1.15rem;
+        color: #283593;
+      }
+
+      .student-info p {
+        color: #666;
+        margin-top: 3px;
+        font-size: 0.95rem;
+      }
+
+      .student-status {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        background: #c8e6c9;
+        color: #2e7d32;
+      }
+
+      /* ========== Course Cards ========== */
+      .course-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
+        margin-top: 10px;
+      }
+
+      .course-card {
+        background: #f5f5f5;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 16px;
+        transition: transform 0.2s;
+      }
+
+      .course-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .course-card.completed {
+        border-color: #43a047;
+        background: #e8f5e9;
+      }
+
+      .course-card h3 {
+        font-size: 1rem;
+        color: #37474f;
+        margin-bottom: 4px;
+      }
+
+      .course-card .course-code {
+        font-size: 0.78rem;
+        color: #888;
+        margin-bottom: 8px;
+      }
+
+      .course-card .course-progress {
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      /* ========== Skill Badges ========== */
+      .badge-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .skill-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 2px solid #e0e0e0;
+        background: #fafafa;
+        color: #546e7a;
+        transition: all 0.2s;
+      }
+
+      .skill-badge.frontend {
+        border-color: #42a5f5;
+        color: #1565c0;
+      }
+
+      .skill-badge.backend {
+        border-color: #66bb6a;
+        color: #2e7d32;
+      }
+
+      .skill-badge.tools {
+        border-color: #ffa726;
+        color: #e65100;
+      }
+
+      .skill-badge.active {
+        color: white;
+      }
+
+      .skill-badge.active.frontend {
+        background: #1e88e5;
+      }
+
+      .skill-badge.active.backend {
+        background: #43a047;
+      }
+
+      .skill-badge.active.tools {
+        background: #fb8c00;
+      }
+
+      /* ========== Schedule Table ========== */
+      .schedule-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      .schedule-table th,
+      .schedule-table td {
+        padding: 10px 14px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .schedule-table th {
+        background: #e8eaf6;
+        font-weight: 600;
+        color: #3949ab;
+        font-size: 0.9rem;
+      }
+
+      .schedule-table tr:hover {
+        background: #f5f5f5;
+      }
+
+      /* ========== Announcements ========== */
+      .announcement {
+        padding: 14px 18px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-weight: 500;
+      }
+
+      .announcement.urgent {
+        background: #ffebee;
+        color: #c62828;
+        border-left: 4px solid #e53935;
+      }
+
+      .announcement.info {
+        background: #e3f2fd;
+        color: #1565c0;
+        border-left: 4px solid #1e88e5;
+      }
+
+      .announcement.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border-left: 4px solid #43a047;
+      }
+
+      .empty-state {
+        text-align: center;
+        color: #999;
+        padding: 20px;
+        font-style: italic;
+      }
+
+      /* ========== Theme Box ========== */
+      .theme-box {
+        padding: 24px;
+        border-radius: 10px;
+        background: #e8eaf6;
+        text-align: center;
+        font-size: 1.15rem;
+        margin-top: 10px;
+        transition: all 0.3s;
+      }
+
+      /* ========== Utility ========== */
+      .output-box {
+        background: #f8f8fc;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+        min-height: 40px;
+        margin-top: 12px;
+        white-space: pre-wrap;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+
+      <!-- ========== 1. Welcome Banner ========== -->
+      <div class="welcome-banner" id="welcome-banner">
+        <h1 id="welcome-heading">Welcome, Student!</h1>
+        <p id="welcome-message">Your learning journey starts here.</p>
+      </div>
+
+      <!-- ========== 2. Profile Card ========== -->
+      <div class="card">
+        <h2>Student Profile</h2>
+        <div class="profile-section" id="profile-card">
+          <div class="student-avatar" id="student-avatar">?</div>
+          <div class="student-info">
+            <h3 class="student-name-display">Student Name</h3>
+            <p class="student-email">student@example.com</p>
+            <p class="student-role">Role: Undecided</p>
+            <span class="student-status" id="student-status">Status: Unknown</span>
+          </div>
+        </div>
+        <div class="output-box" id="output-profile"></div>
+      </div>
+
+      <!-- ========== 3. Course Cards ========== -->
+      <div class="card">
+        <h2>My Courses</h2>
+        <div class="course-grid" id="course-grid">
+          <div class="course-card" data-credits="5">
+            <h3>HTML & CSS</h3>
+            <p class="course-code">WEB-101</p>
+            <p class="course-progress">Progress: 100%</p>
+          </div>
+          <div class="course-card" data-credits="5">
+            <h3>JavaScript Basics</h3>
+            <p class="course-code">JS-201</p>
+            <p class="course-progress">Progress: 100%</p>
+          </div>
+          <div class="course-card" data-credits="6">
+            <h3>DOM & Events</h3>
+            <p class="course-code">JS-301</p>
+            <p class="course-progress">Progress: 60%</p>
+          </div>
+          <div class="course-card" data-credits="6">
+            <h3>React Fundamentals</h3>
+            <p class="course-code">REACT-401</p>
+            <p class="course-progress">Progress: 0%</p>
+          </div>
+          <div class="course-card" data-credits="4">
+            <h3>Node.js Intro</h3>
+            <p class="course-code">NODE-301</p>
+            <p class="course-progress">Progress: 0%</p>
+          </div>
+        </div>
+        <div class="output-box" id="output-courses"></div>
+      </div>
+
+      <!-- ========== 4. Skill Badges ========== -->
+      <div class="card">
+        <h2>Skills</h2>
+        <div class="badge-container" id="badge-container">
+          <span class="skill-badge frontend">HTML</span>
+          <span class="skill-badge frontend">CSS</span>
+          <span class="skill-badge frontend">JavaScript</span>
+          <span class="skill-badge frontend">React</span>
+          <span class="skill-badge backend">Node.js</span>
+          <span class="skill-badge backend">Express</span>
+          <span class="skill-badge backend">MongoDB</span>
+          <span class="skill-badge tools">Git</span>
+          <span class="skill-badge tools">VS Code</span>
+          <span class="skill-badge tools">Chrome DevTools</span>
+        </div>
+        <div class="output-box" id="output-badges"></div>
+      </div>
+
+      <!-- ========== 5. Schedule Table ========== -->
+      <div class="card">
+        <h2>Weekly Schedule</h2>
+        <table class="schedule-table" id="schedule-table">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Subject</th>
+              <th>Time</th>
+              <th>Duration (hrs)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Monday</td>
+              <td>JavaScript</td>
+              <td>10:00</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Tuesday</td>
+              <td>React</td>
+              <td>14:00</td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td>Wednesday</td>
+              <td>Node.js</td>
+              <td>10:00</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Thursday</td>
+              <td>JavaScript</td>
+              <td>14:00</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Friday</td>
+              <td>Project Work</td>
+              <td>11:00</td>
+              <td>4</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="output-box" id="output-schedule"></div>
+      </div>
+
+      <!-- ========== 6. Announcements ========== -->
+      <div class="card">
+        <h2>Announcements</h2>
+        <div id="announcements">
+          <p class="empty-state">No announcements yet.</p>
+        </div>
+        <div class="output-box" id="output-announcements"></div>
+      </div>
+
+      <!-- ========== 7. Theme Box ========== -->
+      <div class="card">
+        <h2>Theme Playground</h2>
+        <div class="theme-box" id="theme-box">
+          Style me with JavaScript!
+        </div>
+        <div class="output-box" id="output-theme"></div>
+      </div>
+
+    </div>
+
+    <script src="challenges.js"></script>
+  </body>
+</html>
