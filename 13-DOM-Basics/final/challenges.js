@@ -5,7 +5,6 @@
 // Student Dashboard (challenges.html)
 ////////////////////////////////////
 
-
 ////////////////////////////////////
 // Challenge #1
 // getElementById, querySelector,
@@ -59,34 +58,34 @@ GOOD LUCK 😀
 */
 
 // --- ნაწილი 1: getElementById ---
-// document.getElementById('welcome-heading').textContent = 'გამარჯობა, გიორგი!';
-// document.getElementById('student-avatar').textContent = 'G';
-// document.getElementById('student-status').textContent = 'Status: Active';
+document.getElementById("welcome-heading").textContent = "გამარჯობა, გიორგი!";
+document.getElementById("student-avatar").textContent = "G";
+document.getElementById("student-status").textContent = "Status: Active";
 
 // --- ნაწილი 2: querySelector ---
-// document.querySelector('.student-name-display').textContent = 'გიორგი ლომიძე';
-// document.querySelector('.student-email').textContent = 'giorgi@skillwill.ge';
-// document.querySelector('.student-role').textContent = 'Role: Frontend Developer';
+document.querySelector(".student-name-display").textContent = "გიორგი ლომიძე";
+document.querySelector(".student-email").textContent = "giorgi@skillwill.ge";
+document.querySelector(".student-role").textContent =
+  "Role: Frontend Developer";
 
 // --- ნაწილი 3: querySelectorAll ---
-// const allCourses = document.querySelectorAll('.course-card');
-// console.log('Total courses:', allCourses.length);
+const allCourses = document.querySelectorAll(".course-card");
+console.log("Total courses:", allCourses.length);
 
-// const progressElements = document.querySelectorAll('.course-progress');
-// for (let i = 0; i < progressElements.length; i++) {
-//   if (progressElements[i].textContent.includes('100%')) {
-//     progressElements[i].parentElement.classList.add('completed');
-//   }
-// }
+const progressElements = document.querySelectorAll(".course-progress");
+for (let i = 0; i < progressElements.length; i++) {
+  if (progressElements[i].textContent.includes("100%")) {
+    progressElements[i].parentElement.classList.add("completed");
+  }
+}
 
 // --- ნაწილი 4: getElementsByClassName ---
-// const allBadges = document.getElementsByClassName('skill-badge');
-// for (let i = 0; i < allBadges.length; i++) {
-//   if (allBadges[i].classList.contains('frontend')) {
-//     allBadges[i].classList.add('active');
-//   }
-// }
-
+const allBadges = document.getElementsByClassName("skill-badge");
+for (let i = 0; i < allBadges.length; i++) {
+  if (allBadges[i].classList.contains("frontend")) {
+    allBadges[i].classList.add("active");
+  }
+}
 
 ////////////////////////////////////
 // Challenge #2

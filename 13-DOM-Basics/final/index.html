@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -215,7 +215,9 @@
         font-weight: bold;
         font-size: 0.9rem;
         cursor: pointer;
-        transition: transform 0.2s, opacity 0.2s;
+        transition:
+          transform 0.2s,
+          opacity 0.2s;
       }
 
       .color-box:hover {
@@ -309,7 +311,13 @@
       <div class="section-card">
         <h2>getElementById</h2>
         <p id="greeting-text">Hello, welcome to DOM Basics!</p>
-        <div id="counter-display" class="display-box" style="text-align: center; font-size: 2rem">0</div>
+        <div
+          id="counter-display"
+          class="display-box"
+          style="text-align: center; font-size: 2rem"
+        >
+          0
+        </div>
         <div class="flex-row" style="justify-content: center; margin-top: 10px">
           <button id="btn-increment" class="demo-btn">+1</button>
           <button id="btn-reset" class="demo-btn">Reset</button>
@@ -329,7 +337,9 @@
           </div>
         </div>
         <div class="flex-row">
-          <button id="btn-update-profile" class="demo-btn">Update Profile</button>
+          <button id="btn-update-profile" class="demo-btn">
+            Update Profile
+          </button>
         </div>
 
         <ul class="task-list" id="task-list">
@@ -355,7 +365,9 @@
           </li>
         </ul>
         <div class="flex-row">
-          <button id="btn-complete-first" class="demo-btn">Complete First</button>
+          <button id="btn-complete-first" class="demo-btn">
+            Complete First
+          </button>
         </div>
         <div id="output-2" class="display-box">Output will appear here</div>
       </div>
@@ -384,8 +396,7 @@
           <a href="#">About</a>
           <a href="#">Contact</a>
         </nav>
-        <div class="flex-row">
-        </div>
+        <div class="flex-row"></div>
 
         <table class="demo-table" id="student-table">
           <thead>
@@ -419,7 +430,9 @@
           </tbody>
         </table>
         <div class="flex-row">
-          <button id="btn-highlight-top" class="demo-btn">Highlight Top Students</button>
+          <button id="btn-highlight-top" class="demo-btn">
+            Highlight Top Students
+          </button>
         </div>
         <div id="output-3" class="display-box">Output will appear here</div>
       </div>
@@ -428,7 +441,8 @@
       <div class="section-card">
         <h2>innerHTML, textContent & style</h2>
         <div id="content-area" class="display-box">
-          <strong>Bold text</strong> and <em>italic text</em> with <a href="#">a link</a>.
+          <strong>Bold text</strong> and <em>italic text</em> with
+          <a href="#">a link</a>.
         </div>
         <div class="flex-row">
           <button id="btn-show-inner" class="demo-btn">Show innerHTML</button>
@@ -437,11 +451,27 @@
           <button id="btn-set-text" class="demo-btn">Set textContent</button>
         </div>
 
-        <div id="style-target" style="padding: 20px; margin: 10px 0; border-radius: 8px; background: #e8eaf6; text-align: center; font-size: 1.2rem">
+        <div
+          id="style-target"
+          style="
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: #e8eaf6;
+            text-align: center;
+            font-size: 1.2rem;
+          "
+        >
           Style me with JavaScript!
         </div>
         <div class="flex-row">
-          <button id="btn-style-bg" class="demo-btn">Change Background</button>
+          <button
+            id="btn-style-bg"
+            style="background-color: white"
+            class="demo-btn"
+          >
+            Change Background
+          </button>
           <button id="btn-style-reset" class="demo-btn">Reset Styles</button>
         </div>
 
@@ -449,7 +479,9 @@
         <div class="flex-row">
           <button id="btn-add-success" class="demo-btn">Add Success</button>
           <button id="btn-add-error" class="demo-btn">Add Error</button>
-          <button id="btn-clear-notifications" class="demo-btn">Clear All</button>
+          <button id="btn-clear-notifications" class="demo-btn">
+            Clear All
+          </button>
         </div>
         <div id="output-4" class="display-box">Output will appear here</div>
       </div>
