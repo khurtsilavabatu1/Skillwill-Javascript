@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>DOM Manipulation</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+        color: #263238;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        padding: 30px 20px;
+        margin-bottom: 30px;
+        background: linear-gradient(to right, #3949ab, #5c6bc0);
+        border-radius: 12px;
+        color: white;
+      }
+
+      .header h1 {
+        font-size: 2.4rem;
+        margin-bottom: 8px;
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .section-card {
+        background: white;
+        border-radius: 10px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-card h2 {
+        font-size: 1.4rem;
+        color: #3949ab;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e8eaf6;
+      }
+
+      .demo-btn {
+        background: #3949ab;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 4px;
+        transition: background 0.2s;
+      }
+
+      .demo-btn:hover {
+        background: #283593;
+      }
+
+      .demo-btn:active {
+        transform: scale(0.97);
+      }
+
+      .display-box {
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin: 10px 0;
+        font-family: "Courier New", monospace;
+        font-size: 1rem;
+        min-height: 40px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .flex-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 8px 0;
+      }
+
+      /* Task Item */
+      .task-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        transition: background 0.2s, box-shadow 0.2s;
+        list-style: none;
+      }
+
+      .task-item:hover {
+        background: #f5f5f5;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Priority Badges */
+      .priority-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .priority-high {
+        background: #ffcdd2;
+        color: #c62828;
+      }
+
+      .priority-medium {
+        background: #fff9c4;
+        color: #f57f17;
+      }
+
+      .priority-low {
+        background: #c8e6c9;
+        color: #2e7d32;
+      }
+
+      /* Notification */
+      .notification {
+        padding: 14px 20px;
+        border-radius: 8px;
+        margin: 8px 0;
+        font-weight: 500;
+        transition: opacity 0.3s;
+      }
+
+      .notification.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border-left: 4px solid #43a047;
+      }
+
+      .notification.info {
+        background: #e3f2fd;
+        color: #1565c0;
+        border-left: 4px solid #1e88e5;
+      }
+
+      .notification.urgent {
+        background: #ffebee;
+        color: #c62828;
+        border-left: 4px solid #e53935;
+      }
+
+      /* Profile Card */
+      .profile-card {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        padding: 20px;
+        background: #f3e5f5;
+        border-radius: 10px;
+        margin: 10px 0;
+      }
+
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #7e57c2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+        flex-shrink: 0;
+      }
+
+      .profile-info h3 {
+        font-size: 1.2rem;
+        color: #4a148c;
+      }
+
+      .profile-info p {
+        color: #666;
+        margin-top: 4px;
+      }
+
+      /* Delete Button */
+      .delete-btn {
+        background: #ef5350;
+        color: white;
+        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        font-size: 0.9rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: auto;
+        transition: background 0.2s;
+        flex-shrink: 0;
+      }
+
+      .delete-btn:hover {
+        background: #c62828;
+      }
+
+      /* Template / Clone Card */
+      .template-card {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        padding: 16px 20px;
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        border-radius: 10px;
+        margin: 10px 0;
+        border: 1px solid #90caf9;
+      }
+
+      .template-card .card-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #1e88e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.4rem;
+        font-weight: bold;
+        flex-shrink: 0;
+      }
+
+      .template-card .card-body h4 {
+        color: #1565c0;
+        margin-bottom: 4px;
+      }
+
+      .template-card .card-body p {
+        color: #546e7a;
+        font-size: 0.9rem;
+      }
+
+      /* Student Card */
+      .student-card {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin: 4px;
+        font-size: 0.95rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+
+      .student-card .student-index {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #3949ab;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: bold;
+        flex-shrink: 0;
+      }
+
+      /* Task list reset */
+      #task-list,
+      #remove-list {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0;
+      }
+
+      /* Input & Select */
+      .task-input,
+      .task-select {
+        padding: 10px 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .task-input:focus,
+      .task-select:focus {
+        border-color: #3949ab;
+      }
+
+      .task-input {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      /* Clone container */
+      #clone-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      /* Fragment container */
+      #fragment-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>DOM Manipulation</h1>
+        <p>Interactive Practice Page</p>
+      </header>
+
+      <!-- Section 1: createElement + appendChild -->
+      <div class="section-card">
+        <h2>1. createElement + appendChild</h2>
+        <div class="flex-row">
+          <input
+            type="text"
+            id="task-input"
+            class="task-input"
+            placeholder="Enter task..."
+          />
+          <select id="task-priority" class="task-select">
+            <option value="high">High</option>
+            <option value="medium" selected>Medium</option>
+            <option value="low">Low</option>
+          </select>
+          <button id="btn-add-task" class="demo-btn">Add Task</button>
+        </div>
+        <ul id="task-list">
+          <li class="task-item">
+            <span class="priority-badge priority-high">High</span>
+            <span>Fix authentication bug</span>
+            <button class="delete-btn">&times;</button>
+          </li>
+          <li class="task-item">
+            <span class="priority-badge priority-medium">Medium</span>
+            <span>Write unit tests</span>
+            <button class="delete-btn">&times;</button>
+          </li>
+          <li class="task-item">
+            <span class="priority-badge priority-low">Low</span>
+            <span>Update README</span>
+            <button class="delete-btn">&times;</button>
+          </li>
+        </ul>
+        <div id="output-1" class="display-box">Output will appear here</div>
+      </div>
+
+      <!-- Section 2: insertBefore / prepend -->
+      <div class="section-card">
+        <h2>2. insertBefore / prepend</h2>
+        <div class="flex-row">
+          <button id="btn-add-urgent" class="demo-btn">
+            Add Urgent (Top)
+          </button>
+          <button id="btn-add-info" class="demo-btn">Add Info (Bottom)</button>
+        </div>
+        <div id="notification-area">
+          <div class="notification success">
+            System initialized successfully.
+          </div>
+          <div class="notification info">Welcome! You have 3 new messages.</div>
+        </div>
+        <div id="output-2" class="display-box">Output will appear here</div>
+      </div>
+
+      <!-- Section 3: remove / removeChild -->
+      <div class="section-card">
+        <h2>3. remove / removeChild</h2>
+        <ul id="remove-list">
+          <li class="task-item">თბილისი</li>
+          <li class="task-item">ბათუმი</li>
+          <li class="task-item">ქუთაისი</li>
+          <li class="task-item">რუსთავი</li>
+          <li class="task-item">ზუგდიდი</li>
+        </ul>
+        <div class="flex-row">
+          <button id="btn-remove-first" class="demo-btn">Remove First</button>
+          <button id="btn-remove-last" class="demo-btn">Remove Last</button>
+          <button id="btn-clear-all" class="demo-btn">Clear All</button>
+        </div>
+        <div id="output-3" class="display-box">Output will appear here</div>
+      </div>
+
+      <!-- Section 4: replaceChild / replaceWith -->
+      <div class="section-card">
+        <h2>4. replaceChild / replaceWith</h2>
+        <div id="old-card" class="profile-card">
+          <div class="profile-avatar">N</div>
+          <div class="profile-info">
+            <h3>Nino Beridze</h3>
+            <p>Junior Developer</p>
+            <p>nino@example.com</p>
+          </div>
+        </div>
+        <div class="flex-row">
+          <button id="btn-update-card" class="demo-btn">Update Card</button>
+        </div>
+        <div id="output-4" class="display-box">Output will appear here</div>
+      </div>
+
+      <!-- Section 5: cloneNode -->
+      <div class="section-card">
+        <h2>5. cloneNode</h2>
+        <div id="template-card" class="template-card">
+          <div class="card-icon">T</div>
+          <div class="card-body">
+            <h4>Template Card</h4>
+            <p>This is the original template that will be cloned.</p>
+          </div>
+        </div>
+        <div class="flex-row">
+          <button id="btn-clone" class="demo-btn">Clone Card</button>
+        </div>
+        <div id="clone-container"></div>
+        <div id="output-5" class="display-box">Output will appear here</div>
+      </div>
+
+      <!-- Section 6: DocumentFragment -->
+      <div class="section-card">
+        <h2>6. DocumentFragment</h2>
+        <div class="flex-row">
+          <button id="btn-generate-students" class="demo-btn">
+            Generate 20 Students
+          </button>
+        </div>
+        <div id="fragment-container"></div>
+        <div id="output-6" class="display-box">Output will appear here</div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
