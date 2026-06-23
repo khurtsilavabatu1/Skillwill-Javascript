@@ -366,7 +366,8 @@ btnGenerateStudents.addEventListener("click", function () {
     // ბარათის დამატება fragment-ში (არა DOM-ში!)
     fragment.appendChild(card);
   }
-
+  console.log(fragment);
+  
   // მთლიანი fragment-ის ერთბაშად დამატება DOM-ში
   fragmentContainer.appendChild(fragment);
 

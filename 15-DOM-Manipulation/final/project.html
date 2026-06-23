@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ბიუჯეტის ტრეკერი — DOM Manipulation Project</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f0f2f5;
+        color: #263238;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .app {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      /* ========== Header ========== */
+      .header {
+        background: linear-gradient(135deg, #3949ab, #5c6bc0);
+        color: white;
+        padding: 28px;
+        border-radius: 14px;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 4px;
+      }
+
+      .header p {
+        opacity: 0.8;
+        font-size: 0.95rem;
+      }
+
+      /* ========== Summary Cards ========== */
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .summary-card {
+        background: white;
+        border-radius: 10px;
+        padding: 16px;
+        text-align: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        border-top: 3px solid #e0e0e0;
+      }
+
+      .summary-card.income {
+        border-top-color: #43a047;
+      }
+      .summary-card.expense {
+        border-top-color: #e53935;
+      }
+      .summary-card.positive {
+        border-top-color: #43a047;
+      }
+      .summary-card.negative {
+        border-top-color: #e53935;
+      }
+
+      .summary-label {
+        display: block;
+        font-size: 0.8rem;
+        color: #78909c;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+
+      .summary-amount {
+        display: block;
+        font-size: 1.4rem;
+        font-weight: 700;
+      }
+
+      .summary-card.income .summary-amount {
+        color: #2e7d32;
+      }
+      .summary-card.expense .summary-amount {
+        color: #c62828;
+      }
+      .summary-card.positive .summary-amount {
+        color: #2e7d32;
+      }
+      .summary-card.negative .summary-amount {
+        color: #c62828;
+      }
+
+      /* ========== Card ========== */
+      .card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      }
+
+      .card h2 {
+        font-size: 1.1rem;
+        color: #3949ab;
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e8eaf6;
+      }
+
+      /* ========== Form ========== */
+      .form-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+
+      .form-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .form-input,
+      .form-select {
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .form-input:focus,
+      .form-select:focus {
+        border-color: #3949ab;
+      }
+
+      .form-input {
+        flex: 1;
+        min-width: 140px;
+      }
+
+      .form-select {
+        min-width: 130px;
+      }
+
+      .btn-add {
+        background: #3949ab;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.2s;
+      }
+
+      .btn-add:hover {
+        background: #283593;
+      }
+
+      /* ========== Toolbar ========== */
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 4px;
+        flex: 1;
+      }
+
+      .filter-btn {
+        background: white;
+        border: 1px solid #e0e0e0;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .filter-btn.active {
+        background: #3949ab;
+        color: white;
+        border-color: #3949ab;
+      }
+
+      .filter-btn:hover:not(.active) {
+        background: #f5f5f5;
+      }
+
+      .btn-clear {
+        background: #ef5350;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .btn-clear:hover {
+        background: #c62828;
+      }
+
+      /* ========== Transaction Row ========== */
+      .tx-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        transition: background 0.2s;
+      }
+
+      .tx-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .tx-row:hover {
+        background: #fafafa;
+      }
+
+      .tx-row.income {
+        border-left: 4px solid #43a047;
+      }
+      .tx-row.expense {
+        border-left: 4px solid #e53935;
+      }
+
+      .tx-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .tx-desc {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+
+      .tx-category {
+        display: inline-block;
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 10px;
+        background: #e8eaf6;
+        color: #3949ab;
+      }
+
+      .tx-amount {
+        font-weight: 700;
+        font-size: 1.05rem;
+        white-space: nowrap;
+      }
+
+      .tx-row.income .tx-amount {
+        color: #2e7d32;
+      }
+      .tx-row.expense .tx-amount {
+        color: #c62828;
+      }
+
+      .btn-delete {
+        width: 30px;
+        height: 30px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ffebee;
+        color: #c62828;
+        flex-shrink: 0;
+        transition: background 0.2s;
+      }
+
+      .btn-delete:hover {
+        background: #ffcdd2;
+      }
+
+      /* ========== Empty State ========== */
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #78909c;
+      }
+
+      .empty-state p {
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+
+      .empty-state small {
+        font-size: 0.85rem;
+      }
+
+      /* ========== Counter ========== */
+      .tx-count {
+        text-align: center;
+        font-size: 0.8rem;
+        color: #78909c;
+        margin-top: 12px;
+        min-height: 18px;
+      }
+
+      /* ========== Responsive ========== */
+      @media (max-width: 520px) {
+        .summary {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Header -->
+      <header class="header">
+        <h1>ბიუჯეტის ტრეკერი</h1>
+        <p>Personal Budget Tracker — DOM Manipulation Project</p>
+      </header>
+
+      <!-- Summary Cards -->
+      <div class="summary">
+        <div class="summary-card income">
+          <span class="summary-label">შემოსავალი</span>
+          <span class="summary-amount" id="income-total">+0.00₾</span>
+        </div>
+        <div class="summary-card expense">
+          <span class="summary-label">ხარჯი</span>
+          <span class="summary-amount" id="expense-total">-0.00₾</span>
+        </div>
+        <div class="summary-card" id="balance-card">
+          <span class="summary-label">ბალანსი</span>
+          <span class="summary-amount" id="balance-total">0.00₾</span>
+        </div>
+      </div>
+
+      <!-- Add Transaction Form -->
+      <div class="card">
+        <h2>ახალი ტრანზაქცია</h2>
+        <form id="transaction-form">
+          <div class="form-row">
+            <input
+              type="text"
+              id="desc-input"
+              class="form-input"
+              placeholder="აღწერა..."
+              required
+            />
+            <input
+              type="number"
+              id="amount-input"
+              class="form-input"
+              placeholder="თანხა"
+              min="0.01"
+              step="0.01"
+              required
+            />
+          </div>
+          <div class="form-row">
+            <select id="type-select" class="form-select">
+              <option value="income">შემოსავალი</option>
+              <option value="expense" selected>ხარჯი</option>
+            </select>
+            <select id="category-select" class="form-select"></select>
+            <button type="submit" class="btn-add">+ დამატება</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="filter-group">
+          <button class="filter-btn active" data-filter="all">ყველა</button>
+          <button class="filter-btn" data-filter="income">შემოსავალი</button>
+          <button class="filter-btn" data-filter="expense">ხარჯები</button>
+        </div>
+        <button id="btn-clear-all" class="btn-clear">ყველას წაშლა</button>
+      </div>
+
+      <!-- Transaction List -->
+      <div class="card">
+        <div id="transaction-list"></div>
+        <div class="tx-count" id="tx-count"></div>
+      </div>
+    </div>
+
+    <script src="project.js"></script>
+  </body>
+</html>
