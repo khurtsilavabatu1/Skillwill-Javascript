@@ -1,0 +1,13 @@
+export const form = document.getElementById("transaction-form");
+export const descInput = document.getElementById("desc-input");
+export const amountInput = document.getElementById("amount-input");
+export const typeSelect = document.getElementById("type-select");
+export const categorySelect = document.getElementById("category-select");
+export const transactionList = document.getElementById("transaction-list");
+export const incomeTotal = document.getElementById("income-total");
+export const expenseTotal = document.getElementById("expense-total");
+export const balanceTotal = document.getElementById("balance-total");
+export const balanceCard = document.getElementById("balance-card");
+export const clearAllBtn = document.getElementById("btn-clear-all");
+export const txCount = document.getElementById("tx-count");
+export const filterBtns = document.querySelectorAll(".filter-btn");

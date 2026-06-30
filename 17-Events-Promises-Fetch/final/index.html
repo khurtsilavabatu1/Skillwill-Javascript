@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>თავი 17 — Events, Promises & Fetch</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f0f2f5;
+        color: #263238;
+        padding: 20px;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      body.dark {
+        background: #1a1a2e;
+        color: #e0e0e0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: #3949ab;
+        margin-bottom: 24px;
+      }
+
+      body.dark h1 {
+        color: #7986cb;
+      }
+
+      .section {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        transition: background 0.3s;
+      }
+
+      body.dark .section {
+        background: #16213e;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      .section h2 {
+        font-size: 1.1rem;
+        color: #3949ab;
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e8eaf6;
+      }
+
+      body.dark .section h2 {
+        color: #7986cb;
+        border-bottom-color: #2a3a5c;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        margin: 4px;
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .btn-primary {
+        background: #3949ab;
+        color: white;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: #303f9f;
+      }
+
+      .btn-danger {
+        background: #e53935;
+        color: white;
+      }
+
+      .btn-danger:hover:not(:disabled) {
+        background: #c62828;
+      }
+
+      .btn-success {
+        background: #43a047;
+        color: white;
+      }
+
+      .btn-success:hover:not(:disabled) {
+        background: #2e7d32;
+      }
+
+      .btn-outline {
+        background: white;
+        border: 1px solid #e0e0e0;
+        color: #263238;
+      }
+
+      body.dark .btn-outline {
+        background: #1a1a2e;
+        border-color: #2a3a5c;
+        color: #e0e0e0;
+      }
+
+      /* Counter */
+      .counter-display {
+        font-size: 3rem;
+        font-weight: bold;
+        text-align: center;
+        padding: 20px;
+        background: #e8eaf6;
+        border-radius: 10px;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s;
+        margin: 12px 0;
+      }
+
+      .counter-display:hover {
+        background: #c5cae9;
+      }
+
+      .counter-display.active {
+        background: #c8e6c9;
+        border: 2px solid #43a047;
+      }
+
+      body.dark .counter-display {
+        background: #2a3a5c;
+      }
+
+      body.dark .counter-display:hover {
+        background: #354a6c;
+      }
+
+      body.dark .counter-display.active {
+        background: #1b5e20;
+        border-color: #43a047;
+      }
+
+      /* Key display */
+      .key-display {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+
+      .key-box {
+        padding: 16px 24px;
+        background: #e8eaf6;
+        border-radius: 10px;
+        text-align: center;
+        min-width: 120px;
+        transition: background 0.3s;
+      }
+
+      body.dark .key-box {
+        background: #2a3a5c;
+      }
+
+      .key-box .label {
+        font-size: 0.75rem;
+        color: #78909c;
+        margin-bottom: 4px;
+      }
+
+      .key-box .value {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #3949ab;
+      }
+
+      body.dark .key-box .value {
+        color: #7986cb;
+      }
+
+      /* Item list */
+      .input-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .input-row input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 0.9rem;
+      }
+
+      body.dark .input-row input {
+        background: #1a1a2e;
+        border-color: #2a3a5c;
+        color: #e0e0e0;
+      }
+
+      .item-list {
+        list-style: none;
+      }
+
+      .item-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 14px;
+        background: #fafafa;
+        border-radius: 6px;
+        margin-bottom: 6px;
+        border: 1px solid #e0e0e0;
+        transition: background 0.2s;
+      }
+
+      body.dark .item-list li {
+        background: #1a1a2e;
+        border-color: #2a3a5c;
+      }
+
+      .item-list li:hover {
+        background: #f0f0f0;
+      }
+
+      body.dark .item-list li:hover {
+        background: #2a3a5c;
+      }
+
+      .delete-btn {
+        padding: 4px 10px;
+        background: #ef5350;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+
+      /* Hover box */
+      .hover-box {
+        width: 100%;
+        height: 80px;
+        background: #ffcdd2;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        transition: background 0.3s;
+        cursor: pointer;
+        margin-top: 12px;
+      }
+
+      /* User cards */
+      .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .user-card {
+        padding: 16px;
+        background: #fafafa;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+      }
+
+      body.dark .user-card {
+        background: #1a1a2e;
+        border-color: #2a3a5c;
+      }
+
+      .user-card h3 {
+        font-size: 1rem;
+        color: #3949ab;
+        margin-bottom: 6px;
+      }
+
+      body.dark .user-card h3 {
+        color: #7986cb;
+      }
+
+      .user-card p {
+        font-size: 0.85rem;
+        color: #546e7a;
+        margin-bottom: 3px;
+      }
+
+      body.dark .user-card p {
+        color: #90a4ae;
+      }
+
+      .loading {
+        text-align: center;
+        color: #78909c;
+        padding: 20px;
+        font-style: italic;
+      }
+
+      .error {
+        text-align: center;
+        color: #e53935;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Events, Promises & Fetch</h1>
+
+      <!-- 1. addEventListener / removeEventListener -->
+      <div class="section">
+        <h2>1. addEventListener / removeEventListener</h2>
+        <p>ქვემოთ მოცემულ ციფრზე დაჭერით რიცხვი იზრდება — მაგრამ მხოლოდ მაშინ, როცა listener ჩართულია.</p>
+        <div class="counter-display" id="counter">0</div>
+        <div style="text-align: center">
+          <button class="btn btn-success" id="add-listener-btn">
+            Listener ჩართვა
+          </button>
+          <button class="btn btn-danger" id="remove-listener-btn" disabled>
+            Listener გამორთვა
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Keyboard Events -->
+      <div class="section">
+        <h2>2. Keyboard Events</h2>
+        <p>დააჭირეთ კლავიატურაზე ნებისმიერ ღილაკს:</p>
+        <div class="key-display" id="key-display">
+          <div class="key-box">
+            <div class="label">key</div>
+            <div class="value" id="key-value">—</div>
+          </div>
+          <div class="key-box">
+            <div class="label">code</div>
+            <div class="value" id="code-value">—</div>
+          </div>
+          <div class="key-box">
+            <div class="label">modifiers</div>
+            <div class="value" id="modifier-value">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Dynamic DOM + Style -->
+      <div class="section">
+        <h2>3. სტრუქტურისა და სტილის ცვლილება</h2>
+        <button class="btn btn-primary" id="toggle-dark">Dark Mode</button>
+
+        <div class="hover-box" id="hover-box">მაუსი მოიტანეთ</div>
+
+        <div class="input-row" style="margin-top: 12px">
+          <input type="text" id="item-input" placeholder="ჩაწერეთ ელემენტი..." />
+          <button class="btn btn-primary" id="add-item-btn">დამატება</button>
+        </div>
+        <ul class="item-list" id="item-list"></ul>
+      </div>
+
+      <!-- 4. Promise -->
+      <div class="section">
+        <h2>4. Promise</h2>
+        <button class="btn btn-primary" id="promise-btn">Promise Demo (3 ნაბიჯი)</button>
+        <button class="btn btn-outline" id="promise-all-btn">Promise.all Demo</button>
+        <div id="promise-output" style="margin-top: 12px; font-family: monospace; font-size: 0.85rem; min-height: 40px;"></div>
+      </div>
+
+      <!-- 5. Fetch API -->
+      <div class="section">
+        <h2>5. Fetch API — JSONPlaceholder</h2>
+        <button class="btn btn-primary" id="load-users-btn">მომხმარებლების ჩატვირთვა</button>
+        <button class="btn btn-outline" id="load-post-btn">პოსტი #1</button>
+        <button class="btn btn-danger" id="load-error-btn">404 ტესტი</button>
+        <div class="cards-container" id="fetch-output"></div>
+      </div>
+
+      <!-- 6. async/await -->
+      <div class="section">
+        <h2>6. async/await</h2>
+        <button class="btn btn-primary" id="async-users-btn">მომხმარებლები (async/await)</button>
+        <button class="btn btn-outline" id="async-parallel-btn">Promise.all + await</button>
+        <div class="cards-container" id="async-output"></div>
+      </div>
+
+      <!-- 7. POST / PUT / DELETE -->
+      <div class="section">
+        <h2>7. POST / PUT / DELETE</h2>
+        <div class="input-row">
+          <input type="text" id="post-title" placeholder="სათაური..." />
+          <input type="text" id="post-body" placeholder="ტექსტი..." />
+          <button class="btn btn-success" id="create-post-btn">POST</button>
+        </div>
+        <div style="margin-bottom: 8px">
+          <button class="btn btn-primary" id="update-post-btn">PUT (პოსტი #1)</button>
+          <button class="btn btn-danger" id="delete-post-btn">DELETE (პოსტი #1)</button>
+        </div>
+        <div id="crud-output" style="font-family: monospace; font-size: 0.85rem; min-height: 40px;"></div>
+      </div>
+    </div>
+
+    <script defer src="script.js"></script>
+  </body>
+</html>
