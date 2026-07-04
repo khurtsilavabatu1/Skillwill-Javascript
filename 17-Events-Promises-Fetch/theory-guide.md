@@ -705,9 +705,22 @@ greet().then(function (msg) {
 `await` ელოდება Promise-ის დასრულებას და აბრუნებს შედეგს. **მხოლოდ `async` ფუნქციის შიგნით** მუშაობს.
 
 ```js
+fetch("https://jsonplaceholder.typicode.com/posts")
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (posts) {
+    console.log(posts.length + " პოსტი");
+  })
+  .catch(function (error) {
+    console.log("შეცდომა:", error.message);
+  })
+  .finally(function () {
+    loadingEl.style.display = "none"; // ყოველთვის გაითიშება
+  });
 async function loadUser() {
-  var response = await fetch("https://jsonplaceholder.typicode.com/users/1");
-  var user = await response.json();
+  let response = await fetch("https://jsonplaceholder.typicode.com/users/1");
+  let user = await response.json();
   console.log(user.name); // "Leanne Graham"
 }
 
@@ -831,7 +844,7 @@ GET-ისთვის options არ სჭირდება. POST/PUT/DELETE-
 fetch(url, {
   method: "POST",                              // HTTP მეთოდი
   headers: {
-    "Content-Type": "application/json",        // ვეუბნებით სერვერს: JSON ვაგზავნით
+    "Content-Type": "application/json",        // ვეუბნებით სერვერს: JSON 
   },
   body: JSON.stringify({ title: "ახალი", body: "ტექსტი" }),  // მონაცემები
 });

@@ -1,9 +1,0 @@
-{
-  "todos": [
-    { "id": 1, "title": "JavaScript-ის გაკვეთილის გავლა", "type": "todo" },
-    { "id": 2, "title": "Promise-ების სავარჯიშოს დასრულება", "type": "todo" },
-    { "id": 3, "title": "React-ის დოკუმენტაციის წაკითხვა", "type": "backlog" },
-    { "id": 4, "title": "CSS Grid-ის პრაქტიკა", "type": "backlog" },
-    { "id": 5, "title": "Git branching-ის სწავლა", "type": "backlog" }
-  ]
-}

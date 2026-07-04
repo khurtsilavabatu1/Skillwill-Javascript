@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>კაბინეტი — ჩელენჯი</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f0f2f5;
+        color: #333;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .header h1 {
+        color: #3949ab;
+        font-size: 24px;
+      }
+
+      .logout-btn {
+        padding: 10px 20px;
+        background: #78909c;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .logout-btn:hover {
+        background: #546e7a;
+      }
+
+      .status-message {
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        margin-bottom: 16px;
+        display: none;
+        text-align: center;
+      }
+
+      .status-message.error {
+        display: block;
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      .status-message.success {
+        display: block;
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      .status-message.loading {
+        display: block;
+        background: #e3f2fd;
+        color: #1565c0;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 24px;
+        margin-bottom: 20px;
+      }
+
+      .card h2 {
+        font-size: 18px;
+        color: #3949ab;
+        margin-bottom: 16px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e8eaf6;
+      }
+
+      .profile-info {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .profile-info .label {
+        font-size: 14px;
+        color: #78909c;
+        font-weight: 500;
+      }
+
+      .profile-info .value {
+        font-size: 16px;
+        font-weight: 500;
+        color: #263238;
+      }
+
+      .form-group {
+        margin-bottom: 14px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #546e7a;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .form-group input:focus {
+        border-color: #3949ab;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .btn-primary {
+        background: #3949ab;
+        color: #fff;
+        width: 100%;
+        margin-top: 8px;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: #283593;
+      }
+
+      .btn-danger {
+        background: #e53935;
+        color: #fff;
+        width: 100%;
+        margin-top: 12px;
+      }
+
+      .btn-danger:hover:not(:disabled) {
+        background: #c62828;
+      }
+
+      .danger-zone {
+        border: 2px solid #ffcdd2;
+      }
+
+      .danger-zone h2 {
+        color: #e53935;
+        border-bottom-color: #ffcdd2;
+      }
+
+      .danger-zone p {
+        font-size: 14px;
+        color: #78909c;
+        margin-bottom: 12px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>ჩემი კაბინეტი</h1>
+        <button class="logout-btn" id="logoutBtn">გასვლა</button>
+      </div>
+
+      <div id="statusMessage" class="status-message"></div>
+
+      <!-- Profile Card -->
+      <div class="card" id="profileCard">
+        <h2>პროფილი</h2>
+        <div class="profile-info">
+          <span class="label">სახელი:</span>
+          <span class="value" id="profileName">...</span>
+
+          <span class="label">ელ-ფოსტა:</span>
+          <span class="value" id="profileEmail">...</span>
+
+          <span class="label">ქალაქი:</span>
+          <span class="value" id="profileCity">...</span>
+        </div>
+      </div>
+
+      <!-- Edit Form -->
+      <div class="card">
+        <h2>პროფილის რედაქტირება</h2>
+        <form id="editForm">
+          <div class="form-group">
+            <label for="editName">სახელი</label>
+            <input type="text" id="editName" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmail">ელ-ფოსტა</label>
+            <input type="email" id="editEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="editCity">ქალაქი</label>
+            <input type="text" id="editCity" required />
+          </div>
+          <button type="submit" class="btn btn-primary">განახლება</button>
+        </form>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="card danger-zone">
+        <h2>ანგარიშის წაშლა</h2>
+        <p>ეს მოქმედება შეუქცევადია. თქვენი ანგარიში და ყველა მონაცემი სამუდამოდ წაიშლება.</p>
+        <button class="btn btn-danger" id="deleteAccountBtn">ანგარიშის წაშლა</button>
+      </div>
+    </div>
+
+    <script src="app-answers.js"></script>
+  </body>
+</html>

@@ -16,7 +16,10 @@ function orderMaterials(toyName) {
     setTimeout(() => {
       const success = Math.random() > 0.2;
       if (success) {
-        resolve({ toy: toyName, materials: ["პლასტმასი", "საღებავი", "ჭანჭიკები"] });
+        resolve({
+          toy: toyName,
+          materials: ["პლასტმასი", "საღებავი", "ჭანჭიკები"],
+        });
       } else {
         reject(`მასალის მომწოდებელმა უარი თქვა "${toyName}"-სთვის`);
       }
@@ -30,7 +33,11 @@ function manufacture(order) {
     setTimeout(() => {
       const success = Math.random() > 0.15;
       if (success) {
-        resolve({ ...order, status: "დამზადებული", quality: Math.floor(Math.random() * 100) });
+        resolve({
+          ...order,
+          status: "დამზადებული",
+          quality: Math.floor(Math.random() * 100),
+        });
       } else {
         reject(`"${order.toy}" - საწარმოო ხაზზე შეფერხება მოხდა`);
       }
@@ -40,12 +47,20 @@ function manufacture(order) {
 
 function qualityCheck(product) {
   return new Promise((resolve, reject) => {
-    console.log(`🔍 "${product.toy}" - ხარისხის შემოწმება... (quality: ${product.quality})`);
+    console.log(
+      `🔍 "${product.toy}" - ხარისხის შემოწმება... (quality: ${product.quality})`,
+    );
     setTimeout(() => {
       if (product.quality >= 30) {
-        resolve({ ...product, status: "შემოწმებული", grade: product.quality >= 70 ? "A" : "B" });
+        resolve({
+          ...product,
+          status: "შემოწმებული",
+          grade: product.quality >= 70 ? "A" : "B",
+        });
       } else {
-        reject(`"${product.toy}" - ხარისხის შემოწმება ვერ გაიარა (quality: ${product.quality})`);
+        reject(
+          `"${product.toy}" - ხარისხის შემოწმება ვერ გაიარა (quality: ${product.quality})`,
+        );
       }
     }, 800);
   });
@@ -57,7 +72,11 @@ function packToy(product) {
     setTimeout(() => {
       const success = Math.random() > 0.1;
       if (success) {
-        resolve({ ...product, status: "შეფუთული", trackingId: "TRK-" + Math.floor(Math.random() * 10000) });
+        resolve({
+          ...product,
+          status: "შეფუთული",
+          trackingId: "TRK-" + Math.floor(Math.random() * 10000),
+        });
       } else {
         reject(`"${product.toy}" - შეფუთვის მასალა ამოიწურა`);
       }
@@ -71,9 +90,15 @@ function shipToy(packed) {
     setTimeout(() => {
       const success = Math.random() > 0.1;
       if (success) {
-        resolve({ ...packed, status: "გაგზავნილი", deliveryDays: Math.floor(Math.random() * 5) + 1 });
+        resolve({
+          ...packed,
+          status: "გაგზავნილი",
+          deliveryDays: Math.floor(Math.random() * 5) + 1,
+        });
       } else {
-        reject(`"${packed.toy}" - კურიერმა ამანათი დაკარგა (${packed.trackingId})`);
+        reject(
+          `"${packed.toy}" - კურიერმა ამანათი დაკარგა (${packed.trackingId})`,
+        );
       }
     }, 1000);
   });
@@ -82,7 +107,9 @@ function shipToy(packed) {
 function sellToy(shipped) {
   return new Promise((resolve) => {
     const price = shipped.grade === "A" ? 50 : 30;
-    console.log(`💰 "${shipped.toy}" - გაიყიდა $${price}-ად (${shipped.deliveryDays} დღეში მიტანა)`);
+    console.log(
+      `💰 "${shipped.toy}" - გაიყიდა $${price}-ად (${shipped.deliveryDays} დღეში მიტანა)`,
+    );
     resolve({ ...shipped, status: "გაყიდული", price });
   });
 }
@@ -148,7 +175,10 @@ async function runFactory() {
 
     const totalRevenue = results.reduce((sum, r) => sum + r.price, 0);
     console.log(`\n🏭 ფაბრიკის შემოსავალი: $${totalRevenue}`);
-    console.log("სათამაშოები:", results.map((r) => `${r.toy} ($${r.price})`));
+    console.log(
+      "სათამაშოები:",
+      results.map((r) => `${r.toy} ($${r.price})`),
+    );
   } catch (error) {
     console.log("❌ ერთ-ერთი სათამაშოს წარმოება ვერ მოხერხდა: " + error);
   }
@@ -170,4 +200,4 @@ async function runFactory() {
   });
 }
 
-// runFactory();
+runFactory();

@@ -132,8 +132,9 @@ var fetchOutput = document.getElementById("fetch-output");
 //   .catch(function (error) {
 //     console.log("ქსელის შეცდომა:", error);
 //   });
-fetch("https://jsonplaceholder.typicode.com/users/999")
+fetch("https://jsonplaceholder.typicode.com/users/1")
   .then(function (response) {
+    console.log(response);
     if (!response.ok) {
       console.log(response);
 

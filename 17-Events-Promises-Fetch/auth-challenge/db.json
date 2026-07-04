@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "გიორგი",
+      "email": "giorgi@mail.com",
+      "password": "pass123",
+      "city": "თბილისი"
+    },
+    {
+      "id": 2,
+      "name": "ნინო",
+      "email": "nino@mail.com",
+      "password": "nino456",
+      "city": "ბათუმი"
+    },
+    {
+      "name": "სდასდ",
+      "email": "sdasd@dasd.com",
+      "password": "sadasd",
+      "city": "დსდას",
+      "id": 3
+    }
+  ]
+}

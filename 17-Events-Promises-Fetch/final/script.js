@@ -265,10 +265,13 @@ document
 
 // Load single post
 document.getElementById("load-post-btn").addEventListener("click", function () {
+  var postId = document.getElementById("fetch-post-id").value || 1;
   fetchOutput.innerHTML = '<div class="loading">იტვირთება...</div>';
 
-  fetch("https://jsonplaceholder.typicode.com/posts/1")
+  fetch("https://jsonplaceholder.typicode.com/posts/" + postId)
     .then(function (response) {
+      console.log(response);
+
       if (!response.ok) {
         throw new Error("HTTP შეცდომა: " + response.status);
       }
@@ -342,6 +345,7 @@ document
 
     try {
       var response = await fetch("https://jsonplaceholder.typicode.com/users");
+      console.log(response);
 
       if (!response.ok) {
         throw new Error("HTTP შეცდომა: " + response.status);
@@ -477,17 +481,18 @@ document
 document
   .getElementById("update-post-btn")
   .addEventListener("click", async function () {
+    var postId = document.getElementById("crud-post-id").value || 1;
     crudOutput.innerHTML = "";
-    crudLog("PUT იგზავნება (პოსტი #1)...");
+    crudLog("PUT იგზავნება (პოსტი #" + postId + ")...");
 
     try {
       var response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts/1",
+        "https://jsonplaceholder.typicode.com/posts/" + postId,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            id: 1,
+            id: Number(postId),
             title: "განახლებული სათაური",
             body: "განახლებული ტექსტი",
             userId: 1,
@@ -511,20 +516,22 @@ document
 document
   .getElementById("delete-post-btn")
   .addEventListener("click", async function () {
+    var postId = document.getElementById("crud-post-id").value || 1;
     crudOutput.innerHTML = "";
-    crudLog("DELETE იგზავნება (პოსტი #1)...");
+    crudLog("DELETE იგზავნება (პოსტი #" + postId + ")...");
 
     try {
       var response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts/1",
+        "https://jsonplaceholder.typicode.com/posts/" + postId,
         {
           method: "DELETE",
         },
       );
+      console.log(response);
 
       if (!response.ok) throw new Error("DELETE ვერ შესრულდა");
 
-      crudLog("პოსტი #1 წაიშალა!");
+      crudLog("პოსტი #" + postId + " წაიშალა!");
       crudLog("(JSONPlaceholder სიმულაციას აკეთებს — რეალურად არ წაიშლება)");
       console.log("DELETE status:", response.status);
     } catch (error) {

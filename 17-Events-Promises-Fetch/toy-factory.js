@@ -19,14 +19,16 @@ function orderMaterials(toyName) {
     setTimeout(() => {
       const success = Math.random() > 0.2;
       if (success) {
-        resolve({ toy: toyName, materials: ["პლასტმასი", "საღებავი", "ჭანჭიკები"] });
+        resolve({
+          toy: toyName,
+          materials: ["პლასტმასი", "საღებავი", "ჭანჭიკები"],
+        });
       } else {
         reject(`მასალის მომწოდებელმა უარი თქვა "${toyName}"-სთვის`);
       }
     }, 1000);
   });
 }
-
 // ✅ ეს მზადაა — ნიმუშად გამოიყენე
 function manufacture(order) {
   return new Promise((resolve, reject) => {
@@ -34,7 +36,11 @@ function manufacture(order) {
     setTimeout(() => {
       const success = Math.random() > 0.15;
       if (success) {
-        resolve({ ...order, status: "დამზადებული", quality: Math.floor(Math.random() * 100) });
+        resolve({
+          ...order,
+          status: "დამზადებული",
+          quality: Math.floor(Math.random() * 100),
+        });
       } else {
         reject(`"${order.toy}" - საწარმოო ხაზზე შეფერხება მოხდა`);
       }
@@ -45,12 +51,20 @@ function manufacture(order) {
 // ✅ ეს მზადაა
 function qualityCheck(product) {
   return new Promise((resolve, reject) => {
-    console.log(`🔍 "${product.toy}" - ხარისხის შემოწმება... (quality: ${product.quality})`);
+    console.log(
+      `🔍 "${product.toy}" - ხარისხის შემოწმება... (quality: ${product.quality})`,
+    );
     setTimeout(() => {
       if (product.quality >= 30) {
-        resolve({ ...product, status: "შემოწმებული", grade: product.quality >= 70 ? "A" : "B" });
+        resolve({
+          ...product,
+          status: "შემოწმებული",
+          grade: product.quality >= 70 ? "A" : "B",
+        });
       } else {
-        reject(`"${product.toy}" - ხარისხის შემოწმება ვერ გაიარა (quality: ${product.quality})`);
+        reject(
+          `"${product.toy}" - ხარისხის შემოწმება ვერ გაიარა (quality: ${product.quality})`,
+        );
       }
     }, 800);
   });

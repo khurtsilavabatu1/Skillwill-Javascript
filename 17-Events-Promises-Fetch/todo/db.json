@@ -1,0 +1,19 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "JavaScript-ის გაკვეთილის გავლა",
+      "type": "backlog"
+    },
+    {
+      "id": 4,
+      "title": "CSS Grid-ის პრაქტიკა",
+      "type": "backlog"
+    },
+    {
+      "title": "სდსას",
+      "type": "todo",
+      "id": 5
+    }
+  ]
+}

@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Auth API — Documentation</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #fafafa;
+        color: #3b4151;
+        line-height: 1.5;
+      }
+
+      .topbar {
+        background: #1b1b1b;
+        padding: 12px 24px;
+      }
+
+      .topbar h1 {
+        color: #fff;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .topbar span {
+        color: #85ea2d;
+        font-weight: 400;
+      }
+
+      .info-section {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+
+      .info-header {
+        margin-bottom: 24px;
+      }
+
+      .info-header h2 {
+        font-size: 28px;
+        color: #3b4151;
+        margin-bottom: 4px;
+      }
+
+      .info-header .version {
+        display: inline-block;
+        background: #85ea2d;
+        color: #1b1b1b;
+        padding: 2px 10px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .info-header p {
+        margin-top: 12px;
+        color: #6b6b6b;
+        font-size: 15px;
+      }
+
+      .base-url {
+        background: #e8e8e8;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 14px;
+        margin-bottom: 24px;
+        display: inline-block;
+      }
+
+      .base-url span {
+        color: #3b4151;
+        font-weight: 600;
+      }
+
+      .setup-box {
+        background: #fff3e0;
+        border: 1px solid #ffcc80;
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-bottom: 28px;
+        font-size: 14px;
+      }
+
+      .setup-box h3 {
+        color: #e65100;
+        margin-bottom: 8px;
+        font-size: 15px;
+      }
+
+      .setup-box code {
+        background: #fff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+        border: 1px solid #e0e0e0;
+      }
+
+      /* Endpoints */
+      .endpoint {
+        background: #fff;
+        border: 1px solid #d8dde7;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+
+      .endpoint-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+
+      .endpoint-header:hover {
+        background: #f7f7f7;
+      }
+
+      .method-badge {
+        padding: 4px 14px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        min-width: 70px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .method-get { background: #61affe; }
+      .method-post { background: #49cc90; }
+      .method-patch { background: #fca130; }
+      .method-delete { background: #f93e3e; }
+
+      .endpoint.get { border-color: #61affe; }
+      .endpoint.post { border-color: #49cc90; }
+      .endpoint.patch { border-color: #fca130; }
+      .endpoint.delete { border-color: #f93e3e; }
+
+      .endpoint.get .endpoint-header { background: rgba(97, 175, 254, 0.05); }
+      .endpoint.post .endpoint-header { background: rgba(73, 204, 144, 0.05); }
+      .endpoint.patch .endpoint-header { background: rgba(252, 161, 48, 0.05); }
+      .endpoint.delete .endpoint-header { background: rgba(249, 62, 62, 0.05); }
+
+      .endpoint-path {
+        font-family: monospace;
+        font-size: 15px;
+        font-weight: 600;
+        color: #3b4151;
+      }
+
+      .endpoint-desc {
+        font-size: 14px;
+        color: #6b6b6b;
+        margin-left: auto;
+      }
+
+      .endpoint-toggle {
+        font-size: 18px;
+        color: #aaa;
+        margin-left: 8px;
+        transition: transform 0.2s;
+      }
+
+      .endpoint-body {
+        display: none;
+        padding: 20px;
+        border-top: 1px solid #e8e8e8;
+      }
+
+      .endpoint.open .endpoint-body {
+        display: block;
+      }
+
+      .endpoint.open .endpoint-toggle {
+        transform: rotate(180deg);
+      }
+
+      .section-title {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #3b4151;
+        margin-bottom: 8px;
+        margin-top: 16px;
+      }
+
+      .section-title:first-child {
+        margin-top: 0;
+      }
+
+      .code-block {
+        background: #1b1b1b;
+        color: #d4d4d4;
+        border-radius: 6px;
+        padding: 16px;
+        font-family: monospace;
+        font-size: 13px;
+        overflow-x: auto;
+        margin-bottom: 8px;
+        white-space: pre;
+        line-height: 1.6;
+      }
+
+      .code-block .key { color: #9cdcfe; }
+      .code-block .string { color: #ce9178; }
+      .code-block .number { color: #b5cea8; }
+
+      .status-codes {
+        margin-top: 8px;
+      }
+
+      .status-code {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 13px;
+        margin-right: 8px;
+        margin-bottom: 6px;
+      }
+
+      .status-code.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      .status-code.error {
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      .param-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 8px;
+      }
+
+      .param-table th {
+        text-align: left;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #6b6b6b;
+        padding: 6px 12px;
+        border-bottom: 2px solid #e8e8e8;
+      }
+
+      .param-table td {
+        padding: 8px 12px;
+        font-size: 14px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .param-table .param-name {
+        font-family: monospace;
+        font-weight: 600;
+      }
+
+      .param-table .required {
+        color: #e53935;
+        font-size: 12px;
+      }
+
+      .fetch-example {
+        margin-top: 16px;
+        background: #f5f7fa;
+        border: 1px solid #e0e4ea;
+        border-radius: 6px;
+        padding: 16px;
+      }
+
+      .fetch-example h4 {
+        font-size: 13px;
+        color: #3949ab;
+        margin-bottom: 8px;
+      }
+
+      .fetch-example .code-block {
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <h1>User Auth API <span>| Documentation</span></h1>
+    </div>
+
+    <div class="info-section">
+      <div class="info-header">
+        <h2>User Auth API</h2>
+        <span class="version">v1.0</span>
+        <p>
+          მომხმარებლის ავტორიზაციის API — რეგისტრაცია, ლოგინი, პროფილის მართვა.
+          API-ს json-server ემულირებს ლოკალურად.
+        </p>
+      </div>
+
+      <div class="base-url">
+        Base URL: <span>http://localhost:3000</span>
+      </div>
+
+      <div class="setup-box">
+        <h3>გაშვება</h3>
+        <p>ტერმინალში გაუშვი <code>auth-challenge</code> ფოლდერიდან:</p>
+        <p style="margin-top: 4px"><code>cd auth-challenge</code></p>
+        <p style="margin-top: 4px"><code>npx json-server db.json</code></p>
+        <p style="margin-top: 4px">სერვერი ამუშავდება <code>http://localhost:3000</code> მისამართზე.</p>
+      </div>
+
+      <!-- ===== POST /users ===== -->
+      <div class="endpoint post">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method-badge method-post">POST</span>
+          <span class="endpoint-path">/users</span>
+          <span class="endpoint-desc">ახალი მომხმარებლის რეგისტრაცია</span>
+          <span class="endpoint-toggle">&#9660;</span>
+        </div>
+        <div class="endpoint-body">
+          <div class="section-title">აღწერა</div>
+          <p>ქმნის ახალ მომხმარებელს ბაზაში. json-server ავტომატურად გენერირებს <code>id</code>-ს.</p>
+
+          <div class="section-title">Request Headers</div>
+          <table class="param-table">
+            <tr><th>Header</th><th>Value</th></tr>
+            <tr><td class="param-name">Content-Type</td><td>application/json</td></tr>
+          </table>
+
+          <div class="section-title">Request Body</div>
+<div class="code-block">{
+  <span class="key">"name"</span>: <span class="string">"ლუკა"</span>,
+  <span class="key">"email"</span>: <span class="string">"luka@mail.com"</span>,
+  <span class="key">"password"</span>: <span class="string">"mypass123"</span>,
+  <span class="key">"city"</span>: <span class="string">"ქუთაისი"</span>
+}</div>
+
+          <table class="param-table">
+            <tr><th>ველი</th><th>ტიპი</th><th>აღწერა</th></tr>
+            <tr><td class="param-name">name <span class="required">*</span></td><td>string</td><td>მომხმარებლის სახელი</td></tr>
+            <tr><td class="param-name">email <span class="required">*</span></td><td>string</td><td>ელ-ფოსტა</td></tr>
+            <tr><td class="param-name">password <span class="required">*</span></td><td>string</td><td>პაროლი</td></tr>
+            <tr><td class="param-name">city <span class="required">*</span></td><td>string</td><td>ქალაქი</td></tr>
+          </table>
+
+          <div class="section-title">Response (201 Created)</div>
+<div class="code-block">{
+  <span class="key">"id"</span>: <span class="number">3</span>,
+  <span class="key">"name"</span>: <span class="string">"ლუკა"</span>,
+  <span class="key">"email"</span>: <span class="string">"luka@mail.com"</span>,
+  <span class="key">"password"</span>: <span class="string">"mypass123"</span>,
+  <span class="key">"city"</span>: <span class="string">"ქუთაისი"</span>
+}</div>
+
+          <div class="section-title">სტატუს კოდები</div>
+          <div class="status-codes">
+            <span class="status-code success">201 — Created</span>
+          </div>
+
+          <div class="fetch-example">
+            <h4>fetch მაგალითი</h4>
+<div class="code-block">var response = await fetch("http://localhost:3000/users", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    name: "ლუკა",
+    email: "luka@mail.com",
+    password: "mypass123",
+    city: "ქუთაისი"
+  }),
+});
+
+var newUser = await response.json();</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== GET /users?email=...&password=... ===== -->
+      <div class="endpoint get">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method-badge method-get">GET</span>
+          <span class="endpoint-path">/users?email=...&password=...</span>
+          <span class="endpoint-desc">ლოგინი (მომხმარებლის ძიება)</span>
+          <span class="endpoint-toggle">&#9660;</span>
+        </div>
+        <div class="endpoint-body">
+          <div class="section-title">აღწერა</div>
+          <p>ეძებს მომხმარებელს ემაილითა და პაროლით. json-server ფილტრაციას query პარამეტრებით აკეთებს. თუ მომხმარებელი მოიძებნა, მასივში ერთი ელემენტი იქნება. თუ არ მოიძებნა — ცარიელი მასივი.</p>
+
+          <div class="section-title">Query პარამეტრები</div>
+          <table class="param-table">
+            <tr><th>პარამეტრი</th><th>ტიპი</th><th>აღწერა</th></tr>
+            <tr><td class="param-name">email <span class="required">*</span></td><td>string</td><td>მომხმარებლის ემაილი</td></tr>
+            <tr><td class="param-name">password <span class="required">*</span></td><td>string</td><td>მომხმარებლის პაროლი</td></tr>
+          </table>
+
+          <div class="section-title">Response (200 OK) — მომხმარებელი ნაპოვნია</div>
+<div class="code-block">[
+  {
+    <span class="key">"id"</span>: <span class="number">1</span>,
+    <span class="key">"name"</span>: <span class="string">"გიორგი"</span>,
+    <span class="key">"email"</span>: <span class="string">"giorgi@mail.com"</span>,
+    <span class="key">"password"</span>: <span class="string">"pass123"</span>,
+    <span class="key">"city"</span>: <span class="string">"თბილისი"</span>
+  }
+]</div>
+
+          <div class="section-title">Response (200 OK) — არ მოიძებნა</div>
+<div class="code-block">[]</div>
+
+          <div class="section-title">სტატუს კოდები</div>
+          <div class="status-codes">
+            <span class="status-code success">200 — OK</span>
+          </div>
+
+          <div class="fetch-example">
+            <h4>fetch მაგალითი</h4>
+<div class="code-block">var email = "giorgi@mail.com";
+var password = "pass123";
+
+var response = await fetch(
+  "http://localhost:3000/users?email=" + email + "&password=" + password
+);
+
+var users = await response.json();
+var user = users.length > 0 ? users[0] : null;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== GET /users/:id ===== -->
+      <div class="endpoint get">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method-badge method-get">GET</span>
+          <span class="endpoint-path">/users/:id</span>
+          <span class="endpoint-desc">მომხმარებლის პროფილის წამოღება</span>
+          <span class="endpoint-toggle">&#9660;</span>
+        </div>
+        <div class="endpoint-body">
+          <div class="section-title">აღწერა</div>
+          <p>წამოიღებს კონკრეტული მომხმარებლის მონაცემებს ID-ით.</p>
+
+          <div class="section-title">URL პარამეტრი</div>
+          <table class="param-table">
+            <tr><th>პარამეტრი</th><th>ტიპი</th><th>აღწერა</th></tr>
+            <tr><td class="param-name">id <span class="required">*</span></td><td>number</td><td>მომხმარებლის ID</td></tr>
+          </table>
+
+          <div class="section-title">Response (200 OK)</div>
+<div class="code-block">{
+  <span class="key">"id"</span>: <span class="number">1</span>,
+  <span class="key">"name"</span>: <span class="string">"გიორგი"</span>,
+  <span class="key">"email"</span>: <span class="string">"giorgi@mail.com"</span>,
+  <span class="key">"password"</span>: <span class="string">"pass123"</span>,
+  <span class="key">"city"</span>: <span class="string">"თბილისი"</span>
+}</div>
+
+          <div class="section-title">სტატუს კოდები</div>
+          <div class="status-codes">
+            <span class="status-code success">200 — OK</span>
+            <span class="status-code error">404 — Not Found</span>
+          </div>
+
+          <div class="fetch-example">
+            <h4>fetch მაგალითი</h4>
+<div class="code-block">var userId = 1;
+
+var response = await fetch("http://localhost:3000/users/" + userId);
+var user = await response.json();</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PATCH /users/:id ===== -->
+      <div class="endpoint patch">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method-badge method-patch">PATCH</span>
+          <span class="endpoint-path">/users/:id</span>
+          <span class="endpoint-desc">მომხმარებლის მონაცემების განახლება</span>
+          <span class="endpoint-toggle">&#9660;</span>
+        </div>
+        <div class="endpoint-body">
+          <div class="section-title">აღწერა</div>
+          <p>ანახლებს მომხმარებლის მონაცემებს. PATCH მხოლოდ გადაცემულ ველებს ცვლის — დანარჩენი უცვლელი რჩება.</p>
+
+          <div class="section-title">URL პარამეტრი</div>
+          <table class="param-table">
+            <tr><th>პარამეტრი</th><th>ტიპი</th><th>აღწერა</th></tr>
+            <tr><td class="param-name">id <span class="required">*</span></td><td>number</td><td>მომხმარებლის ID</td></tr>
+          </table>
+
+          <div class="section-title">Request Headers</div>
+          <table class="param-table">
+            <tr><th>Header</th><th>Value</th></tr>
+            <tr><td class="param-name">Content-Type</td><td>application/json</td></tr>
+          </table>
+
+          <div class="section-title">Request Body (მხოლოდ ის ველები, რისი შეცვლაც გინდა)</div>
+<div class="code-block">{
+  <span class="key">"name"</span>: <span class="string">"გიორგი მეგრელი"</span>,
+  <span class="key">"city"</span>: <span class="string">"ზუგდიდი"</span>
+}</div>
+
+          <table class="param-table">
+            <tr><th>ველი</th><th>ტიპი</th><th>აღწერა</th></tr>
+            <tr><td class="param-name">name</td><td>string</td><td>ახალი სახელი</td></tr>
+            <tr><td class="param-name">email</td><td>string</td><td>ახალი ემაილი</td></tr>
+            <tr><td class="param-name">city</td><td>string</td><td>ახალი ქალაქი</td></tr>
+          </table>
+
+          <div class="section-title">Response (200 OK)</div>
+<div class="code-block">{
+  <span class="key">"id"</span>: <span class="number">1</span>,
+  <span class="key">"name"</span>: <span class="string">"გიორგი მეგრელი"</span>,
+  <span class="key">"email"</span>: <span class="string">"giorgi@mail.com"</span>,
+  <span class="key">"password"</span>: <span class="string">"pass123"</span>,
+  <span class="key">"city"</span>: <span class="string">"ზუგდიდი"</span>
+}</div>
+
+          <div class="section-title">სტატუს კოდები</div>
+          <div class="status-codes">
+            <span class="status-code success">200 — OK</span>
+            <span class="status-code error">404 — Not Found</span>
+          </div>
+
+          <div class="fetch-example">
+            <h4>fetch მაგალითი</h4>
+<div class="code-block">var userId = 1;
+
+var response = await fetch("http://localhost:3000/users/" + userId, {
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    name: "გიორგი მეგრელი",
+    city: "ზუგდიდი"
+  }),
+});
+
+var updatedUser = await response.json();</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== DELETE /users/:id ===== -->
+      <div class="endpoint delete">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method-badge method-delete">DELETE</span>
+          <span class="endpoint-path">/users/:id</span>
+          <span class="endpoint-desc">მომხმარებლის ანგარიშის წაშლა</span>
+          <span class="endpoint-toggle">&#9660;</span>
+        </div>
+        <div class="endpoint-body">
+          <div class="section-title">აღწერა</div>
+          <p>წაშლის მომხმარებელს ბაზიდან სამუდამოდ. ეს მოქმედება შეუქცევადია.</p>
+
+          <div class="section-title">URL პარამეტრი</div>
+          <table class="param-table">
+            <tr><th>პარამეტრი</th><th>ტიპი</th><th>აღწერა</th></tr>
+            <tr><td class="param-name">id <span class="required">*</span></td><td>number</td><td>მომხმარებლის ID</td></tr>
+          </table>
+
+          <div class="section-title">Request Body</div>
+          <p style="color: #6b6b6b; font-size: 14px;">არ სჭირდება</p>
+
+          <div class="section-title">Response (200 OK)</div>
+<div class="code-block">{}</div>
+
+          <div class="section-title">სტატუს კოდები</div>
+          <div class="status-codes">
+            <span class="status-code success">200 — OK</span>
+            <span class="status-code error">404 — Not Found</span>
+          </div>
+
+          <div class="fetch-example">
+            <h4>fetch მაგალითი</h4>
+<div class="code-block">var userId = 1;
+
+var response = await fetch("http://localhost:3000/users/" + userId, {
+  method: "DELETE",
+});</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

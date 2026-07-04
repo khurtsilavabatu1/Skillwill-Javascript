@@ -11,6 +11,8 @@ const todoCount = document.getElementById("todoCount");
 const backlogCount = document.getElementById("backlogCount");
 const statusMessage = document.getElementById("statusMessage");
 
+let todos = [];
+
 function renderTodos(todos) {
   const todoTasks = todos.filter((t) => t.type === "todo");
   const backlogTasks = todos.filter((t) => t.type === "backlog");
@@ -85,16 +87,18 @@ function hideStatus() {
 
 // -------- 1. fetchTodos --------
 
-async function fetchTodos() {
-  try {
-    showStatus("ჩატვირთვა...", "loading");
-    const response = await fetch(API_URL);
-    const todos = await response.json();
-    renderTodos(todos);
-    hideStatus();
-  } catch (error) {
-    showStatus("შეცდომა: " + error.message, "error");
-  }
+function fetchTodos() {
+  showStatus("ჩატვირთვა...", "loading");
+  fetch(API_URL)
+    .then((response) => response.json())
+    .then((data) => {
+      todos = data;
+      renderTodos(todos);
+      hideStatus();
+    })
+    .catch((error) => {
+      showStatus("შეცდომა: " + error.message, "error");
+    });
 }
 
 // -------- 2. addTodo --------

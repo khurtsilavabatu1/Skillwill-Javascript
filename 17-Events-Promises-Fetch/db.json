@@ -1,0 +1,24 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "JavaScript-ის გაკვეთილის გავლა",
+      "type": "backlog"
+    },
+    {
+      "title": "სდსას",
+      "type": "todo",
+      "id": 5
+    },
+    {
+      "title": "sss",
+      "type": "todo",
+      "id": 6
+    },
+    {
+      "title": "ss",
+      "type": "todo",
+      "id": 7
+    }
+  ]
+}

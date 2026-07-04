@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ავტორიზაცია — ჩელენჯი</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f0f2f5;
+        color: #333;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .auth-container {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 420px;
+        overflow: hidden;
+      }
+
+      .tabs {
+        display: flex;
+      }
+
+      .tab {
+        flex: 1;
+        padding: 16px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        background: #e8eaf6;
+        color: #5c6bc0;
+        transition: all 0.2s;
+      }
+
+      .tab.active {
+        background: #3949ab;
+        color: #fff;
+      }
+
+      .tab:hover:not(.active) {
+        background: #c5cae9;
+      }
+
+      .form-container {
+        padding: 28px 24px;
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #546e7a;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .form-group input:focus {
+        border-color: #3949ab;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: #3949ab;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-top: 8px;
+      }
+
+      .submit-btn:hover {
+        background: #283593;
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .status-message {
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        margin-bottom: 16px;
+        display: none;
+        text-align: center;
+      }
+
+      .status-message.error {
+        display: block;
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      .status-message.success {
+        display: block;
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      .status-message.loading {
+        display: block;
+        background: #e3f2fd;
+        color: #1565c0;
+      }
+
+      .auth-form {
+        display: none;
+      }
+
+      .auth-form.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="tabs">
+        <button class="tab active" id="loginTab">შესვლა</button>
+        <button class="tab" id="registerTab">რეგისტრაცია</button>
+      </div>
+
+      <div class="form-container">
+        <div id="statusMessage" class="status-message"></div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-form active">
+          <div class="form-group">
+            <label for="loginEmail">ელ-ფოსტა</label>
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="magaliti@mail.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">პაროლი</label>
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="პაროლი..."
+              required
+            />
+          </div>
+          <button type="submit" class="submit-btn">შესვლა</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="auth-form">
+          <div class="form-group">
+            <label for="regName">სახელი</label>
+            <input
+              type="text"
+              id="regName"
+              placeholder="თქვენი სახელი..."
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="regEmail">ელ-ფოსტა</label>
+            <input
+              type="email"
+              id="regEmail"
+              placeholder="magaliti@mail.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="regPassword">პაროლი</label>
+            <input
+              type="password"
+              id="regPassword"
+              placeholder="პაროლი..."
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="regCity">ქალაქი</label>
+            <input
+              type="text"
+              id="regCity"
+              placeholder="თბილისი, ბათუმი..."
+              required
+            />
+          </div>
+          <button type="submit" class="submit-btn">რეგისტრაცია</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="app-answers.js"></script>
+  </body>
+</html>
